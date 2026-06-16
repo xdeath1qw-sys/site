@@ -272,6 +272,16 @@ function lsSet(key, val) {
 window._syncFromJSONBin = async function() {
   console.log('[DB] 🔄 Загрузка из Supabase...');
 
+  // Если в localStorage уже есть данные — сразу помечаем готовность
+  // чтобы страница не ждала сети и показала кэш мгновенно
+  const hasCached = lsGet('pl_users') || lsGet('pl_players') || lsGet('pl_teams');
+  if (hasCached) {
+    _dbReady = true;
+    window._dbReady = true;
+    console.log('[DB] ⚡ Кэш найден — показываем сразу, обновляем в фоне');
+    if (window._afterSync) window._afterSync();
+  }
+
   try {
     const [users, players, teams, news, tournaments, matches, vetos] = await Promise.all([
       sbFetch('users'),
@@ -304,6 +314,9 @@ window._syncFromJSONBin = async function() {
     console.log(`[DB] 👥 Пользователей: ${users.length}`);
     console.log(`[DB] 🎮 Игроков: ${players.length}`);
     console.log(`[DB] 🗺️ Вето: ${vetos.length}`);
+
+    // Диспатчим обновление чтобы страницы перерендерились со свежими данными
+    window.dispatchEvent(new CustomEvent('db-updated'));
 
   } catch(e) {
     console.error('[DB] ❌ Ошибка Supabase:', e.message);
@@ -701,7 +714,7 @@ window._afterSync = function() {
   // Чистим игроков без аккаунтов
   _cleanOrphanPlayers();
 
-  // Автообновление каждые 10 секунд
+  // Автообновление каждые 60 секунд (не чаще — лишние запросы тормозят сайт)
   setInterval(async () => {
     try {
       const [users, players, teams, news, tournaments, matches] = await Promise.all([
@@ -722,7 +735,7 @@ window._afterSync = function() {
       await _cleanOrphanPlayers();
       window.dispatchEvent(new CustomEvent('db-updated'));
     } catch(e) { /* тихая ошибка */ }
-  }, 10000);
+  }, 60000);
 };
 
 // Заглушки

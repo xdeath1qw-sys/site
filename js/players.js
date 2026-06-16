@@ -30,14 +30,13 @@ document.addEventListener('DOMContentLoaded', () => {
       </style>`;
   }
 
-  // Ждём минимум 3 секунды И загрузки БД
-  const minDelay = new Promise(resolve => setTimeout(resolve, 3000));
-  const dbReady  = new Promise(resolve => {
+  // Ждём загрузки БД (без искусственной задержки)
+  const dbReady = new Promise(resolve => {
     const check = () => window._dbReady ? resolve() : setTimeout(check, 100);
     check();
   });
 
-  Promise.all([minDelay, dbReady]).then(() => {
+  dbReady.then(() => {
     console.log('[PLAYERS] Готово, отображаем игроков');
     init();
   });

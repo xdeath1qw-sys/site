@@ -140,9 +140,9 @@ document.addEventListener('DOMContentLoaded', () => {
         <td>${t.rating || 0}</td>
         <td>
           <div class="action-btns">
-            <button class="btn btn-sm btn-outline" onclick="manageTeamRoster(${t.id}, '${t.name.replace(/'/g, "\\'")}')"><i class="fas fa-users"></i></button>
-            <button class="btn btn-sm btn-outline" onclick="editTeam(${t.id})"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-sm btn-danger" onclick="deleteTeam(${t.id})"><i class="fas fa-trash"></i></button>
+            <button class="btn btn-sm btn-outline" onclick="manageTeamRoster('${t.id}', '${t.name.replace(/'/g, "\\'")}')"><i class="fas fa-users"></i></button>
+            <button class="btn btn-sm btn-outline" onclick="editTeam('${t.id}')"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-sm btn-danger" onclick="deleteTeam('${t.id}')"><i class="fas fa-trash"></i></button>
           </div>
         </td>
       </tr>`).join('');
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.editTeam = (id) => {
     const teams = DB.get('pl_teams');
-    const t = teams.find(x => x.id === id);
+    const t = teams.find(x => String(x.id) === String(id));
     if (!t) return;
     editingTeamId = id;
     document.getElementById('teamFormTitle').textContent = 'Редактировать команду';
@@ -258,8 +258,8 @@ document.addEventListener('DOMContentLoaded', () => {
         <td>${d}</td>
         <td>
           <div class="action-btns">
-            <button class="btn btn-sm btn-outline" onclick="editNews(${n.id})"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-sm btn-danger" onclick="deleteNews(${n.id})"><i class="fas fa-trash"></i></button>
+            <button class="btn btn-sm btn-outline" onclick="editNews('${n.id}')"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-sm btn-danger" onclick="deleteNews('${n.id}')"><i class="fas fa-trash"></i></button>
           </div>
         </td>
       </tr>`;
@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.editNews = (id) => {
     const newsList = DB.get('pl_news');
-    const n = newsList.find(x => x.id === id);
+    const n = newsList.find(x => String(x.id) === String(id));
     if (!n) return;
     editingNewsId = id;
     document.getElementById('newsFormTitle').textContent = 'Редактировать новость';
@@ -309,7 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const users   = DB.get('pl_users');
     if (!players.length) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-dim);padding:30px">Нет игроков</td></tr>`; return; }
     tbody.innerHTML = players.map((p, i) => {
-      const user = users.find(u => u.id === p.userId || (u.username || '').toLowerCase() === (p.nick || '').toLowerCase());
+      const user = users.find(u => String(u.id) === String(p.userId) || (u.username || '').toLowerCase() === (p.nick || '').toLowerCase());
       const isIgl = user?.role === 'igl';
       const isAdmin = user?.role === 'admin';
       const kd = p.stats?.kd ?? p.kd ?? null;
@@ -336,12 +336,12 @@ document.addEventListener('DOMContentLoaded', () => {
         <td>
           <div class="action-btns">
             ${!isAdmin && uid ? `
-              <button class="btn btn-sm btn-outline" onclick="openStatsEditor(${uid})" title="Редактировать K/D" style="color:var(--accent);border-color:var(--accent)"><i class="fas fa-chart-bar"></i></button>
+              <button class="btn btn-sm btn-outline" onclick="openStatsEditor('${uid}')" title="Редактировать K/D" style="color:var(--accent);border-color:var(--accent)"><i class="fas fa-chart-bar"></i></button>
               ${isIgl
-                ? `<button class="btn btn-sm btn-outline" onclick="setUserRole(${uid}, 'user')" title="Снять IGL" style="color:var(--warning);border-color:var(--warning)"><i class="fas fa-crown"></i></button>`
-                : `<button class="btn btn-sm btn-outline" onclick="setUserRole(${uid}, 'igl')" title="Назначить IGL"><i class="fas fa-crown"></i></button>`
+                ? `<button class="btn btn-sm btn-outline" onclick="setUserRole('${uid}', 'user')" title="Снять IGL" style="color:var(--warning);border-color:var(--warning)"><i class="fas fa-crown"></i></button>`
+                : `<button class="btn btn-sm btn-outline" onclick="setUserRole('${uid}', 'igl')" title="Назначить IGL"><i class="fas fa-crown"></i></button>`
               }
-              <button class="btn btn-sm btn-danger" onclick="deleteUser(${uid})"><i class="fas fa-trash"></i></button>
+              <button class="btn btn-sm btn-danger" onclick="deleteUser('${uid}')"><i class="fas fa-trash"></i></button>
             ` : isAdmin ? '<span style="color:var(--text-dim);font-size:0.8rem">Администратор</span>' : '<span style="color:var(--text-dim);font-size:0.8rem">—</span>'}
           </div>
         </td>
@@ -353,9 +353,9 @@ document.addEventListener('DOMContentLoaded', () => {
   window.openStatsEditor = (userId) => {
     const users   = DB.get('pl_users');
     const players = DB.get('pl_players');
-    const user    = users.find(u => u.id === userId);
+    const user    = users.find(u => String(u.id) === String(userId));
     if (!user) return;
-    const player  = players.find(p => p.userId === userId || (p.nick || '').toLowerCase() === (user.username || '').toLowerCase());
+    const player  = players.find(p => String(p.userId) === String(userId) || (p.nick || '').toLowerCase() === (user.username || '').toLowerCase());
 
     const kd = parseFloat(player?.stats?.kd ?? player?.kd ?? 0).toFixed(2);
 
@@ -378,7 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
             style="width:100%;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:1.1rem;box-sizing:border-box;font-weight:700" />
         </div>
         <div style="display:flex;gap:10px;margin-top:20px">
-          <button id="se_saveBtn" class="btn btn-primary" style="flex:1" onclick="savePlayerStats(${userId})">
+          <button id="se_saveBtn" class="btn btn-primary" style="flex:1" onclick="savePlayerStats('${userId}')">
             <i class="fas fa-save"></i> Сохранить
           </button>
           <button class="btn btn-outline" style="flex:1" onclick="document.getElementById('statsModal').remove()">
@@ -400,10 +400,10 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Сохраняем...';
 
     const users   = DB.get('pl_users');
-    const user    = users.find(u => u.id === userId);
+    const user    = users.find(u => String(u.id) === String(userId));
     const players = DB.get('pl_players');
     const pi = players.findIndex(p =>
-      p.userId === userId ||
+      String(p.userId) === String(userId) ||
       (p.nick || '').toLowerCase() === (user?.username || '').toLowerCase()
     );
 
@@ -431,13 +431,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const label = role === 'igl' ? 'назначить капитаном (IGL)' : 'снять роль IGL';
     if (!confirm(`${label}?`)) return;
     const users = DB.get('pl_users');
-    const idx = users.findIndex(u => u.id === id);
+    const idx = users.findIndex(u => String(u.id) === String(id));
     if (idx === -1) return;
 
-    // Если снимаем IGL — удаляем его команду (если есть)
     if (role === 'user' && users[idx].teamId) {
       const teamId = users[idx].teamId;
-      const teams = DB.get('pl_teams').filter(t => t.id !== teamId);
+      const teams = DB.get('pl_teams').filter(t => String(t.id) !== String(teamId));
       lsSet('pl_teams', teams);
       await DB.remove('pl_teams', teamId).catch(() => {});
       users[idx].teamId = null;
@@ -446,12 +445,10 @@ document.addEventListener('DOMContentLoaded', () => {
     users[idx].role = role;
     lsSet('pl_users', users);
 
-    // Сохраняем в MongoDB
-    await DB.update('pl_users', id, { role, teamId: users[idx].teamId || null }).catch(e => console.warn('[ADMIN]', e.message));
+    await DB.update('pl_users', String(id), { role, teamId: users[idx].teamId || null }).catch(e => console.warn('[ADMIN]', e.message));
 
-    // Обновляем сессию если это текущий пользователь
     const cur = Auth.current();
-    if (cur && cur.id === id) { const { password: _, ...safe } = users[idx]; Auth.login(safe); }
+    if (cur && String(cur.id) === String(id)) { const { password: _, ...safe } = users[idx]; Auth.login(safe); }
 
     renderUsersTable();
     showToast(role === 'igl' ? '👑 Роль IGL назначена' : 'Роль IGL снята');
@@ -461,31 +458,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!confirm('Удалить пользователя?')) return;
 
     const users = DB.get('pl_users');
-    const user = users.find(u => u.id === id);
+    const user = users.find(u => String(u.id) === String(id));
 
-    // Удаляем из localStorage
-    lsSet('pl_users', users.filter(u => u.id !== id));
+    lsSet('pl_users', users.filter(u => String(u.id) !== String(id)));
 
-    // Удаляем связанного игрока
     if (user) {
       const players = DB.get('pl_players');
       const playerToDelete = players.find(p =>
-        p.userId === id ||
+        String(p.userId) === String(id) ||
         (p.nick || '').toLowerCase() === (user.username || '').toLowerCase()
       );
       lsSet('pl_players', players.filter(p =>
-        p.userId !== id &&
+        String(p.userId) !== String(id) &&
         (p.nick || '').toLowerCase() !== (user.username || '').toLowerCase()
       ));
 
-      if (playerToDelete) {
-        // Удаляем игрока из MongoDB
-        if (playerToDelete.id) {
-          try {
-            await DB.remove('pl_players', playerToDelete.id);
-            console.log(`[DB] 🗑️ Игрок id=${playerToDelete.id} удалён из MongoDB`);
-          } catch(e) { console.warn('[DB] ⚠️', e.message); }
-        }
+      if (playerToDelete?.id) {
+        await DB.remove('pl_players', String(playerToDelete.id)).catch(e => console.warn('[DB] ⚠️', e.message));
       }
     }
 
@@ -493,11 +482,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateDashboard();
     showToast('Пользователь удалён', 'error');
 
-    // Удаляем пользователя из MongoDB
-    try {
-      await DB.remove('pl_users', id);
-      console.log(`[DB] 🗑️ Пользователь id=${id} удалён из MongoDB`);
-    } catch(e) { console.warn('[DB] ⚠️', e.message); }
+    await DB.remove('pl_users', String(id)).catch(e => console.warn('[DB] ⚠️', e.message));
   };
 
   // ──────────────────────────────────
@@ -601,8 +586,8 @@ document.addEventListener('DOMContentLoaded', () => {
           <td>
             <div class="action-btns">
               ${m.url ? `<a href="${m.url}" target="_blank" class="btn btn-sm btn-outline" title="Открыть на xplay"><i class="fas fa-external-link-alt"></i></a>` : ''}
-              <button class="btn btn-sm btn-outline" onclick="editMatch(${m.id})"><i class="fas fa-edit"></i></button>
-              <button class="btn btn-sm btn-danger" onclick="deleteMatch(${m.id})"><i class="fas fa-trash"></i></button>
+              <button class="btn btn-sm btn-outline" onclick="editMatch('${m.id}')"><i class="fas fa-edit"></i></button>
+              <button class="btn btn-sm btn-danger" onclick="deleteMatch('${m.id}')"><i class="fas fa-trash"></i></button>
             </div>
           </td>
         </tr>`;
@@ -611,7 +596,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.editMatch = (id) => {
     const matches = DB.get('pl_matches');
-    const m = matches.find(x => x.id === id);
+    const m = matches.find(x => String(x.id) === String(id));
     if (!m) return;
     editingMatchId = id;
     document.getElementById('matchFormTitle').textContent = 'Редактировать матч';
@@ -738,8 +723,8 @@ document.addEventListener('DOMContentLoaded', () => {
         <td style="font-size:0.82rem">${fmtDate(t.dateEnd)}</td>
         <td>
           <div class="action-btns">
-            <button class="btn btn-sm btn-outline" onclick="editTournament(${t.id})"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-sm btn-danger"  onclick="deleteTournament(${t.id})"><i class="fas fa-trash"></i></button>
+            <button class="btn btn-sm btn-outline" onclick="editTournament('${t.id}')"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-sm btn-danger"  onclick="deleteTournament('${t.id}')"><i class="fas fa-trash"></i></button>
           </div>
         </td>
       </tr>`).join('');
@@ -778,7 +763,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.deleteTournament = async (id) => {
     if (!confirm('Удалить турнир?')) return;
-    await DB.remove('pl_tournaments', parseInt(id) || id);
+    await DB.remove('pl_tournaments', id);
     renderTournamentsTable();
     updateDashboard();
     showToast('Турнир удалён', 'error');
@@ -892,7 +877,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.editHighlight = (id) => {
     const list = getHL();
-    const h = list.find(x => x.id === id);
+    const h = list.find(x => String(x.id) === String(id));
     if (!h) return;
     editingHlId = id;
     document.getElementById('highlightFormTitle').textContent = 'Редактировать хайлайт';
@@ -922,7 +907,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.deleteHighlight = (id) => {
     if (!confirm('Удалить хайлайт?')) return;
-    saveHL(getHL().filter(h => h.id !== id));
+    saveHL(getHL().filter(h => String(h.id) !== String(id)));
     renderHighlightsTable();
     showToast('Хайлайт удалён', 'error');
   };
@@ -1146,8 +1131,8 @@ document.addEventListener('DOMContentLoaded', () => {
           <td style="font-size:0.82rem">${d}</td>
           <td>
             <div class="action-btns">
-              <button class="btn btn-sm btn-outline" onclick="editAward(${a.id})"><i class="fas fa-edit"></i></button>
-              <button class="btn btn-sm btn-danger" onclick="deleteAward(${a.id})"><i class="fas fa-trash"></i></button>
+              <button class="btn btn-sm btn-outline" onclick="editAward('${a.id}')"><i class="fas fa-edit"></i></button>
+              <button class="btn btn-sm btn-danger" onclick="deleteAward('${a.id}')"><i class="fas fa-trash"></i></button>
             </div>
           </td>
         </tr>`;
@@ -1155,7 +1140,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   window.editAward = (id) => {
-    const a = getAwards().find(x => x.id === id);
+    const a = getAwards().find(x => String(x.id) === String(id));
     if (!a) return;
     editingAwardId = id;
     awardImageData = a.image || '';
@@ -1184,7 +1169,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.deleteAward = (id) => {
     if (!confirm('Удалить награду?')) return;
-    saveAwards(getAwards().filter(a => a.id !== id));
+    saveAwards(getAwards().filter(a => String(a.id) !== String(id)));
     renderAwardsTable();
     showToast('Награда удалена', 'error');
   };
@@ -1446,9 +1431,9 @@ document.addEventListener('DOMContentLoaded', () => {
           <td style="font-size:0.82rem;color:var(--text-muted)">${d}</td>
           <td>
             <div class="action-btns">
-              <button class="btn btn-sm btn-outline" onclick="openVeto(${v.id})" title="Открыть страницу вето"><i class="fas fa-external-link-alt"></i></button>
-              <button class="btn btn-sm btn-outline" onclick="copyVetoLink(${v.id})" title="Скопировать ссылку"><i class="fas fa-link"></i></button>
-              <button class="btn btn-sm btn-danger" onclick="deleteVeto(${v.id})"><i class="fas fa-trash"></i></button>
+              <button class="btn btn-sm btn-outline" onclick="openVeto('${v.id}')" title="Открыть страницу вето"><i class="fas fa-external-link-alt"></i></button>
+              <button class="btn btn-sm btn-outline" onclick="copyVetoLink('${v.id}')" title="Скопировать ссылку"><i class="fas fa-link"></i></button>
+              <button class="btn btn-sm btn-danger" onclick="deleteVeto('${v.id}')"><i class="fas fa-trash"></i></button>
             </div>
           </td>
         </tr>`;

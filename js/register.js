@@ -1,9 +1,9 @@
 ﻿// ── Register ──
 document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('registerForm');
+  const form    = document.getElementById('registerForm');
   const alertEl = document.getElementById('regAlert');
   const togglePass = document.getElementById('togglePass');
-  const passInput = document.getElementById('regPassword');
+  const passInput  = document.getElementById('regPassword');
 
   if (togglePass && passInput) {
     togglePass.addEventListener('click', () => {
@@ -17,17 +17,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-
-    if (isRegistering) return; // защита от двойного сабмита
+    if (isRegistering) return;
     isRegistering = true;
 
-    const submitBtn = form.querySelector('[type="submit"]') || form.querySelector('button');
+    const submitBtn   = form.querySelector('[type="submit"]') || form.querySelector('button');
     const origBtnText = submitBtn ? submitBtn.innerHTML : '';
 
     const username = document.getElementById('regUsername').value.trim();
-    const email = document.getElementById('regEmail').value.trim().toLowerCase();
+    const email    = document.getElementById('regEmail').value.trim().toLowerCase();
     const password = document.getElementById('regPassword').value;
-    const password2 = document.getElementById('regPassword2').value;
+    const password2= document.getElementById('regPassword2').value;
 
     if (!username || username.length < 2) {
       showAlert('Введите никнейм (минимум 2 символа)', 'error'); isRegistering = false; return;
@@ -41,21 +40,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Регистрация...'; }
 
-    // Если БД ещё грузится — загружаем только users напрямую из Supabase
-    let users;
-    if (!window._dbReady) {
+    // Проверяем уникальность — сначала кэш, потом API
+    let users = DB.get('pl_users');
+    if (!users.length) {
       try {
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/users?select=id,username,email`, {
-          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-        });
+        const res = await fetch('/api/data?col=users');
         const data = await res.json();
-        users = Array.isArray(data) ? data.map(u => ({ id: u.id, username: u.username, email: u.email })) : [];
-      } catch(e) {
-        users = DB.get('pl_users');
-      }
-    } else {
-      users = DB.get('pl_users');
+        users = Array.isArray(data) ? data : [];
+      } catch(e) { users = []; }
     }
+
     if (users.find(u => (u.username || '').toLowerCase() === username.toLowerCase())) {
       showAlert('Такой никнейм уже занят', 'error');
       if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origBtnText; }
@@ -67,100 +61,58 @@ document.addEventListener('DOMContentLoaded', () => {
       isRegistering = false; return;
     }
 
-    const newUser = {
-      id: Date.now(),
-      username,
-      email,
-      password,
-      role: 'user',
-      joinedAt: new Date().toISOString()
-    };
-
-    // Сохраняем пользователя напрямую в Supabase
+    // Сохраняем пользователя в MongoDB
+    let newUser = { username, email, password, role: 'user', joinedAt: new Date().toISOString() };
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
+      const res = await fetch('/api/data?col=users', {
         method: 'POST',
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=representation'
-        },
-        body: JSON.stringify({
-          username: newUser.username,
-          email: newUser.email,
-          password: newUser.password,
-          role: 'user'
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password, role: 'user' })
       });
-      const inserted = await res.json();
-      if (inserted && inserted[0]) {
-        newUser.id = inserted[0].id;
-        console.log('[REG] ✅ Пользователь сохранён, id=', newUser.id);
-      } else {
-        // Возможно ошибка уникальности — проверим
-        const errText = JSON.stringify(inserted);
-        if (errText.includes('unique') || errText.includes('duplicate') || errText.includes('23505')) {
-          showAlert('Такой никнейм или email уже существует', 'error');
-          if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origBtnText; }
-          return;
-        }
+      const saved = await res.json();
+      if (saved && saved.id) {
+        newUser.id = saved.id;
+        console.log('[REG] ✅ Пользователь создан, id=', newUser.id);
       }
     } catch(e) {
-      console.warn('[REG] ⚠️ Ошибка сохранения пользователя:', e.message);
+      console.warn('[REG] ⚠️ Ошибка создания пользователя:', e.message);
     }
 
-    users.push(newUser);
-    lsSet('pl_users', users);
+    // Обновляем localStorage
+    const allUsers = DB.get('pl_users');
+    allUsers.push(newUser);
+    lsSet('pl_users', allUsers);
 
-    // Уведомление в Discord о новом пользователе
+    // Уведомление в Discord
     if (window.notifyNewUser) notifyNewUser(newUser);
 
-    // Создаём игрока напрямую в Supabase
+    // Создаём игрока в MongoDB
     try {
-      const pRes = await fetch(`${SUPABASE_URL}/rest/v1/players`, {
+      const res = await fetch('/api/data?col=players', {
         method: 'POST',
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=representation'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          nick: username,
-          name: '',
-          team: '',
-          role: '',
-          country: '',
-          rating: 0,
-          photo: null,
-          user_id: newUser.id,
-          kd: 0, hs: 0, wins: 0, matches: 0, adr: 0
+          nick: username, name: '', team: '', role: '',
+          country: '', rating: 0, photo: null,
+          user_id: newUser.id, kd: 0, hs: 0, wins: 0, matches: 0, adr: 0
         })
       });
-      const pInserted = await pRes.json();
-      if (pInserted && pInserted[0]) {
-        console.log('[REG] ✅ Игрок создан, id=', pInserted[0].id);
-        const players = DB.get('pl_players');
-        players.push({
-          id: pInserted[0].id,
-          nick: username,
-          name: '',
-          team: '',
-          role: '',
-          country: '',
-          rating: 0,
-          photo: '',
-          userId: newUser.id,
+      const pSaved = await res.json();
+      if (pSaved && pSaved.id) {
+        console.log('[REG] ✅ Игрок создан, id=', pSaved.id);
+        const allPlayers = DB.get('pl_players');
+        allPlayers.push({
+          id: pSaved.id, nick: username, name: '', team: '', role: '',
+          country: '', rating: 0, photo: '', userId: newUser.id,
           stats: { kd: 0, hs: 0, wins: 0, matches: 0, adr: 0 }
         });
-        lsSet('pl_players', players);
+        lsSet('pl_players', allPlayers);
       }
     } catch(e) {
       console.warn('[REG] ⚠️ Ошибка создания игрока:', e.message);
     }
 
-    // Auto login
+    // Авто-логин
     const { password: _, ...safeUser } = newUser;
     Auth.login(safeUser);
 

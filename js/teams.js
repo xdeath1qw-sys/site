@@ -310,7 +310,30 @@ document.addEventListener('DOMContentLoaded', () => {
           ? `<img src="${t.logo}" alt="${t.name}" />`
           : `<span>${t.name.substring(0,2).toUpperCase()}</span>`;
         const players = DB.get('pl_players').filter(p => p.team === t.name);
+        const allUsers = DB.get('pl_users');
+        const captain = allUsers.find(u => u.id === t.ownerId);
         const isOwn = user && t.ownerId === user.id;
+
+        // Собираем 5 слотов: IGL + игроки + пустые
+        const slots = [];
+        if (captain) {
+          slots.push({ nick: captain.username, photo: captain.avatar || captain.photo || '', isCaptain: true });
+        }
+        players.forEach(p => {
+          if (slots.length < 5) slots.push({ nick: p.nick, photo: p.photo || '', isCaptain: false });
+        });
+        while (slots.length < 5) slots.push(null); // пустые слоты
+
+        const rosterHTML = slots.map(s => s
+          ? `<div class="tc-slot" title="${s.nick}" onclick="event.stopPropagation();window.location.href='profile.html?user=${encodeURIComponent(s.nick)}'">
+               ${s.photo
+                 ? `<img src="${s.photo}" alt="${s.nick}" />`
+                 : `<span>${s.nick.charAt(0).toUpperCase()}</span>`}
+               ${s.isCaptain ? `<div class="tc-slot-crown">👑</div>` : ''}
+             </div>`
+          : `<div class="tc-slot tc-slot-empty"><i class="fas fa-user-plus"></i></div>`
+        ).join('');
+
         return `
           <div class="team-card${isOwn ? ' own-team-card' : ''}" style="cursor:pointer" onclick="openTeamModal(${t.id})">
             <div class="team-card-top">
@@ -328,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <span class="team-rating">Рейтинг: <span>${t.rating || 0}</span></span>
             </div>
             ${t.description ? `<div class="team-desc">${t.description}</div>` : ''}
-            <div style="margin-top:12px;font-size:0.78rem;color:var(--text-dim)"><i class="fas fa-users"></i> Игроков: ${players.length}</div>
+            <div class="tc-roster">${rosterHTML}</div>
           </div>`;
       }).join('');
 

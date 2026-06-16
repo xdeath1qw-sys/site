@@ -796,7 +796,7 @@ window._afterSync = function() {
   // Чистка сиротских игроков отключена
   // _cleanOrphanPlayers();
 
-  // Синк каждые 3 минуты — только критичные данные (экономим запросы Supabase)
+  // Синк каждые 3 минуты — резервный (на случай если Realtime не сработал)
   setInterval(async () => {
     try {
       const [users, players, teams] = await Promise.all([
@@ -824,9 +824,120 @@ window._afterSync = function() {
       lsSet('pl_matches',     matches.map(matchFromSB));
     } catch(e) { /* тихая ошибка */ }
   }, 600000);
+
+  // ── Supabase Realtime — мгновенная синхронизация ──
+  _initRealtime();
 };
 
 // Заглушки
 window.showSyncIndicator = function() {};
 window.hideSyncIndicator = function() {};
 window.startAutoSync = function() {};
+
+// ── Supabase Realtime ──────────────────────────────────────────
+// Подписываемся на изменения таблиц через WebSocket
+function _initRealtime() {
+  const wsUrl = SUPABASE_URL.replace('https://', 'wss://') + '/realtime/v1/websocket?apikey=' + SUPABASE_KEY + '&vsn=1.0.0';
+
+  let ws;
+  let reconnectTimer;
+  let heartbeatTimer;
+
+  function connect() {
+    try {
+      ws = new WebSocket(wsUrl);
+
+      ws.onopen = () => {
+        console.log('[RT] 🟢 Realtime подключён');
+        clearTimeout(reconnectTimer);
+
+        // Подписываемся на изменения таблиц users, players, teams
+        const tables = ['users', 'players', 'teams', 'news', 'matches', 'tournaments'];
+        tables.forEach(table => {
+          ws.send(JSON.stringify({
+            topic: `realtime:public:${table}`,
+            event: 'phx_join',
+            payload: { config: { broadcast: { self: false }, presence: { key: '' } } },
+            ref: table
+          }));
+        });
+
+        // Heartbeat каждые 25 сек чтобы соединение не закрылось
+        heartbeatTimer = setInterval(() => {
+          if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ topic: 'phoenix', event: 'heartbeat', payload: {}, ref: 'hb' }));
+          }
+        }, 25000);
+      };
+
+      ws.onmessage = async (e) => {
+        try {
+          const msg = JSON.parse(e.data);
+          if (!msg.payload || !msg.payload.data) return;
+
+          const { schema, table, eventType, record, old_record } = msg.payload.data;
+          if (schema !== 'public') return;
+
+          console.log(`[RT] 📡 ${table} ${eventType}`);
+
+          // Обновляем только нужную таблицу
+          const keyMap = {
+            users: 'pl_users',
+            players: 'pl_players',
+            teams: 'pl_teams',
+            news: 'pl_news',
+            matches: 'pl_matches',
+            tournaments: 'pl_tournaments'
+          };
+          const fromSBMap = {
+            users: userFromSB,
+            players: playerFromSB,
+            teams: teamFromSB,
+            news: newsFromSB,
+            matches: matchFromSB,
+            tournaments: tournFromSB
+          };
+
+          const lsKey = keyMap[table];
+          const fromSB = fromSBMap[table];
+          if (!lsKey || !fromSB) return;
+
+          const arr = lsGet(lsKey) || [];
+
+          if (eventType === 'INSERT') {
+            arr.push(fromSB(record));
+          } else if (eventType === 'UPDATE') {
+            const idx = arr.findIndex(x => x.id === record.id);
+            if (idx !== -1) arr[idx] = fromSB(record);
+            else arr.push(fromSB(record));
+          } else if (eventType === 'DELETE') {
+            const id = old_record?.id || record?.id;
+            const filtered = arr.filter(x => x.id !== id);
+            lsSet(lsKey, filtered);
+            window.dispatchEvent(new CustomEvent('db-updated'));
+            return;
+          }
+
+          lsSet(lsKey, arr);
+          window.dispatchEvent(new CustomEvent('db-updated'));
+        } catch(err) { /* игнорируем мусорные сообщения */ }
+      };
+
+      ws.onclose = () => {
+        console.log('[RT] 🔴 Realtime отключён, переподключаемся...');
+        clearInterval(heartbeatTimer);
+        reconnectTimer = setTimeout(connect, 3000);
+      };
+
+      ws.onerror = () => {
+        ws.close();
+      };
+
+    } catch(e) {
+      console.warn('[RT] ⚠️ Realtime недоступен:', e.message);
+      reconnectTimer = setTimeout(connect, 5000);
+    }
+  }
+
+  connect();
+}

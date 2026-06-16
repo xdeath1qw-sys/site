@@ -278,11 +278,10 @@ window._syncFromJSONBin = async function() {
     _dbReady = true;
     window._dbReady = true;
     console.log('[DB] ⚡ Кэш найден — показываем сразу, обновляем в фоне');
-    if (window._afterSync) window._afterSync();
+    if (window._afterSync) { window._afterSync(); window._afterSync = null; }
   }
 
   try {
-    // Быстрый синк: только самые нужные таблицы (3 запроса вместо 7)
     const [users, players, teams] = await Promise.all([
       sbFetch('users'),
       sbFetch('players'),
@@ -297,35 +296,35 @@ window._syncFromJSONBin = async function() {
     window._dbReady = true;
     window.dispatchEvent(new CustomEvent('db-updated'));
 
-    // Медленный синк: остальные таблицы в фоне
-    const [news, tournaments, matches, vetos] = await Promise.all([
+    // Вызываем _afterSync только если не вызвали раньше (нет кэша)
+    if (window._afterSync) { window._afterSync(); window._afterSync = null; }
+
+    // Медленный синк остальных таблиц в фоне
+    Promise.all([
       sbFetch('news'),
       sbFetch('tournaments'),
       sbFetch('matches'),
       sbFetch('vetos')
-    ]);
-
-    lsSet('pl_news',        news.map(newsFromSB));
-    lsSet('pl_tournaments', tournaments.map(tournFromSB));
-    lsSet('pl_matches',     matches.map(matchFromSB));
-    lsSet('pl_vetos',       vetos.map(vetoFromSB));
-
-    if (!lsGet('pl_invites'))       lsSet('pl_invites', []);
-    if (!lsGet('pl_notifications')) lsSet('pl_notifications', []);
-    if (!lsGet('pl_highlights'))    lsSet('pl_highlights', []);
-    if (!lsGet('pl_awards'))        lsSet('pl_awards', []);
-    if (!lsGet('pl_tourn_regs'))    lsSet('pl_tourn_regs', {});
-
-    console.log(`[DB] ✅ Загружено: ${users.length} users, ${players.length} players`);
-    window.dispatchEvent(new CustomEvent('db-updated'));
+    ]).then(([news, tournaments, matches, vetos]) => {
+      lsSet('pl_news',        news.map(newsFromSB));
+      lsSet('pl_tournaments', tournaments.map(tournFromSB));
+      lsSet('pl_matches',     matches.map(matchFromSB));
+      lsSet('pl_vetos',       vetos.map(vetoFromSB));
+      if (!lsGet('pl_invites'))       lsSet('pl_invites', []);
+      if (!lsGet('pl_notifications')) lsSet('pl_notifications', []);
+      if (!lsGet('pl_highlights'))    lsSet('pl_highlights', []);
+      if (!lsGet('pl_awards'))        lsSet('pl_awards', []);
+      if (!lsGet('pl_tourn_regs'))    lsSet('pl_tourn_regs', {});
+      console.log(`[DB] ✅ Загружено: ${users.length} users, ${players.length} players`);
+      window.dispatchEvent(new CustomEvent('db-updated'));
+    }).catch(e => console.warn('[DB] ⚠️ Медленный синк:', e.message));
 
   } catch(e) {
     console.error('[DB] ❌ Ошибка Supabase:', e.message);
     _dbReady = true;
     window._dbReady = true;
+    if (window._afterSync) { window._afterSync(); window._afterSync = null; }
   }
-
-  if (window._afterSync) window._afterSync();
 };
 
 window._syncFromJSONBin();

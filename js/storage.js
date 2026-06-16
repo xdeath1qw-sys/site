@@ -711,8 +711,9 @@ window._afterSync = function() {
     }
   }
 
-  // Чистим игроков без аккаунтов
-  _cleanOrphanPlayers();
+  // Чистка сиротских игроков отключена — на хосте не нужна,
+  // может удалить данные если users/players не синхронны в кэше
+  // _cleanOrphanPlayers();
 
   // Автообновление каждые 60 секунд (не чаще — лишние запросы тормозят сайт)
   setInterval(async () => {
@@ -731,8 +732,8 @@ window._afterSync = function() {
       lsSet('pl_news',        news.map(newsFromSB));
       lsSet('pl_tournaments', tournaments.map(tournFromSB));
       lsSet('pl_matches',     matches.map(matchFromSB));
-      // Чистим лишних игроков при каждом обновлении
-      await _cleanOrphanPlayers();
+      // Чистка сиротских игроков отключена
+      // await _cleanOrphanPlayers();
       window.dispatchEvent(new CustomEvent('db-updated'));
     } catch(e) { /* тихая ошибка */ }
   }, 30000);

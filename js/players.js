@@ -30,23 +30,22 @@ document.addEventListener('DOMContentLoaded', () => {
       </style>`;
   }
 
-  // Ждём загрузки БД (без искусственной задержки)
-  const dbReady = new Promise(resolve => {
-    const check = () => window._dbReady ? resolve() : setTimeout(check, 100);
-    check();
-  });
-
-  dbReady.then(() => {
-    console.log('[PLAYERS] Готово, отображаем игроков');
-    init();
-  });
-
-  // Перерендериваем когда Supabase вернул свежие данные
+  // Ждём свежих данных из Supabase (db-updated), не используем кэш
+  let playersInited = false;
   window.addEventListener('db-updated', () => {
-    console.log('[PLAYERS] db-updated — обновляем список');
-    populateTeamFilter();
-    renderPlayers();
+    if (!playersInited) {
+      init();
+      playersInited = true;
+    } else {
+      populateTeamFilter();
+      renderPlayers();
+    }
   });
+
+  // Запасной вариант если db-updated не пришёл за 5 сек
+  setTimeout(() => {
+    if (!playersInited && window._dbReady) { init(); playersInited = true; }
+  }, 5000);
 
   function init() {
     const players = DB.get('pl_players');

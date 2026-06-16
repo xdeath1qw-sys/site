@@ -3,30 +3,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let initialized = false;
 
-  function tryInit() {
-    if (window._dbReady) {
-      init();
-      initialized = true;
-    } else {
-      setTimeout(tryInit, 100);
-    }
-  }
-  tryInit();
-
-  // Перерисовываем всё при обновлении данных из Supabase
+  // Запускаем init только после получения свежих данных из Supabase
   window.addEventListener('db-updated', () => {
     if (!initialized) {
       init();
       initialized = true;
     } else {
-      // Обновляем счётчики и контент
       const heroTeams   = document.getElementById('heroTeams');
       const heroPlayers = document.getElementById('heroPlayers');
       const heroNews    = document.getElementById('heroNews');
       if (heroTeams)   animateCounter('heroTeams',   DB.get('pl_teams').length);
       if (heroPlayers) animateCounter('heroPlayers', DB.get('pl_players').length);
       if (heroNews)    animateCounter('heroNews',    DB.get('pl_news').length);
-      // Перерендериваем списки со свежими данными
       if (typeof _renderHomeAll === 'function') _renderHomeAll();
     }
   });

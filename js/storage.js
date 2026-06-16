@@ -778,7 +778,7 @@ window._afterSync = function() {
   // Чистка сиротских игроков отключена
   // _cleanOrphanPlayers();
 
-  // Быстрый синк каждые 45 сек — только критичные данные (3 запроса)
+  // Синк каждые 3 минуты — только критичные данные (экономим запросы Supabase)
   setInterval(async () => {
     try {
       const [users, players, teams] = await Promise.all([
@@ -791,9 +791,9 @@ window._afterSync = function() {
       lsSet('pl_teams',   teams.map(teamFromSB));
       window.dispatchEvent(new CustomEvent('db-updated'));
     } catch(e) { /* тихая ошибка */ }
-  }, 45000);
+  }, 180000);
 
-  // Медленный синк каждые 2 мин — новости/матчи/турниры (не критично)
+  // Новости/матчи/турниры — раз в 10 минут
   setInterval(async () => {
     try {
       const [news, tournaments, matches] = await Promise.all([
@@ -805,7 +805,7 @@ window._afterSync = function() {
       lsSet('pl_tournaments', tournaments.map(tournFromSB));
       lsSet('pl_matches',     matches.map(matchFromSB));
     } catch(e) { /* тихая ошибка */ }
-  }, 120000);
+  }, 600000);
 };
 
 // Заглушки

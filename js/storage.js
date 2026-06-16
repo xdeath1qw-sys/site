@@ -281,7 +281,24 @@ function lsGet(key) {
   try { return JSON.parse(localStorage.getItem(key)); } catch { return null; }
 }
 function lsSet(key, val) {
-  try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {}
+  try {
+    localStorage.setItem(key, JSON.stringify(val));
+  } catch(e) {
+    // localStorage переполнен — чистим старые данные и пробуем снова
+    console.warn('[DB] ⚠️ localStorage full, clearing old data...');
+    try {
+      // Удаляем только некритичные ключи
+      ['pl_highlights', 'pl_awards', 'pl_notifications', 'pl_invites'].forEach(k => localStorage.removeItem(k));
+      localStorage.setItem(key, JSON.stringify(val));
+    } catch(e2) {
+      // Если всё равно не помогло — чистим всё кроме сессии
+      console.error('[DB] ❌ localStorage critically full, clearing all cache');
+      const session = localStorage.getItem('pl_session');
+      localStorage.clear();
+      if (session) localStorage.setItem('pl_session', session);
+      try { localStorage.setItem(key, JSON.stringify(val)); } catch(e3) {}
+    }
+  }
 }
 
 // ── Загрузка всех данных из Supabase ───────────────────────────

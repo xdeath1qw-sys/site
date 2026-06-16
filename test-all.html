@@ -1,0 +1,216 @@
+﻿<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Полное тестирование — EFL League</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .test-page { padding: 120px 24px 80px; min-height: 100vh; }
+    .test-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+    .test-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 16px; color: var(--primary); }
+    .test-item { padding: 8px 12px; background: var(--bg-secondary); border-radius: 8px; margin-bottom: 8px; font-family: monospace; font-size: 0.85rem; }
+    .test-pass { border-left: 4px solid var(--success); }
+    .test-fail { border-left: 4px solid var(--danger); }
+    .test-warn { border-left: 4px solid var(--warning); }
+    .test-button { margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <div class="test-page container">
+    <h1>?? Полное тестирование системы</h1>
+    <p style="color: var(--text-muted); margin-bottom: 32px;">Автоматическая проверка всех компонентов</p>
+
+    <div id="testResults"></div>
+
+    <button class="btn btn-primary" onclick="runAllTests()">
+      <i class="fas fa-play"></i> Запустить все тесты
+    </button>
+    
+    <button class="btn btn-outline" onclick="location.reload()">
+      <i class="fas fa-sync"></i> Перезапустить
+    </button>
+  </div>
+
+  <script src="js/storage.js?v=6"></script>
+  <script src="js/auth.js?v=6"></script>
+  
+  <script>
+    const results = [];
+
+    function addResult(category, name, status, message) {
+      results.push({ category, name, status, message });
+    }
+
+    function renderResults() {
+      const container = document.getElementById('testResults');
+      const grouped = {};
+      
+      results.forEach(r => {
+        if (!grouped[r.category]) grouped[r.category] = [];
+        grouped[r.category].push(r);
+      });
+
+      let html = '';
+      Object.keys(grouped).forEach(cat => {
+        const items = grouped[cat];
+        const passCount = items.filter(i => i.status === 'pass').length;
+        const failCount = items.filter(i => i.status === 'fail').length;
+        
+        html += `
+          <div class="test-section">
+            <div class="test-title">
+              ${cat} 
+              <span style="font-size: 0.85rem; font-weight: 400;">
+                (? ${passCount} / ? ${failCount})
+              </span>
+            </div>
+            ${items.map(item => {
+              const icon = item.status === 'pass' ? '?' : item.status === 'fail' ? '?' : '??';
+              return `<div class="test-item test-${item.status}">${icon} ${item.name}: ${item.message}</div>`;
+            }).join('')}
+          </div>`;
+      });
+
+      container.innerHTML = html;
+    }
+
+    async function runAllTests() {
+      results.length = 0;
+      document.getElementById('testResults').innerHTML = '<p>Выполнение тестов...</p>';
+
+      // 1. Supabase
+      testFirebase();
+      
+      // 2. localStorage
+      testLocalStorage();
+      
+      // 3. Данные
+      testData();
+      
+      // 4. Аутентификация
+      testAuth();
+      
+      // 5. Функции
+      testFunctions();
+
+      // Ждём Supabase
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      
+      renderResults();
+    }
+
+    function testFirebase() {
+      addResult('Supabase', 'Готовность', 
+        window._dbReady ? 'pass' : 'fail',
+        window._dbReady ? 'Supabase готов' : 'Supabase НЕ готов'
+      );
+
+      addResult('Supabase', 'Client', 
+        window._supabase ? 'pass' : 'fail',
+        window._supabase ? 'Supabase client инициализирован' : 'Supabase client НЕ инициализирован'
+      );
+    }
+
+    function testLocalStorage() {
+      try {
+        localStorage.setItem('test', 'ok');
+        localStorage.removeItem('test');
+        addResult('localStorage', 'Доступность', 'pass', 'localStorage работает');
+      } catch(e) {
+        addResult('localStorage', 'Доступность', 'fail', 'localStorage НЕ работает: ' + e.message);
+      }
+
+      const keys = ['pl_users', 'pl_teams', 'pl_players', 'pl_matches'];
+      keys.forEach(key => {
+        const exists = localStorage.getItem(key) !== null;
+        addResult('localStorage', `Ключ ${key}`, 
+          exists ? 'pass' : 'warn',
+          exists ? 'Существует' : 'Отсутствует'
+        );
+      });
+    }
+
+    function testData() {
+      const users = DB.get('pl_users');
+      addResult('Данные', 'Пользователи', 
+        users.length > 0 ? 'pass' : 'fail',
+        `Найдено: ${users.length}`
+      );
+
+      const players = DB.get('pl_players');
+      addResult('Данные', 'Игроки', 
+        players.length > 0 ? 'pass' : 'warn',
+        `Найдено: ${players.length}`
+      );
+
+      const teams = DB.get('pl_teams');
+      addResult('Данные', 'Команды', 
+        teams.length >= 0 ? 'pass' : 'fail',
+        `Найдено: ${teams.length}`
+      );
+
+      // Синхронизация пользователей с игроками
+      const orphanUsers = users.filter(u => 
+        !players.find(p => p.userId === u.id)
+      );
+      addResult('Данные', 'Синхронизация users/players', 
+        orphanUsers.length === 0 ? 'pass' : 'warn',
+        orphanUsers.length === 0 
+          ? 'Все пользователи имеют игроков' 
+          : `${orphanUsers.length} пользователей без игроков: ${orphanUsers.map(u => u.username).join(', ')}`
+      );
+    }
+
+    function testAuth() {
+      const session = Auth.current();
+      addResult('Аутентификация', 'Текущая сессия', 
+        session ? 'pass' : 'warn',
+        session ? `Вход выполнен: ${session.username} (${session.role})` : 'Вход не выполнен'
+      );
+
+      if (session) {
+        const users = DB.get('pl_users');
+        const userExists = users.find(u => u.id === session.id);
+        addResult('Аутентификация', 'Пользователь в БД', 
+          userExists ? 'pass' : 'fail',
+          userExists ? 'Пользователь найден' : 'Пользователь НЕ найден в базе!'
+        );
+      }
+
+      addResult('Аутентификация', 'Функция Auth.login', 
+        typeof Auth.login === 'function' ? 'pass' : 'fail',
+        typeof Auth.login === 'function' ? 'Существует' : 'НЕ существует'
+      );
+
+      addResult('Аутентификация', 'Функция Auth.logout', 
+        typeof Auth.logout === 'function' ? 'pass' : 'fail',
+        typeof Auth.logout === 'function' ? 'Существует' : 'НЕ существует'
+      );
+    }
+
+    function testFunctions() {
+      const functions = [
+        { name: 'DB.get', fn: DB.get },
+        { name: 'DB.set', fn: DB.set },
+        { name: 'emergencyBackupToSupabase', fn: window.emergencyBackupToSupabase },
+        { name: 'showDataStatus', fn: window.showDataStatus },
+        { name: 'syncUsersToPlayers', fn: window.syncUsersToPlayers },
+        { name: 'showSyncIndicator', fn: window.showSyncIndicator },
+      ];
+
+      functions.forEach(({ name, fn }) => {
+        addResult('Функции', name, 
+          typeof fn === 'function' ? 'pass' : 'fail',
+          typeof fn === 'function' ? 'Доступна' : 'НЕ доступна'
+        );
+      });
+    }
+
+    // Автозапуск при загрузке
+    window.addEventListener('load', () => {
+      setTimeout(() => runAllTests(), 1000);
+    });
+  </script>
+</body>
+</html>

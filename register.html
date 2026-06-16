@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Регистрация — EFL League</title>
+  <link rel="icon" type="image/svg+xml" href="efl-logo.svg" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><img class="logo-img" src="efl-logo.svg" alt="EFL"> EFL League</a>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon" id="themeIcon"></i></button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <i class="fas fa-bolt"></i>
+        <span>EFL League</span>
+      </div>
+      <h2>Создать аккаунт</h2>
+      <p class="auth-subtitle">Присоединяйтесь к сообществу</p>
+
+      <div class="alert" id="regAlert" style="display:none"></div>
+
+      <form id="registerForm">
+        <div class="form-group">
+          <label><i class="fas fa-user"></i> Никнейм</label>
+          <input type="text" id="regUsername" placeholder="Ваш никнейм" required minlength="3" />
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-envelope"></i> Email</label>
+          <input type="email" id="regEmail" placeholder="your@email.com" required />
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-lock"></i> Пароль</label>
+          <div class="input-with-icon">
+            <input type="password" id="regPassword" placeholder="Минимум 6 символов" required minlength="6" />
+            <button type="button" class="toggle-pass" id="togglePass"><i class="fas fa-eye"></i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-lock"></i> Повторите пароль</label>
+          <input type="password" id="regPassword2" placeholder="Повторите пароль" required />
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">
+          <i class="fas fa-user-plus"></i> Зарегистрироваться
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <p>Уже есть аккаунт? <a href="login.html">Войти</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/storage.js?v=6"></script>
+  <script src="js/discord.js"></script>
+  <script>
+    const Auth = {
+      current() { try { const d = localStorage.getItem('pl_current'); return d ? JSON.parse(d) : null; } catch { return null; } },
+      login(user) { localStorage.setItem('pl_current', JSON.stringify(user)); },
+      logout() { localStorage.removeItem('pl_current'); }
+    };
+  </script>
+  <script src="js/theme.js"></script>
+  <script src="js/register.js"></script>
+</body>
+</html>

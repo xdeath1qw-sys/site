@@ -1,0 +1,364 @@
+﻿                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  <!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Турниры — EFL League</title>
+  <link rel="icon" type="image/svg+xml" href="efl-logo.svg" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    /* -- TOURNAMENTS -- */
+    .tournaments-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .tournament-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s;
+      position: relative;
+    }
+    .tournament-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      transition: opacity 0.3s;
+      opacity: 0;
+    }
+    .tournament-card.status-upcoming::before { background: linear-gradient(90deg, #FFB300, #FF6B00); }
+    .tournament-card.status-ongoing::before  { background: linear-gradient(90deg, var(--success), #00B0FF); }
+    .tournament-card.status-finished::before { background: linear-gradient(90deg, var(--text-dim), var(--text-muted)); }
+    .tournament-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); border-color: var(--border-active); background: var(--bg-card-hover); }
+    .tournament-card:hover::before { opacity: 1; }
+
+    .tournament-banner {
+      height: 120px;
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-card) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .tournament-banner i { font-size: 3.5rem; color: var(--primary); opacity: 0.35; }
+    .tournament-banner-img { background: #000; }
+    .tournament-banner-img i { display: none; }
+
+    .tournament-status-badge {
+      position: absolute;
+      top: 12px; right: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .badge-upcoming { background: rgba(255,179,0,0.15); border: 1px solid rgba(255,179,0,0.4); color: #FFB300; }
+    .badge-ongoing  { background: rgba(0,230,118,0.12); border: 1px solid rgba(0,230,118,0.4); color: var(--success); }
+    .badge-finished { background: rgba(123,125,157,0.12); border: 1px solid rgba(123,125,157,0.3); color: var(--text-muted); }
+
+    .tournament-body { padding: 20px; }
+    .tournament-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
+    .tournament-game { font-size: 0.78rem; color: var(--accent); font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+    .tournament-info-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .t-info-item { display: flex; flex-direction: column; gap: 2px; }
+    .t-info-label { font-size: 0.68rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.6px; font-weight: 600; }
+    .t-info-value { font-size: 0.85rem; color: var(--text); font-weight: 600; }
+    .t-info-value.prize { color: #FFB300; }
+
+    .tournament-teams-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    .tournament-teams-row i { color: var(--primary); }
+
+    .countdown {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .countdown-label { font-size: 0.72rem; color: var(--text-muted); margin-right: 4px; }
+    .countdown-block {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 8px;
+      text-align: center;
+      min-width: 42px;
+    }
+    .countdown-num { font-size: 1rem; font-weight: 800; color: var(--primary); display: block; line-height: 1.2; }
+    .countdown-unit { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+    .countdown-sep { color: var(--text-dim); font-weight: 700; margin: 0 -2px; align-self: flex-start; margin-top: 6px; }
+
+    /* Status tabs */
+    .status-tab { display: flex; align-items: center; gap: 6px; }
+    .status-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-upcoming { background: #FFB300; }
+    .dot-ongoing  { background: var(--success); box-shadow: 0 0 6px var(--success); animation: pulse-dot 1.4s infinite; }
+    .dot-finished { background: var(--text-muted); }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+
+    .no-tournaments {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-dim);
+    }
+    .no-tournaments i { font-size: 3rem; margin-bottom: 14px; display: block; }
+
+    /* -- Registration button -- */
+    .tourn-reg-row {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .btn-reg-done {
+      background: rgba(0, 230, 118, 0.1);
+      border: 1.5px solid rgba(0, 230, 118, 0.4);
+      color: var(--success);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 9px 16px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .btn-reg-done:hover {
+      background: rgba(255, 71, 87, 0.1);
+      border-color: rgba(255, 71, 87, 0.4);
+      color: var(--danger);
+    }
+    .btn-reg-done:hover::before {
+      content: 'Отменить ';
+    }
+    .btn-reg-done:hover i {
+      display: none;
+    }
+    .tourn-reg-count {
+      background: rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 1px 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-left: 4px;
+    }
+
+    /* Блок «нет команды / не капитан» */
+    .tourn-no-team {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 10px;
+      background: rgba(123,125,157,0.08);
+      border: 1.5px solid rgba(123,125,157,0.2);
+      color: var(--text-dim);
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+    .tourn-no-team i { flex-shrink: 0; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><img class="logo-img" src="efl-logo.svg" alt="EFL"> EFL League</a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html"><i class="fas fa-home"></i> Главная</a></li>
+        <li><a href="teams.html"><i class="fas fa-shield-halved"></i> Команды</a></li>
+        <li><a href="players.html"><i class="fas fa-users"></i> Игроки</a></li>
+        <li><a href="news.html"><i class="fas fa-newspaper"></i> Новости</a></li>
+        <li><a href="tournaments.html" class="active"><i class="fas fa-trophy"></i> Турниры</a></li>
+
+      </ul>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon" id="themeIcon"></i></button>
+        <div id="authButtons">
+          <a href="login.html" class="btn btn-outline">Войти</a>
+          <a href="register.html" class="btn btn-primary">Регистрация</a>
+        </div>
+        <div id="userMenu" style="display:none" class="user-menu">
+          <div class="user-avatar" id="userAvatarNav"><i class="fas fa-user"></i></div>
+          <div class="user-dropdown" id="userDropdown">
+            <a href="profile.html"><i class="fas fa-id-card"></i> Профиль</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+          </div>
+        </div>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="container">
+      <h1><i class="fas fa-trophy"></i> Турниры</h1>
+      <p>Предстоящие и текущие соревнования по CS2</p>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <section class="section">
+    <div class="container">
+
+      <!-- Filter bar -->
+      <div class="filter-bar">
+        <div class="tier-tabs" id="statusTabs">
+          <button class="tier-tab active" data-status="all">Все</button>
+          <button class="tier-tab" data-status="upcoming">
+            <span class="status-dot dot-upcoming"></span> Предстоящие
+          </button>
+          <button class="tier-tab" data-status="ongoing">
+            <span class="status-dot dot-ongoing"></span> Идут сейчас
+          </button>
+          <button class="tier-tab" data-status="finished">
+            <span class="status-dot dot-finished"></span> Завершены
+          </button>
+        </div>
+        <div style="margin-left:auto;">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="tournamentSearch" placeholder="Поиск турнира..." />
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div class="tournaments-grid" id="tournamentsGrid"></div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <a href="index.html" class="nav-logo"><img class="logo-img" src="efl-logo.svg" alt="EFL"> EFL League</a>
+          <p>Лучший портал о киберспорте. Следите за командами, игроками и новостями.</p>
+          <div class="footer-socials">
+            <a href="https://t.me/EFLcs2" target="_blank" rel="noopener" title="Telegram"><i class="fab fa-telegram"></i></a>
+            <a href="https://discord.gg/kCs9xAcq" target="_blank" rel="noopener" title="Discord"><i class="fab fa-discord"></i></a>
+  <a href="https://www.twitch.tv/eflcs" target="_blank" rel="noopener" title="Twitch"><i class="fab fa-twitch"></i></a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <h4>Навигация</h4>
+          <ul>
+            <li><a href="teams.html">Команды</a></li>
+            <li><a href="players.html">Игроки</a></li>
+            <li><a href="news.html">Новости</a></li>
+            <li><a href="tournaments.html">Турниры</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Аккаунт</h4>
+          <ul>
+            <li><a href="login.html">Войти</a></li>
+            <li><a href="register.html">Регистрация</a></li>
+            <li><a href="profile.html">Профиль</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom"><p>&copy; 2026 EFL League. Все права защищены.</p></div>
+    </div>
+  </footer>
+
+  <!-- === MODAL: RESULTS === -->
+  <div class="modal-overlay" id="teamResultsModal" style="display:none" onclick="if(event.target===this)closeResultsModal()">
+    <div class="modal" style="max-width:460px">
+      <button class="modal-close" onclick="closeResultsModal()"><i class="fas fa-times"></i></button>
+      <h2 style="margin-bottom:6px"><i class="fas fa-chart-line" style="color:var(--primary)"></i> Результаты матчей</h2>
+      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:20px">Команда сыграла <strong id="resultsMatchCount">5</strong> матчей. Укажите сколько было побед:</p>
+
+      <div class="form-group">
+        <label><i class="fas fa-trophy"></i> Побед из <span id="resultsOf">5</span></label>
+        <input type="number" id="resultsWins" min="0" max="5" value="0" oninput="updateResultsPreview()" />
+      </div>
+
+      <div class="results-preview" id="resultsPreview">
+        <div class="res-item win"><i class="fas fa-check"></i> Победы: <strong id="resWinsVal">0</strong></div>
+        <div class="res-item loss"><i class="fas fa-times"></i> Поражения: <strong id="resLossesVal">5</strong></div>
+        <div class="res-item wr"><i class="fas fa-chart-pie"></i> Winrate: <strong id="resWrVal">0%</strong></div>
+      </div>
+
+      <div class="form-actions" style="margin-top:20px">
+        <button class="btn btn-primary" onclick="saveTeamResults()"><i class="fas fa-save"></i> Сохранить</button>
+        <button class="btn btn-outline" onclick="closeResultsModal()"><i class="fas fa-times"></i> Позже</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-overlay" id="tournRegModal" style="display:none" onclick="if(event.target===this)closeTournRegModal()">
+    <div class="modal" style="max-width:540px">
+      <button class="modal-close" onclick="closeTournRegModal()"><i class="fas fa-times"></i></button>
+      <h2 style="margin-bottom:6px"><i class="fas fa-paper-plane" style="color:var(--primary)"></i> Регистрация на турнир</h2>
+      <p id="tournRegModalName" style="color:var(--text-muted);font-size:0.88rem;margin-bottom:24px"></p>
+
+      <div class="alert alert-error" id="tournRegAlert" style="display:none"></div>
+
+      <!-- Состав (капитан + 4 игрока) -->
+      <div id="tournRegRosterWrap" style="display:none">
+        <div class="tourn-reg-team-header" id="tournRegTeamDisplay"></div>
+        <label style="display:block;margin:14px 0 8px;font-weight:600;font-size:0.88rem">
+          <i class="fas fa-users"></i> Состав — капитан + выберите 4 игрока
+          <span id="tournRegRosterCount" style="margin-left:8px;color:var(--text-muted);font-weight:400">1 / 5</span>
+        </label>
+        <div id="tournRegPlayerList" style="display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto;padding-right:4px"></div>
+      </div>
+
+      <input type="hidden" id="tournRegTeamSelect" />
+
+      <div class="form-actions" style="margin-top:20px">
+        <button class="btn btn-primary" id="tournRegConfirmBtn" onclick="confirmTournReg()">
+          <i class="fas fa-paper-plane"></i> Зарегистрировать
+        </button>
+        <button class="btn btn-outline" onclick="closeTournRegModal()">
+          <i class="fas fa-times"></i> Отмена
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/storage.js?v=6"></script>
+  <script src="js/auth.js?v=6"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/tournaments.js"></script>
+</body>
+</html>

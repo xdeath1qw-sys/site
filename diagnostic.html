@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Диагностика — EFL League</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .diag-page { padding: 120px 24px 80px; min-height: 100vh; }
+    .diag-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+    .diag-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 16px; color: var(--primary); }
+    .diag-item { padding: 12px; background: var(--bg-secondary); border-radius: 8px; margin-bottom: 8px; font-family: monospace; font-size: 0.85rem; }
+    .diag-ok { color: var(--success); }
+    .diag-error { color: var(--danger); }
+    .diag-warn { color: var(--warning); }
+  </style>
+</head>
+<body>
+  <div class="diag-page container">
+    <h1>?? Диагностика системы</h1>
+    
+    <div class="diag-box">
+      <div class="diag-title">?? Статус данных</div>
+      <div id="dataStatus">Загрузка...</div>
+    </div>
+
+    <div class="diag-box">
+      <div class="diag-title">?? Firebase</div>
+      <div id="firebaseStatus">Проверка...</div>
+    </div>
+
+    <div class="diag-box">
+      <div class="diag-title">?? Текущая сессия</div>
+      <div id="sessionStatus">Проверка...</div>
+    </div>
+
+    <div class="diag-box">
+      <div class="diag-title">?? Игроки</div>
+      <div id="playersStatus">Проверка...</div>
+    </div>
+
+    <div class="diag-box">
+      <div class="diag-title">?? Логи консоли</div>
+      <div id="consoleLogs" style="max-height: 400px; overflow-y: auto;"></div>
+    </div>
+
+    <button class="btn btn-primary" onclick="location.reload()">
+      <i class="fas fa-sync"></i> Обновить диагностику
+    </button>
+  </div>
+
+  <script src="js/storage.js?v=6"></script>
+  <script src="js/auth.js?v=6"></script>
+  
+  <script>
+    const logs = [];
+    const originalLog = console.log;
+    const originalWarn = console.warn;
+    const originalError = console.error;
+
+    console.log = function(...args) {
+      logs.push({ type: 'log', msg: args.join(' '), time: new Date().toLocaleTimeString() });
+      originalLog.apply(console, args);
+      updateConsoleLogs();
+    };
+    console.warn = function(...args) {
+      logs.push({ type: 'warn', msg: args.join(' '), time: new Date().toLocaleTimeString() });
+      originalWarn.apply(console, args);
+      updateConsoleLogs();
+    };
+    console.error = function(...args) {
+      logs.push({ type: 'error', msg: args.join(' '), time: new Date().toLocaleTimeString() });
+      originalError.apply(console, args);
+      updateConsoleLogs();
+    };
+
+    function updateConsoleLogs() {
+      const el = document.getElementById('consoleLogs');
+      el.innerHTML = logs.slice(-20).map(log => {
+        const className = log.type === 'error' ? 'diag-error' : log.type === 'warn' ? 'diag-warn' : '';
+        return `<div class="diag-item ${className}">[${log.time}] ${log.msg}</div>`;
+      }).join('');
+      el.scrollTop = el.scrollHeight;
+    }
+
+    function checkData() {
+      const dataEl = document.getElementById('dataStatus');
+      const keys = ['pl_users', 'pl_teams', 'pl_players', 'pl_matches', 'pl_news'];
+      
+      let html = '';
+      keys.forEach(key => {
+        const data = DB.get(key);
+        const count = Array.isArray(data) ? data.length : 0;
+        const status = count > 0 ? 'diag-ok' : 'diag-warn';
+        html += `<div class="diag-item ${status}">${key}: ${count} записей</div>`;
+      });
+      
+      dataEl.innerHTML = html;
+    }
+
+    function checkFirebase() {
+      const el = document.getElementById('firebaseStatus');
+      setTimeout(() => {
+        if (window._fbReady) {
+          el.innerHTML = '<div class="diag-item diag-ok">? Firebase готов</div>';
+        } else {
+          el.innerHTML = '<div class="diag-item diag-error">? Firebase не загружен</div>';
+        }
+      }, 2000);
+    }
+
+    function checkSession() {
+      const el = document.getElementById('sessionStatus');
+      const user = Auth.current();
+      if (user) {
+        el.innerHTML = `
+          <div class="diag-item diag-ok">? Вход выполнен</div>
+          <div class="diag-item">ID: ${user.id}</div>
+          <div class="diag-item">Username: ${user.username}</div>
+          <div class="diag-item">Email: ${user.email}</div>
+          <div class="diag-item">Role: ${user.role}</div>
+        `;
+      } else {
+        el.innerHTML = '<div class="diag-item diag-warn">?? Вход не выполнен</div>';
+      }
+    }
+
+    function checkPlayers() {
+      const el = document.getElementById('playersStatus');
+      const players = DB.get('pl_players');
+      const users = DB.get('pl_users');
+      
+      let html = `<div class="diag-item">Всего игроков: ${players.length}</div>`;
+      html += `<div class="diag-item">Всего пользователей: ${users.length}</div>`;
+      
+      if (players.length === 0 && users.length > 0) {
+        html += '<div class="diag-item diag-error">? Игроки не созданы для пользователей!</div>';
+        html += '<div class="diag-item">Исправление: обновите страницу или вызовите syncUsersToPlayers()</div>';
+      } else if (players.length > 0) {
+        html += '<div class="diag-item diag-ok">? Игроки найдены</div>';
+        players.slice(0, 5).forEach(p => {
+          html += `<div class="diag-item">?? ${p.nick} (ID: ${p.id})</div>`;
+        });
+      }
+      
+      el.innerHTML = html;
+    }
+
+    // Запускаем проверки
+    setTimeout(() => {
+      checkData();
+      checkFirebase();
+      checkSession();
+      checkPlayers();
+    }, 1000);
+
+    setInterval(() => {
+      checkData();
+      checkPlayers();
+    }, 3000);
+  </script>
+</body>
+</html>

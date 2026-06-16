@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Новости — EFL League</title>
+  <link rel="icon" type="image/svg+xml" href="efl-logo.svg" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><img class="logo-img" src="efl-logo.svg" alt="EFL"> EFL League</a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html"><i class="fas fa-home"></i> Главная</a></li>
+        <li><a href="teams.html"><i class="fas fa-shield-halved"></i> Команды</a></li>
+        <li><a href="players.html"><i class="fas fa-users"></i> Игроки</a></li>
+        <li><a href="news.html" class="active"><i class="fas fa-newspaper"></i> Новости</a></li>
+        <li><a href="tournaments.html"><i class="fas fa-trophy"></i> Турниры</a></li>
+
+      </ul>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon" id="themeIcon"></i></button>
+        <div id="authButtons">
+          <a href="login.html" class="btn btn-outline">Войти</a>
+          <a href="register.html" class="btn btn-primary">Регистрация</a>
+        </div>
+        <div id="userMenu" style="display:none" class="user-menu">
+          <div class="user-avatar" id="userAvatarNav"><i class="fas fa-user"></i></div>
+          <div class="user-dropdown" id="userDropdown">
+            <a href="profile.html"><i class="fas fa-id-card"></i> Профиль</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+          </div>
+        </div>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1><i class="fas fa-newspaper"></i> Новости</h1>
+      <p>Актуальные новости киберспортивного мира</p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="filter-bar">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" id="newsSearch" placeholder="Поиск новостей..." />
+        </div>
+      </div>
+      <div class="news-grid full-grid" id="newsGrid"></div>
+    </div>
+  </section>
+
+  <!-- NEWS MODAL -->
+  <div class="modal-overlay" id="newsModal">
+    <div class="modal modal-news">
+      <button class="modal-close" id="newsModalClose"><i class="fas fa-times"></i></button>
+      <div id="newsModalContent"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <a href="index.html" class="nav-logo"><img class="logo-img" src="efl-logo.svg" alt="EFL"> EFL League</a>
+          <p>Лучший портал о киберспорте. Следите за командами, игроками и новостями.</p>
+          <div class="footer-socials">
+            <a href="https://t.me/EFLcs2" target="_blank" rel="noopener" title="Telegram"><i class="fab fa-telegram"></i></a>
+            <a href="https://discord.gg/kCs9xAcq" target="_blank" rel="noopener" title="Discord"><i class="fab fa-discord"></i></a>
+  <a href="https://www.twitch.tv/eflcs" target="_blank" rel="noopener" title="Twitch"><i class="fab fa-twitch"></i></a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <h4>Навигация</h4>
+          <ul>
+            <li><a href="teams.html">Команды</a></li>
+            <li><a href="players.html">Игроки</a></li>
+            <li><a href="news.html">Новости</a></li>
+            <li><a href="tournaments.html">Турниры</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Аккаунт</h4>
+          <ul>
+            <li><a href="login.html">Войти</a></li>
+            <li><a href="register.html">Регистрация</a></li>
+            <li><a href="profile.html">Профиль</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom"><p>&copy; 2026 EFL League. Все права защищены.</p></div>
+    </div>
+  </footer>
+
+  <script src="js/storage.js?v=6"></script>
+  <script src="js/auth.js?v=6"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/news.js"></script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EFL League — Киберспортивный портал</title>
+  <link rel="icon" type="image/svg+xml" href="efl-logo.svg" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <img class="logo-img" src="efl-logo.svg" alt="EFL"> EFL League
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="active"><i class="fas fa-home"></i> Главная</a></li>
+        <li><a href="teams.html"><i class="fas fa-shield-halved"></i> Команды</a></li>
+        <li><a href="players.html"><i class="fas fa-users"></i> Игроки</a></li>
+        <li><a href="news.html"><i class="fas fa-newspaper"></i> Новости</a></li>
+        <li><a href="tournaments.html"><i class="fas fa-trophy"></i> Турниры</a></li>
+
+      </ul>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" title="Сменить тему">
+          <i class="fas fa-moon" id="themeIcon"></i>
+        </button>
+        <div id="authButtons">
+          <a href="login.html" class="btn btn-outline">Войти</a>
+          <a href="register.html" class="btn btn-primary">Регистрация</a>
+        </div>
+        <div id="userMenu" style="display:none" class="user-menu">
+          <div class="user-avatar" id="userAvatarNav">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="user-dropdown" id="userDropdown">
+            <a href="profile.html"><i class="fas fa-id-card"></i> Профиль</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+          </div>
+        </div>
+        <button class="hamburger" id="hamburger">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-badge"><i class="fas fa-trophy"></i> Сезон 2026</div>
+      <h1>Добро пожаловать в <span class="gradient-text">EFL League</span></h1>
+      <p>Следите за лучшими командами, топ-игроками и свежими новостями киберспортивного мира</p>
+      <div class="hero-buttons">
+        <a href="teams.html" class="btn btn-primary btn-lg"><i class="fas fa-shield-halved"></i> Смотреть команды</a>
+        <a href="news.html" class="btn btn-outline btn-lg"><i class="fas fa-newspaper"></i> Новости</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="stat-num" id="heroTeams">0</span>
+        <span class="stat-label">Команд</span>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-num" id="heroPlayers">0</span>
+        <span class="stat-label">Игроков</span>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-num" id="heroNews">0</span>
+        <span class="stat-label">Новостей</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- HIGHLIGHTS -->
+  <section class="section highlights-section">
+    <div class="container">
+      <div class="section-header">
+        <h2><i class="fas fa-film"></i> Хайлайты</h2>
+        <span class="hl-sub">Лучшие моменты игроков</span>
+      </div>
+      <div class="hl-track" id="highlightsGrid"></div>
+    </div>
+  </section>
+
+  <!-- LATEST NEWS -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-header">
+        <h2><i class="fas fa-rss"></i> Последние новости</h2>
+        <a href="news.html" class="btn btn-outline btn-sm">Все новости <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div class="news-grid" id="homeNewsGrid"></div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <a href="index.html" class="nav-logo"><img class="logo-img" src="efl-logo.svg" alt="EFL"> EFL League</a>
+          <p>Лучший портал о киберспорте. Следите за командами, игроками и новостями.</p>
+          <div class="footer-socials">
+            <a href="https://t.me/EFLcs2" target="_blank" rel="noopener" title="Telegram"><i class="fab fa-telegram"></i></a>
+            <a href="https://discord.gg/kCs9xAcq" target="_blank" rel="noopener" title="Discord"><i class="fab fa-discord"></i></a>
+  <a href="https://www.twitch.tv/eflcs" target="_blank" rel="noopener" title="Twitch"><i class="fab fa-twitch"></i></a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <h4>Навигация</h4>
+          <ul>
+            <li><a href="teams.html">Команды</a></li>
+            <li><a href="players.html">Игроки</a></li>
+            <li><a href="news.html">Новости</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Аккаунт</h4>
+          <ul>
+            <li><a href="login.html">Войти</a></li>
+            <li><a href="register.html">Регистрация</a></li>
+            <li><a href="profile.html">Профиль</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 EFL League. Все права защищены.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/storage.js?v=6"></script>
+  <script src="js/auth.js?v=6"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/match-notifications.js"></script>
+  <script src="js/home.js?v=5"></script>
+  <script src="js/highlights.js"></script>
+
+  <!-- Highlight modal -->
+  <div id="hlModal" class="hl-modal-overlay" style="display:none" onclick="hlModalClose(event)">
+    <div class="hl-modal-box">
+      <button class="hl-modal-close" onclick="hlModalClose()"><i class="fas fa-times"></i></button>
+      <video id="hlModalVideo" controls playsinline></video>
+      <div class="hl-modal-footer">
+        <div class="hl-avatar" id="hlModalAvatar">?</div>
+        <div class="hl-meta">
+          <span class="hl-nick" id="hlModalNick"></span>
+          <span class="hl-label" id="hlModalLabel"></span>
+        </div>
+        <div class="hl-kd-badge" id="hlModalKd" style="position:static;margin-left:auto"></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

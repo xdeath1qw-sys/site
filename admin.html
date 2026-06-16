@@ -1,0 +1,690 @@
+﻿<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Админ панель — EFL League</title>
+  <link rel="icon" type="image/svg+xml" href="efl-logo.svg" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><img class="logo-img" src="efl-logo.svg" alt="EFL"> EFL League</a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html"><i class="fas fa-home"></i> Главная</a></li>
+        <li><a href="teams.html"><i class="fas fa-shield-halved"></i> Команды</a></li>
+        <li><a href="players.html"><i class="fas fa-users"></i> Игроки</a></li>
+        <li><a href="news.html"><i class="fas fa-newspaper"></i> Новости</a></li>
+        <li><a href="tournaments.html"><i class="fas fa-trophy"></i> Турниры</a></li>
+        <li><a href="admin.html" class="active"><i class="fas fa-cog"></i> Админ</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon" id="themeIcon"></i></button>
+        <div id="userMenu" style="display:none" class="user-menu">
+          <div class="user-avatar" id="userAvatarNav"><i class="fas fa-user"></i></div>
+          <div class="user-dropdown" id="userDropdown">
+            <a href="profile.html"><i class="fas fa-id-card"></i> Профиль</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+          </div>
+        </div>
+        <div id="authButtons" style="display:none"></div>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="admin-layout">
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-header">
+        <i class="fas fa-shield-halved"></i>
+        <span>Панель управления</span>
+      </div>
+      <nav class="admin-nav">
+        <button class="admin-nav-btn active" data-panel="dashboard">
+          <i class="fas fa-chart-pie"></i> Обзор
+        </button>
+        <button class="admin-nav-btn" data-panel="teams">
+          <i class="fas fa-shield-halved"></i> Команды
+        </button>
+        <button class="admin-nav-btn" data-panel="news">
+          <i class="fas fa-newspaper"></i> Новости
+        </button>
+        <button class="admin-nav-btn" data-panel="users">
+          <i class="fas fa-users"></i> Игроки
+        </button>
+        <button class="admin-nav-btn" data-panel="tournaments">
+          <i class="fas fa-trophy"></i> Турниры
+        </button>
+        <button class="admin-nav-btn" data-panel="highlights">
+          <i class="fas fa-film"></i> Хайлайты
+        </button>
+        <button class="admin-nav-btn" data-panel="matches">
+          <i class="fas fa-gamepad"></i> Матчи
+        </button>
+        <button class="admin-nav-btn" data-panel="awards">
+          <i class="fas fa-medal"></i> Награды
+        </button>
+        <button class="admin-nav-btn" data-panel="veto">
+          <i class="fas fa-ban"></i> Вето карт
+        </button>
+      </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="admin-main">
+
+      <!-- DASHBOARD -->
+      <div class="admin-panel active" id="panel-dashboard">
+        <h2 class="admin-title"><i class="fas fa-chart-pie"></i> Обзор</h2>
+        <div class="admin-stats-grid">
+          <div class="admin-stat-card">
+            <i class="fas fa-shield-halved"></i>
+            <div>
+              <span class="admin-stat-num" id="statTeams">0</span>
+              <span>Команды</span>
+            </div>
+          </div>
+          <div class="admin-stat-card">
+            <i class="fas fa-users"></i>
+            <div>
+              <span class="admin-stat-num" id="statPlayers">0</span>
+              <span>Игроки</span>
+            </div>
+          </div>
+          <div class="admin-stat-card">
+            <i class="fas fa-newspaper"></i>
+            <div>
+              <span class="admin-stat-num" id="statNews">0</span>
+              <span>Новости</span>
+            </div>
+          </div>
+          <div class="admin-stat-card">
+            <i class="fas fa-trophy"></i>
+            <div>
+              <span class="admin-stat-num" id="statTournaments">0</span>
+              <span>Турниры</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TEAMS PANEL -->
+      <div class="admin-panel" id="panel-teams">
+        <div class="admin-panel-header">
+          <h2 class="admin-title"><i class="fas fa-shield-halved"></i> Управление командами</h2>
+          <button class="btn btn-primary" id="addTeamBtn"><i class="fas fa-plus"></i> Добавить команду</button>
+        </div>
+
+        <!-- ADD/EDIT TEAM FORM -->
+        <div class="admin-form-card" id="teamForm" style="display:none">
+          <h3 id="teamFormTitle">Добавить команду</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Название команды *</label>
+              <input type="text" id="teamName" placeholder="Название команды" />
+            </div>
+            <div class="form-group">
+              <label>Тир уровень *</label>
+              <select id="teamTier">
+                <option value="1">Tier 1</option>
+                <option value="2">Tier 2</option>
+                <option value="3">Tier 3</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Страна</label>
+              <input type="text" id="teamCountry" placeholder="Россия" />
+            </div>
+            <div class="form-group">
+              <label>Рейтинг</label>
+              <input type="number" id="teamRating" placeholder="1000" min="0" />
+            </div>
+            <div class="form-group">
+              <label>Матчей сыграно</label>
+              <input type="number" id="teamMatches" placeholder="0" min="0" />
+            </div>
+            <div class="form-group">
+              <label>Побед</label>
+              <input type="number" id="teamWins" placeholder="0" min="0" />
+            </div>
+            <div class="form-group">
+              <label>Поражений</label>
+              <input type="number" id="teamLosses" placeholder="0" min="0" />
+            </div>
+            <div class="form-group form-full">
+              <label>Описание</label>
+              <textarea id="teamDescription" placeholder="Описание команды..." rows="3"></textarea>
+            </div>
+            <div class="form-group form-full">
+              <label>Логотип команды</label>
+              <div class="file-upload-area" id="teamLogoArea">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Перетащите изображение или нажмите для выбора</p>
+                <input type="file" id="teamLogo" accept="image/*" style="display:none" />
+              </div>
+              <div class="logo-preview" id="teamLogoPreview" style="display:none">
+                <img id="teamLogoImg" src="" alt="Логотип" />
+                <button type="button" class="btn btn-sm btn-danger" id="removeTeamLogo"><i class="fas fa-trash"></i></button>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" id="teamEditId" />
+          <div class="form-actions">
+            <button class="btn btn-primary" id="saveTeamBtn"><i class="fas fa-save"></i> Сохранить</button>
+            <button class="btn btn-outline" id="cancelTeamBtn"><i class="fas fa-times"></i> Отмена</button>
+          </div>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="teamsTable">
+            <thead>
+              <tr>
+                <th>Логотип</th>
+                <th>Команда</th>
+                <th>Тир</th>
+                <th>Страна</th>
+                <th>Рейтинг</th>
+                <th>Действия</th>
+              </tr>
+            </thead>
+            <tbody id="teamsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- NEWS PANEL -->
+      <div class="admin-panel" id="panel-news">
+        <div class="admin-panel-header">
+          <h2 class="admin-title"><i class="fas fa-newspaper"></i> Управление новостями</h2>
+          <button class="btn btn-primary" id="addNewsBtn"><i class="fas fa-plus"></i> Добавить новость</button>
+        </div>
+
+        <div class="admin-form-card" id="newsForm" style="display:none">
+          <h3 id="newsFormTitle">Добавить новость</h3>
+          <div class="form-grid">
+            <div class="form-group form-full">
+              <label>Заголовок *</label>
+              <input type="text" id="newsTitle" placeholder="Заголовок новости" />
+            </div>
+            <div class="form-group form-full">
+              <label>Краткое описание</label>
+              <input type="text" id="newsExcerpt" placeholder="Краткое описание для превью" />
+            </div>
+            <div class="form-group form-full">
+              <label>Текст новости *</label>
+              <textarea id="newsContent" rows="8" placeholder="Полный текст новости..."></textarea>
+            </div>
+            <div class="form-group form-full">
+              <label>Фото новости</label>
+              <div class="file-upload-area" id="newsImageArea">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Перетащите изображение или нажмите для выбора</p>
+                <input type="file" id="newsImage" accept="image/*" style="display:none" />
+              </div>
+              <div class="logo-preview" id="newsImagePreview" style="display:none">
+                <img id="newsImageImg" src="" alt="Фото новости" />
+                <button type="button" class="btn btn-sm btn-danger" id="removeNewsImage"><i class="fas fa-trash"></i></button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Категория</label>
+              <select id="newsCategory">
+                <option value="general">Общее</option>
+                <option value="tournament">Турниры</option>
+                <option value="teams">Команды</option>
+                <option value="players">Игроки</option>
+              </select>
+            </div>
+          </div>
+          <input type="hidden" id="newsEditId" />
+          <div class="form-actions">
+            <button class="btn btn-primary" id="saveNewsBtn"><i class="fas fa-save"></i> Опубликовать</button>
+            <button class="btn btn-outline" id="cancelNewsBtn"><i class="fas fa-times"></i> Отмена</button>
+          </div>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="newsTable">
+            <thead>
+              <tr>
+                <th>Фото</th>
+                <th>Заголовок</th>
+                <th>Категория</th>
+                <th>Дата</th>
+                <th>Действия</th>
+              </tr>
+            </thead>
+            <tbody id="newsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- USERS PANEL -->
+      <div class="admin-panel" id="panel-users">
+        <div class="admin-panel-header">
+          <h2 class="admin-title"><i class="fas fa-users"></i> Игроки</h2>
+          <button class="btn btn-danger" id="deleteAllUsersBtn" style="gap:8px"><i class="fas fa-trash-alt"></i> Удалить всех</button>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Никнейм</th>
+                <th>Email</th>
+                <th>Команда</th>
+                <th>K/D</th>
+                <th>Дата регистрации</th>
+                <th>Действия</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TOURNAMENTS PANEL -->
+      <div class="admin-panel" id="panel-tournaments">
+        <div class="admin-panel-header">
+          <h2 class="admin-title"><i class="fas fa-trophy"></i> Управление турнирами</h2>
+          <button class="btn btn-primary" id="addTournamentBtn"><i class="fas fa-plus"></i> Добавить турнир</button>
+        </div>
+
+        <div class="admin-form-card" id="tournamentForm" style="display:none">
+          <h3 id="tournamentFormTitle">Добавить турнир</h3>
+          <div class="form-grid">
+            <div class="form-group form-full">
+              <label>Название *</label>
+              <input type="text" id="tournamentName" placeholder="Название турнира" />
+            </div>
+            <div class="form-group">
+              <label>Статус</label>
+              <select id="tournamentStatus">
+                <option value="upcoming">Предстоящий</option>
+                <option value="ongoing">Идёт сейчас</option>
+                <option value="finished">Завершён</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Призовой фонд</label>
+              <input type="text" id="tournamentPrize" placeholder="$5 000" />
+            </div>
+            <div class="form-group">
+              <label>Формат</label>
+              <input type="text" id="tournamentFormat" placeholder="Double Elimination" />
+            </div>
+            <div class="form-group">
+              <label>Команд</label>
+              <input type="number" id="tournamentTeams" placeholder="16" min="2" />
+            </div>
+            <div class="form-group">
+              <label>Площадка</label>
+              <input type="text" id="tournamentLocation" placeholder="Online" />
+            </div>
+            <div class="form-group">
+              <label>Дата начала</label>
+              <input type="date" id="tournamentDateStart" />
+            </div>
+            <div class="form-group">
+              <label>Дата окончания</label>
+              <input type="date" id="tournamentDateEnd" />
+            </div>
+            <div class="form-group form-full">
+              <label>Описание</label>
+              <textarea id="tournamentDesc" rows="3" placeholder="Описание турнира..."></textarea>
+            </div>
+            <div class="form-group form-full">
+              <label>Фото турнира (баннер)</label>
+              <div class="file-upload-area" id="tournamentImageArea">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Перетащите изображение или нажмите для выбора</p>
+                <input type="file" id="tournamentImage" accept="image/*" style="display:none" />
+              </div>
+              <div class="logo-preview" id="tournamentImagePreview" style="display:none">
+                <img id="tournamentImageImg" src="" alt="Баннер" style="width:160px;height:90px;object-fit:cover;border-radius:8px" />
+                <button type="button" class="btn btn-sm btn-danger" id="removeTournamentImage"><i class="fas fa-trash"></i></button>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" id="tournamentEditId" />
+          <div class="form-actions">
+            <button class="btn btn-primary" id="saveTournamentBtn"><i class="fas fa-save"></i> Сохранить</button>
+            <button class="btn btn-outline" id="cancelTournamentBtn"><i class="fas fa-times"></i> Отмена</button>
+          </div>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="tournamentsTable">
+            <thead>
+              <tr>
+                <th>Название</th>
+                <th>Статус</th>
+                <th>Призовой</th>
+                <th>Формат</th>
+                <th>Дата начала</th>
+                <th>Дата конца</th>
+                <th>Действия</th>
+              </tr>
+            </thead>
+            <tbody id="tournamentsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- HIGHLIGHTS PANEL -->
+      <div class="admin-panel" id="panel-highlights">
+        <div class="admin-panel-header">
+          <h2 class="admin-title"><i class="fas fa-film"></i> Управление хайлайтами</h2>
+          <button class="btn btn-primary" id="addHighlightBtn"><i class="fas fa-plus"></i> Добавить хайлайт</button>
+        </div>
+
+        <div class="admin-form-card" id="highlightForm" style="display:none">
+          <h3 id="highlightFormTitle">Добавить хайлайт</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Никнейм игрока *</label>
+              <input type="text" id="hlNick" placeholder="atoman" />
+            </div>
+            <div class="form-group">
+              <label>K/D *</label>
+              <input type="text" id="hlKd" placeholder="2.06" />
+            </div>
+            <div class="form-group">
+              <label>Подпись</label>
+              <input type="text" id="hlLabel" placeholder="Топ хайлайт" />
+            </div>
+            <div class="form-group">
+              <label>Путь к видео *</label>
+              <input type="text" id="hlVideo" placeholder="videos/nick 1.50.mp4" />
+            </div>
+            <div class="form-group form-full">
+              <label>Превью-фото (необязательно)</label>
+              <div class="file-upload-area" id="hlThumbArea">
+                <i class="fas fa-image"></i>
+                <p>Перетащите изображение или нажмите для выбора</p>
+                <input type="file" id="hlThumbFile" accept="image/*" style="display:none" />
+              </div>
+              <div class="logo-preview" id="hlThumbPreview" style="display:none">
+                <img id="hlThumbImg" src="" alt="превью" style="width:160px;height:90px;object-fit:cover;border-radius:8px" />
+                <button type="button" class="btn btn-sm btn-danger" id="removeHlThumb"><i class="fas fa-trash"></i></button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Аватар игрока</label>
+              <div class="file-upload-area" id="hlAvatarArea" style="padding:16px">
+                <i class="fas fa-user-circle" style="font-size:1.6rem"></i>
+                <p>Фото для кружка на карточке</p>
+                <input type="file" id="hlAvatarFile" accept="image/*" style="display:none" />
+              </div>
+              <div class="logo-preview" id="hlAvatarPreview" style="display:none;align-items:center;gap:12px">
+                <img id="hlAvatarImg" src="" alt="аватар" style="width:56px;height:56px;object-fit:cover;border-radius:50%;border:2px solid var(--primary)" />
+                <button type="button" class="btn btn-sm btn-danger" id="removeHlAvatar"><i class="fas fa-trash"></i></button>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" id="hlEditId" />
+          <div class="form-actions">
+            <button class="btn btn-primary" id="saveHighlightBtn"><i class="fas fa-save"></i> Сохранить</button>
+            <button class="btn btn-outline" id="cancelHighlightBtn"><i class="fas fa-times"></i> Отмена</button>
+          </div>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Превью</th>
+                <th>Ник</th>
+                <th>K/D</th>
+                <th>Подпись</th>
+                <th>Видео</th>
+                <th>Действия</th>
+              </tr>
+            </thead>
+            <tbody id="highlightsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- MATCHES PANEL -->
+      <div class="admin-panel" id="panel-matches">
+        <div class="admin-panel-header">
+          <h2 class="admin-title"><i class="fas fa-gamepad"></i> Матчи</h2>
+          <button class="btn btn-primary" id="addMatchBtn"><i class="fas fa-plus"></i> Добавить матч</button>
+        </div>
+
+        <div class="admin-form-card" id="matchForm" style="display:none">
+          <h3 id="matchFormTitle">Добавить матч</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Команда 1 *</label>
+              <select id="matchTeam1"></select>
+            </div>
+            <div class="form-group">
+              <label>Команда 2 *</label>
+              <select id="matchTeam2"></select>
+            </div>
+            <div class="form-group">
+              <label>Счёт команды 1</label>
+              <input type="number" id="matchScore1" placeholder="0" min="0" />
+            </div>
+            <div class="form-group">
+              <label>Счёт команды 2</label>
+              <input type="number" id="matchScore2" placeholder="0" min="0" />
+            </div>
+            <div class="form-group form-full">
+              <label>Турнир *</label>
+              <input type="text" id="matchTournament" placeholder="Название турнира" />
+            </div>
+            <div class="form-group form-full">
+              <label><i class="fas fa-link"></i> Ссылка на матч (xplay.gg)</label>
+              <div class="input-with-icon">
+                <input type="text" id="matchUrl" placeholder="https://xplay.gg/matches/..." />
+                <button type="button" class="toggle-pass" id="copyMatchUrlBtn" title="Скопировать ссылку">
+                  <i class="fas fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Дата и время</label>
+              <input type="datetime-local" id="matchDate" />
+            </div>
+            <div class="form-group">
+              <label>Статус</label>
+              <select id="matchStatus">
+                <option value="upcoming">Предстоящий</option>
+                <option value="finished">Завершён</option>
+              </select>
+            </div>
+          </div>
+          <input type="hidden" id="matchEditId" />
+          <div class="form-actions">
+            <button class="btn btn-primary" id="saveMatchBtn"><i class="fas fa-save"></i> Сохранить</button>
+            <button class="btn btn-outline" id="cancelMatchBtn"><i class="fas fa-times"></i> Отмена</button>
+          </div>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="matchesTable">
+            <thead>
+              <tr>
+                <th>Команда 1</th>
+                <th>Счёт</th>
+                <th>Команда 2</th>
+                <th>Турнир</th>
+                <th>Дата</th>
+                <th>Статус</th>
+                <th>Действия</th>
+              </tr>
+            </thead>
+            <tbody id="matchesTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- AWARDS PANEL -->
+      <div class="admin-panel" id="panel-awards">
+        <div class="admin-panel-header">
+          <h2 class="admin-title"><i class="fas fa-medal"></i> Управление наградами</h2>
+          <button class="btn btn-primary" id="addAwardBtn"><i class="fas fa-plus"></i> Добавить награду</button>
+        </div>
+
+        <div class="admin-form-card" id="awardForm" style="display:none">
+          <h3 id="awardFormTitle">Добавить награду</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Название *</label>
+              <input type="text" id="awardName" placeholder="EFL League Champion 2026" />
+            </div>
+            <div class="form-group">
+              <label>Изображение награды *</label>
+              <div class="file-upload-area" id="awardImageArea">
+                <i class="fas fa-image"></i>
+                <p>Нажмите для выбора изображения</p>
+                <input type="file" id="awardImageInput" accept="image/*" style="display:none" />
+              </div>
+              <div class="logo-preview" id="awardImagePreview" style="display:none">
+                <img id="awardImageImg" src="" alt="Награда" style="width:64px;height:64px;object-fit:cover;border-radius:10px" />
+                <button type="button" class="btn btn-sm btn-danger" id="removeAwardImage"><i class="fas fa-trash"></i></button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Цвет</label>
+              <select id="awardColor">
+                <option value="gold">?? Золото</option>
+                <option value="silver">?? Серебро</option>
+                <option value="bronze">?? Бронза</option>
+                <option value="primary">?? Фиолетовый</option>
+                <option value="accent">?? Голубой</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Кому выдать</label>
+              <select id="awardTarget">
+                <option value="player">Игроку</option>
+                <option value="team">Команде</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Игрок / Команда *</label>
+              <select id="awardRecipient"></select>
+            </div>
+            <div class="form-group">
+              <label>Описание</label>
+              <input type="text" id="awardDesc" placeholder="Победитель турнира..." />
+            </div>
+            <div class="form-group">
+              <label>Дата</label>
+              <input type="date" id="awardDate" />
+            </div>
+          </div>
+          <input type="hidden" id="awardEditId" />
+          <div class="form-actions">
+            <button class="btn btn-primary" id="saveAwardBtn"><i class="fas fa-save"></i> Сохранить</button>
+            <button class="btn btn-outline" id="cancelAwardBtn"><i class="fas fa-times"></i> Отмена</button>
+          </div>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Иконка</th>
+                <th>Название</th>
+                <th>Кому</th>
+                <th>Тип</th>
+                <th>Дата</th>
+                <th>Действия</th>
+              </tr>
+            </thead>
+            <tbody id="awardsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- VETO PANEL -->
+      <div class="admin-panel" id="panel-veto">
+        <div class="admin-panel-header">
+          <h2 class="admin-title"><i class="fas fa-ban"></i> Вето карт</h2>
+          <button class="btn btn-primary" id="addVetoBtn"><i class="fas fa-plus"></i> Создать вето</button>
+        </div>
+
+        <!-- Форма создания вето -->
+        <div class="admin-form-card" id="vetoForm" style="display:none">
+          <h3>Создать вето</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Матч</label>
+              <select id="vetoMatchSelect"></select>
+            </div>
+            <div class="form-group">
+              <label>Формат</label>
+              <select id="vetoFormat">
+                <option value="bo1">BO1</option>
+                <option value="bo3">BO3</option>
+                <option value="bo5">BO5</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" id="saveVetoBtn"><i class="fas fa-save"></i> Создать</button>
+            <button class="btn btn-outline" id="cancelVetoBtn"><i class="fas fa-times"></i> Отмена</button>
+          </div>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Матч</th>
+                <th>Формат</th>
+                <th>Статус</th>
+                <th>Создано</th>
+                <th>Действия</th>
+              </tr>
+            </thead>
+            <tbody id="vetoTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="js/storage.js?v=6"></script>
+  <script src="js/auth.js?v=6"></script>
+  <script src="js/theme.js?v=2"></script>
+  <script src="js/match-notifications.js?v=2"></script>
+  <script src="js/highlights.js?v=2"></script>
+  <script src="js/admin.js?v=6"></script>
+
+  <!-- === MODAL: MANAGE TEAM ROSTER === -->
+  <div class="modal-overlay" id="rosterModal" style="display:none">
+    <div class="modal" style="max-width:700px">
+      <button class="modal-close" onclick="closeRosterModal()"><i class="fas fa-times"></i></button>
+      <h2 id="rosterModalTitle" style="margin-bottom:24px"><i class="fas fa-users"></i> Управление составом</h2>
+      
+      <div style="margin-bottom:24px">
+        <h3 style="font-size:1rem;margin-bottom:12px">Текущий состав</h3>
+        <div id="rosterCurrentList" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+
+      <div>
+        <h3 style="font-size:1rem;margin-bottom:12px">Добавить игрока</h3>
+        <div style="display:flex;gap:12px;align-items:flex-end">
+          <div class="form-group" style="flex:1;margin:0">
+            <label>Выберите пользователя</label>
+            <select id="rosterUserSelect" style="width:100%">
+              <option value="">— Выберите пользователя —</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="addUserToTeamRoster()"><i class="fas fa-plus"></i> Добавить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

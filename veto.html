@@ -1,0 +1,413 @@
+﻿<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Вето карт — EFL League</title>
+  <link rel="icon" type="image/svg+xml" href="efl-logo.svg" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    /* -- Основной лейаут вето -- */
+    .veto-page { padding: 80px 12px 40px; min-height: 100vh; background: var(--bg); }
+
+    .veto-loading, .veto-not-found {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 16px; min-height: 60vh;
+      color: var(--text-muted); font-size: 1.1rem;
+    }
+    .veto-not-found i { font-size: 3rem; color: var(--danger); }
+
+    /* Шапка */
+    .veto-header { margin-bottom: 16px; }
+    .veto-header-inner {
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px; flex-wrap: wrap; padding: 12px 0;
+    }
+    .veto-match-title { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; font-weight: 800; }
+    .veto-vs { color: var(--text-muted); font-size: 0.9rem; font-weight: 600; }
+    .veto-team-name { color: var(--text); }
+    .veto-format-badge {
+      background: var(--primary); color: #fff; border-radius: 6px;
+      padding: 3px 10px; font-size: 0.75rem; font-weight: 700;
+    }
+    .veto-status-badge {
+      border-radius: 6px; padding: 3px 10px; font-size: 0.75rem; font-weight: 700;
+      background: var(--card); border: 1px solid var(--border); color: var(--text-muted);
+    }
+    .veto-status-badge.status-active { color: var(--accent); border-color: var(--accent); }
+    .veto-status-badge.status-done   { color: var(--success); border-color: var(--success); }
+    .veto-tournament { font-size: 0.82rem; color: var(--text-muted); }
+    .veto-copy-btn { font-size: 0.82rem; padding: 6px 14px; }
+
+    /* Ожидание */
+    .veto-waiting {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 12px; padding: 60px 20px;
+      color: var(--text-muted); text-align: center;
+    }
+    .veto-waiting i { font-size: 2.5rem; color: var(--warning); }
+    .veto-waiting h3 { color: var(--text); margin: 0; }
+
+    /* -- Трёхколоночный лейаут -- */
+    .veto-layout {
+      display: grid;
+      grid-template-columns: 200px 1fr 200px;
+      gap: 16px;
+      max-width: 1200px;
+      margin: 0 auto;
+      align-items: start;
+    }
+
+    /* Колонка игроков */
+    .veto-players-col {
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .veto-players-col-title {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.5px; color: var(--text-muted);
+      padding-bottom: 6px; border-bottom: 1px solid var(--border);
+      margin-bottom: 4px; text-align: center;
+    }
+    .veto-players-col-teamname {
+      font-size: 0.95rem; font-weight: 800; color: var(--text);
+      text-align: center; margin-bottom: 8px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .veto-player-row {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 7px 10px;
+    }
+    .veto-players-col.right .veto-player-row { flex-direction: row-reverse; }
+    .veto-player-ava {
+      width: 36px; height: 36px; border-radius: 50%;
+      object-fit: cover; flex-shrink: 0;
+      background: var(--bg-secondary); border: 2px solid var(--border);
+    }
+    .veto-player-ava-fb {
+      width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg,#667eea,#764ba2);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; font-size: 0.85rem;
+    }
+    .veto-player-nick {
+      font-size: 0.82rem; font-weight: 700; color: var(--text);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .veto-players-col.right .veto-player-nick { text-align: right; }
+
+    /* Центральная колонка */
+    .veto-center-col { display: flex; flex-direction: column; gap: 12px; }
+
+    /* Индикатор хода */
+    .veto-turn-indicator {
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px; padding: 10px 16px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .vti-inner {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.9rem; font-weight: 600; color: var(--text-muted);
+    }
+    .vti-my-turn    { color: var(--accent) !important; }
+    .vti-opponent-turn { color: var(--text-muted); }
+    .vti-done       { color: var(--success) !important; }
+
+    /* Таймер */
+    .veto-timer-wrap {
+      display: flex; align-items: center; justify-content: center;
+      position: relative; width: 36px; height: 36px; flex-shrink: 0;
+    }
+    .veto-timer-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .veto-timer-count {
+      position: relative; font-size: 0.8rem; font-weight: 800;
+      color: var(--success); z-index: 1;
+    }
+    @keyframes vetoTimerPulse {
+      from { transform: scale(1); } to { transform: scale(1.2); }
+    }
+
+    /* Сетка карт */
+    .veto-maps-row {
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .veto-map-card {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      height: 56px;
+      cursor: default;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.04);
+      transition: background 0.15s, transform 0.12s, opacity 0.2s;
+    }
+    .veto-map-card.active-turn {
+      cursor: pointer;
+      border-color: rgba(0,212,255,0.4);
+      background: rgba(0,212,255,0.05);
+    }
+    .veto-map-card.active-turn:hover {
+      background: rgba(0,212,255,0.1);
+      transform: translateX(3px);
+    }
+
+    /* Забанена — серая */
+    .veto-map-card.banned {
+      opacity: 0.4;
+      filter: grayscale(1) brightness(0.6);
+      pointer-events: none;
+    }
+
+    /* Запикана — зелёная обводка */
+    .veto-map-card.picked {
+      border-color: rgba(34,197,94,0.4);
+      background: rgba(34,197,94,0.05);
+    }
+
+    /* Превью карты */
+    .vmc-thumb {
+      width: 88px;
+      height: 56px;
+      flex-shrink: 0;
+      background-size: cover;
+      background-position: center;
+    }
+
+    /* Название карты */
+    .vmc-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+      flex: 1;
+      padding: 0 14px;
+      letter-spacing: 0.3px;
+    }
+
+    /* Статус справа */
+    .vmc-status {
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 5px;
+      margin-right: 12px;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .vmc-status.ban  {
+      background: rgba(239,68,68,0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239,68,68,0.3);
+    }
+    .vmc-status.pick {
+      background: rgba(34,197,94,0.15);
+      color: #22c55e;
+      border: 1px solid rgba(34,197,94,0.3);
+    }
+    .vmc-status.hint {
+      background: transparent;
+      color: var(--accent, #00d4ff);
+      border: 1px dashed var(--accent, #00d4ff);
+      opacity: 0.7;
+    }
+
+    /* Карточка результата */
+    .veto-result {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px 20px;
+    }
+    .veto-result-title {
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 10px;
+    }
+    .veto-result-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0; border-bottom: 1px solid var(--border);
+    }
+    .veto-result-row:last-child { border-bottom: none; }
+    .vrr-num { font-size: 0.8rem; color: var(--text-muted); width: 20px; }
+    .vrr-img { width: 40px; height: 28px; border-radius: 5px; background-size: cover; flex-shrink: 0; }
+    .vrr-name { font-weight: 700; font-size: 0.9rem; flex: 1; }
+    .vrr-badge { font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+    .vrr-pick    { background: rgba(34,197,94,0.15); color: #22c55e; }
+    .vrr-decider { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .vrr-by { font-size: 0.78rem; color: var(--text-muted); }
+
+    /* Адаптив */
+    @media (max-width: 860px) {
+      .veto-layout { grid-template-columns: 1fr; }
+      .veto-players-col { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><img class="logo-img" src="efl-logo.svg" alt="EFL"> EFL League</a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html"><i class="fas fa-home"></i> Главная</a></li>
+        <li><a href="teams.html"><i class="fas fa-shield-halved"></i> Команды</a></li>
+        <li><a href="players.html"><i class="fas fa-users"></i> Игроки</a></li>
+        <li><a href="news.html"><i class="fas fa-newspaper"></i> Новости</a></li>
+        <li><a href="tournaments.html"><i class="fas fa-trophy"></i> Турниры</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon" id="themeIcon"></i></button>
+        <div id="authButtons">
+          <a href="login.html" class="btn btn-outline">Войти</a>
+          <a href="register.html" class="btn btn-primary">Регистрация</a>
+        </div>
+        <div id="userMenu" style="display:none" class="user-menu">
+          <div class="user-avatar" id="userAvatarNav"><i class="fas fa-user"></i></div>
+          <div class="user-dropdown" id="userDropdown">
+            <a href="profile.html"><i class="fas fa-id-card"></i> Профиль</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+          </div>
+        </div>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="veto-page" id="vetoPage">
+
+    <div class="veto-loading" id="vetoLoading">
+      <i class="fas fa-spinner fa-spin" style="font-size:2rem;color:var(--primary)"></i>
+      <span>Загрузка вето...</span>
+    </div>
+
+    <div class="veto-not-found" id="vetoNotFound" style="display:none">
+      <i class="fas fa-ban"></i>
+      <h2>Вето не найдено</h2>
+      <p>Проверьте ссылку или обратитесь к администратору.</p>
+      <a href="index.html" class="btn btn-primary"><i class="fas fa-home"></i> На главную</a>
+    </div>
+
+    <div id="vetoContent" style="display:none">
+
+      <!-- Шапка -->
+      <div class="veto-header">
+        <div class="veto-header-inner">
+          <div class="veto-match-title">
+            <span class="veto-team-name" id="vhTeam1">—</span>
+            <span class="veto-vs">VS</span>
+            <span class="veto-team-name" id="vhTeam2">—</span>
+          </div>
+          <span class="veto-format-badge" id="vhFormat">BO1</span>
+          <span class="veto-status-badge" id="vhStatus">Ожидание</span>
+          <span class="veto-tournament" id="vhTournament"></span>
+          <div id="adminStartWrap" style="display:none">
+            <button class="btn btn-primary" id="startVetoBtn" style="font-size:0.85rem;padding:7px 16px">
+              <i class="fas fa-play"></i> Начать вето
+            </button>
+          </div>
+          <button class="btn btn-outline veto-copy-btn" id="copyVetoLink">
+            <i class="fas fa-link"></i> Скопировать ссылку
+          </button>
+        </div>
+      </div>
+
+      <!-- Ожидание -->
+      <div class="veto-waiting" id="vetoWaiting" style="display:none">
+        <i class="fas fa-clock"></i>
+        <h3>Ожидаем начала вето</h3>
+        <p>Администратор скоро запустит вето. Не закрывайте страницу.</p>
+        <div id="adminStartWrapWaiting" style="display:none;margin-top:16px">
+          <button class="btn btn-primary" id="startVetoBtnWaiting">
+            <i class="fas fa-play"></i> Начать вето
+          </button>
+        </div>
+      </div>
+
+      <!-- Активное вето — три колонки -->
+      <div class="veto-layout" id="vetoMain" style="display:none">
+
+        <!-- Левая колонка: команда 1 -->
+        <div class="veto-players-col left" id="playersCol1">
+          <div class="veto-players-col-title">Команда</div>
+          <div class="veto-players-col-teamname" id="playersTeam1Name">—</div>
+          <div id="playersList1"></div>
+        </div>
+
+        <!-- Центр: индикатор + карты + результат -->
+        <div class="veto-center-col">
+
+          <!-- Индикатор хода + таймер -->
+          <div class="veto-turn-indicator" id="vetoTurnIndicator">
+            <div class="vti-inner" id="vtiInner">
+              <i class="fas fa-crosshairs"></i>
+              <span id="vtiText">Ожидание...</span>
+            </div>
+            <div class="veto-timer-wrap" id="vetoTimerWrap" style="display:none">
+              <svg class="veto-timer-svg" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="8.3" fill="none" stroke="var(--border)" stroke-width="2.5"/>
+                <circle id="vetoTimerRing" cx="12" cy="12" r="8.3" fill="none" stroke="#22c55e" stroke-width="2.5"
+                  stroke-dasharray="52" stroke-dashoffset="0" stroke-linecap="round"
+                  transform="rotate(-90 12 12)" style="transition:stroke-dashoffset 0.9s linear,stroke 0.3s"/>
+              </svg>
+              <span id="vetoTimerCount" class="veto-timer-count">10</span>
+            </div>
+          </div>
+
+          <!-- Список карт -->
+          <div class="veto-maps-row" id="vetoMapsGrid"></div>
+
+          <!-- Результат -->
+          <div class="veto-result" id="vetoResult" style="display:none">
+            <div class="veto-result-title"><i class="fas fa-map-marked-alt"></i> Карты матча</div>
+            <div id="vetoResultMaps"></div>
+          </div>
+
+        </div>
+
+        <!-- Правая колонка: команда 2 -->
+        <div class="veto-players-col right" id="playersCol2">
+          <div class="veto-players-col-title">Команда</div>
+          <div class="veto-players-col-teamname" id="playersTeam2Name">—</div>
+          <div id="playersList2"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- скрытый элемент для лога (используется в veto.js) -->
+  <div id="vetoLogList" style="display:none"></div>
+
+  <script src="js/storage.js?v=6"></script>
+  <script src="js/auth.js?v=6"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/match-notifications.js"></script>
+  <script src="js/veto.js"></script>
+
+  <script>
+    // Рендер игроков по колонкам (вызывается из veto.js через window.renderVetoPlayers)
+    window.renderVetoPlayers = function(team1, team2) {
+      renderCol(team1, 'playersTeam1Name', 'playersList1', false);
+      renderCol(team2, 'playersTeam2Name', 'playersList2', true);
+    };
+
+    function renderCol(teamName, nameId, listId, isRight) {
+      if (!teamName) return;
+      document.getElementById(nameId).textContent = teamName;
+      const players = DB.get('pl_players').filter(p => p.team === teamName);
+      const listEl = document.getElementById(listId);
+      if (!players.length) {
+        listEl.innerHTML = '<div style="font-size:0.78rem;color:var(--text-muted);text-align:center;padding:6px">—</div>';
+        return;
+      }
+      listEl.innerHTML = players.map(p => {
+        const ava = p.photo
+          ? `<img class="veto-player-ava" src="${p.photo}" alt="${p.nick}" onerror="this.style.display='none';this.nextSibling.style.display='flex'">`
+          : '';
+        const fb = `<div class="veto-player-ava-fb" ${p.photo ? 'style="display:none"' : ''}>${p.nick.charAt(0).toUpperCase()}</div>`;
+        return `<div class="veto-player-row">${ava}${fb}<div class="veto-player-nick">${p.nick}</div></div>`;
+      }).join('');
+    }
+  </script>
+</body>
+</html>

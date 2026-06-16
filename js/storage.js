@@ -9,22 +9,38 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 async function sbFetch(table, options = {}) {
   const { method = 'GET', filter = '', body = null, select = '*' } = options;
   const url = `${SUPABASE_URL}/rest/v1/${table}?select=${select}${filter}`;
-  const res = await fetch(url, {
-    method,
-    headers: {
-      'apikey': SUPABASE_KEY,
-      'Authorization': `Bearer ${SUPABASE_KEY}`,
-      'Content-Type': 'application/json',
-      'Prefer': method === 'POST' ? 'return=representation' : ''
-    },
-    body: body ? JSON.stringify(body) : null
-  });
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(err);
+  const headers = {
+    'apikey': SUPABASE_KEY,
+    'Authorization': `Bearer ${SUPABASE_KEY}`,
+    'Content-Type': 'application/json',
+    'Prefer': method === 'POST' ? 'return=representation' : ''
+  };
+
+  // Retry до 3 раз при ошибке (timeout, 500)
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const res = await fetch(url, { method, headers, body: body ? JSON.stringify(body) : null });
+      if (!res.ok) {
+        const err = await res.text();
+        if (attempt < 3 && (res.status === 500 || res.status === 503)) {
+          console.warn(`[DB] ⚠️ ${table} attempt ${attempt} failed (${res.status}), retrying...`);
+          await new Promise(r => setTimeout(r, 2000 * attempt));
+          continue;
+        }
+        throw new Error(err);
+      }
+      const text = await res.text();
+      return text ? JSON.parse(text) : [];
+    } catch(e) {
+      if (attempt < 3) {
+        console.warn(`[DB] ⚠️ ${table} attempt ${attempt} error, retrying...`);
+        await new Promise(r => setTimeout(r, 2000 * attempt));
+        continue;
+      }
+      throw e;
+    }
   }
-  const text = await res.text();
-  return text ? JSON.parse(text) : [];
+  return [];
 }
 
 // ── Конвертеры: Supabase ↔ localStorage формат ───────────────

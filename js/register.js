@@ -15,27 +15,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    const submitBtn = form.querySelector('[type="submit"]') || form.querySelector('button');
+    const origBtnText = submitBtn ? submitBtn.innerHTML : '';
+
     const username = document.getElementById('regUsername').value.trim();
     const email = document.getElementById('regEmail').value.trim().toLowerCase();
     const password = document.getElementById('regPassword').value;
     const password2 = document.getElementById('regPassword2').value;
 
+    if (!username || username.length < 2) {
+      showAlert('Введите никнейм (минимум 2 символа)', 'error'); return;
+    }
     if (password !== password2) {
-      showAlert('Пароли не совпадают', 'error');
-      return;
+      showAlert('Пароли не совпадают', 'error'); return;
     }
     if (password.length < 6) {
-      showAlert('Пароль должен содержать минимум 6 символов', 'error');
-      return;
+      showAlert('Пароль должен содержать минимум 6 символов', 'error'); return;
+    }
+
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Регистрация...'; }
+
+    // Если БД ещё грузится — ждём максимум 5 секунд
+    if (!window._dbReady) {
+      showAlert('Подключение к базе данных...', 'success');
+      await new Promise(resolve => {
+        const t = setTimeout(resolve, 5000);
+        const check = setInterval(() => {
+          if (window._dbReady) { clearInterval(check); clearTimeout(t); resolve(); }
+        }, 100);
+      });
     }
 
     const users = DB.get('pl_users');
-    if (users.find(u => u.username.toLowerCase() === username.toLowerCase())) {
+    if (users.find(u => (u.username || '').toLowerCase() === username.toLowerCase())) {
       showAlert('Такой никнейм уже занят', 'error');
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origBtnText; }
       return;
     }
     if (users.find(u => u.email === email)) {
       showAlert('Этот email уже зарегистрирован', 'error');
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origBtnText; }
       return;
     }
 
@@ -66,9 +86,17 @@ document.addEventListener('DOMContentLoaded', () => {
         })
       });
       const inserted = await res.json();
-      if (inserted[0]) {
-        newUser.id = inserted[0].id; // реальный Supabase ID
+      if (inserted && inserted[0]) {
+        newUser.id = inserted[0].id;
         console.log('[REG] ✅ Пользователь сохранён, id=', newUser.id);
+      } else {
+        // Возможно ошибка уникальности — проверим
+        const errText = JSON.stringify(inserted);
+        if (errText.includes('unique') || errText.includes('duplicate') || errText.includes('23505')) {
+          showAlert('Такой никнейм или email уже существует', 'error');
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origBtnText; }
+          return;
+        }
       }
     } catch(e) {
       console.warn('[REG] ⚠️ Ошибка сохранения пользователя:', e.message);
@@ -103,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
       });
       const pInserted = await pRes.json();
-      if (pInserted[0]) {
+      if (pInserted && pInserted[0]) {
         console.log('[REG] ✅ Игрок создан, id=', pInserted[0].id);
         const players = DB.get('pl_players');
         players.push({

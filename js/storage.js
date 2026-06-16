@@ -735,7 +735,7 @@ window._afterSync = function() {
       await _cleanOrphanPlayers();
       window.dispatchEvent(new CustomEvent('db-updated'));
     } catch(e) { /* тихая ошибка */ }
-  }, 60000);
+  }, 30000);
 };
 
 // Заглушки

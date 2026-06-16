@@ -273,7 +273,6 @@ window._syncFromJSONBin = async function() {
   console.log('[DB] 🔄 Загрузка из Supabase...');
 
   // Если в localStorage уже есть данные — сразу помечаем готовность
-  // чтобы страница не ждала сети и показала кэш мгновенно
   const hasCached = lsGet('pl_users') || lsGet('pl_players') || lsGet('pl_teams');
   if (hasCached) {
     _dbReady = true;
@@ -283,44 +282,45 @@ window._syncFromJSONBin = async function() {
   }
 
   try {
-    const [users, players, teams, news, tournaments, matches, vetos] = await Promise.all([
+    // Быстрый синк: только самые нужные таблицы (3 запроса вместо 7)
+    const [users, players, teams] = await Promise.all([
       sbFetch('users'),
       sbFetch('players'),
-      sbFetch('teams'),
+      sbFetch('teams')
+    ]);
+
+    lsSet('pl_users',   users.map(userFromSB));
+    lsSet('pl_players', players.map(playerFromSB));
+    lsSet('pl_teams',   teams.map(teamFromSB));
+
+    _dbReady = true;
+    window._dbReady = true;
+    window.dispatchEvent(new CustomEvent('db-updated'));
+
+    // Медленный синк: остальные таблицы в фоне
+    const [news, tournaments, matches, vetos] = await Promise.all([
       sbFetch('news'),
       sbFetch('tournaments'),
       sbFetch('matches'),
       sbFetch('vetos')
     ]);
 
-    lsSet('pl_users',       users.map(userFromSB));
-    lsSet('pl_players',     players.map(playerFromSB));
-    lsSet('pl_teams',       teams.map(teamFromSB));
     lsSet('pl_news',        news.map(newsFromSB));
     lsSet('pl_tournaments', tournaments.map(tournFromSB));
     lsSet('pl_matches',     matches.map(matchFromSB));
     lsSet('pl_vetos',       vetos.map(vetoFromSB));
 
-    // Приватные ключи - только localStorage
     if (!lsGet('pl_invites'))       lsSet('pl_invites', []);
     if (!lsGet('pl_notifications')) lsSet('pl_notifications', []);
     if (!lsGet('pl_highlights'))    lsSet('pl_highlights', []);
     if (!lsGet('pl_awards'))        lsSet('pl_awards', []);
     if (!lsGet('pl_tourn_regs'))    lsSet('pl_tourn_regs', {});
 
-    _dbReady = true;
-    window._dbReady = true;
-    console.log('[DB] ✅ Supabase загружен!');
-    console.log(`[DB] 👥 Пользователей: ${users.length}`);
-    console.log(`[DB] 🎮 Игроков: ${players.length}`);
-    console.log(`[DB] 🗺️ Вето: ${vetos.length}`);
-
-    // Диспатчим обновление чтобы страницы перерендерились со свежими данными
+    console.log(`[DB] ✅ Загружено: ${users.length} users, ${players.length} players`);
     window.dispatchEvent(new CustomEvent('db-updated'));
 
   } catch(e) {
     console.error('[DB] ❌ Ошибка Supabase:', e.message);
-    console.log('[DB] 💾 Используем localStorage');
     _dbReady = true;
     window._dbReady = true;
   }
@@ -693,6 +693,52 @@ function seedData() {
 
 seedData();
 
+// ── Создаёт записи players для пользователей у которых их нет ──
+async function _syncMissingPlayers() {
+  const users   = DB.get('pl_users');
+  const players = DB.get('pl_players');
+  if (!users.length) return;
+
+  const playerNicks = new Set(players.map(p => (p.nick || '').toLowerCase()));
+  const playerUserIds = new Set(players.map(p => p.userId).filter(Boolean));
+
+  const missing = users.filter(u =>
+    u.role !== 'admin' &&
+    !playerUserIds.has(u.id) &&
+    !playerNicks.has((u.username || '').toLowerCase())
+  );
+
+  if (!missing.length) return;
+  console.log(`[DB] 🔧 Создаём записи players для ${missing.length} пользователей без них`);
+
+  for (const u of missing) {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/players`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify({
+          nick: u.username, name: '', team: '', role: '',
+          country: '', rating: 0, photo: u.avatar || null,
+          user_id: u.id, kd: 0, hs: 0, wins: 0, matches: 0, adr: 0
+        })
+      });
+      const inserted = await res.json();
+      if (inserted && inserted[0]) {
+        players.push(playerFromSB(inserted[0]));
+        console.log(`[DB] ✅ Игрок создан для ${u.username}`);
+      }
+    } catch(e) { console.warn(`[DB] ⚠️ Не удалось создать игрока для ${u.username}:`, e.message); }
+  }
+
+  lsSet('pl_players', players);
+  window.dispatchEvent(new CustomEvent('db-updated'));
+}
+
 // ── _afterSync ─────────────────────────────────────────────────
 window._afterSync = function() {
   console.log('[DB] ✅ БД готова');
@@ -711,32 +757,40 @@ window._afterSync = function() {
     }
   }
 
-  // Чистка сиротских игроков отключена — на хосте не нужна,
-  // может удалить данные если users/players не синхронны в кэше
+  // Авто-создание записей players для пользователей у которых их нет
+  _syncMissingPlayers();
+
+  // Чистка сиротских игроков отключена
   // _cleanOrphanPlayers();
 
-  // Автообновление каждые 60 секунд (не чаще — лишние запросы тормозят сайт)
+  // Быстрый синк каждые 45 сек — только критичные данные (3 запроса)
   setInterval(async () => {
     try {
-      const [users, players, teams, news, tournaments, matches] = await Promise.all([
+      const [users, players, teams] = await Promise.all([
         sbFetch('users'),
         sbFetch('players'),
-        sbFetch('teams'),
+        sbFetch('teams')
+      ]);
+      lsSet('pl_users',   users.map(userFromSB));
+      lsSet('pl_players', players.map(playerFromSB));
+      lsSet('pl_teams',   teams.map(teamFromSB));
+      window.dispatchEvent(new CustomEvent('db-updated'));
+    } catch(e) { /* тихая ошибка */ }
+  }, 45000);
+
+  // Медленный синк каждые 2 мин — новости/матчи/турниры (не критично)
+  setInterval(async () => {
+    try {
+      const [news, tournaments, matches] = await Promise.all([
         sbFetch('news'),
         sbFetch('tournaments'),
         sbFetch('matches')
       ]);
-      lsSet('pl_users',       users.map(userFromSB));
-      lsSet('pl_players',     players.map(playerFromSB));
-      lsSet('pl_teams',       teams.map(teamFromSB));
       lsSet('pl_news',        news.map(newsFromSB));
       lsSet('pl_tournaments', tournaments.map(tournFromSB));
       lsSet('pl_matches',     matches.map(matchFromSB));
-      // Чистка сиротских игроков отключена
-      // await _cleanOrphanPlayers();
-      window.dispatchEvent(new CustomEvent('db-updated'));
     } catch(e) { /* тихая ошибка */ }
-  }, 30000);
+  }, 120000);
 };
 
 // Заглушки

@@ -962,7 +962,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ──────────────────────────────────
   function updateDashboard() {
     document.getElementById('statTeams').textContent = DB.get('pl_teams').length;
-    document.getElementById('statPlayers').textContent = DB.get('pl_users').length;
+    document.getElementById('statPlayers').textContent = DB.get('pl_players').length;
     document.getElementById('statNews').textContent = DB.get('pl_news').length;
     document.getElementById('statTournaments').textContent = getStoredTournaments().length;
   }

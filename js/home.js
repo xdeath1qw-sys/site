@@ -9,23 +9,20 @@ document.addEventListener('DOMContentLoaded', () => {
       init();
       initialized = true;
     } else {
-      const heroTeams   = document.getElementById('heroTeams');
-      const heroPlayers = document.getElementById('heroPlayers');
-      const heroNews    = document.getElementById('heroNews');
-      if (heroTeams)   animateCounter('heroTeams',   DB.get('pl_teams').length);
-      if (heroPlayers) animateCounter('heroPlayers', DB.get('pl_players').length);
-      if (heroNews)    animateCounter('heroNews',    DB.get('pl_news').length);
+      animateCounter('heroTeams',   DB.get('pl_teams').length);
+      animateCounter('heroPlayers', DB.get('pl_players').length);
+      animateCounter('heroNews',    DB.get('pl_news').length);
       if (typeof _renderHomeAll === 'function') _renderHomeAll();
     }
   });
 
   function init() {
     const teams   = DB.get('pl_teams');
+    const users   = DB.get('pl_users').filter(u => u.role !== 'admin');
     const players = DB.get('pl_players');
     const news    = DB.get('pl_news');
 
-    console.log('[HOME] init: teams=', teams.length, 'players=', players.length);
-    // Hero counters
+    // Hero counters — используем players для единообразия с главной и админкой
     animateCounter('heroTeams',   teams.length);
     animateCounter('heroPlayers', players.length);
     animateCounter('heroNews',    news.length);

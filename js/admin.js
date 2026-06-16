@@ -323,39 +323,44 @@ document.addEventListener('DOMContentLoaded', () => {
   // ──────────────────────────────────
   function renderUsersTable() {
     const tbody = document.getElementById('usersTableBody');
-    const users = DB.get('pl_users');
-    if (!users.length) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-dim);padding:30px">Нет игроков</td></tr>`; return; }
     const players = DB.get('pl_players');
-    tbody.innerHTML = users.map((u, i) => {
-      const player = players.find(p => p.userId === u.id || (p.nick || '').toLowerCase() === (u.username || '').toLowerCase());
-      const teamName = player && player.team ? player.team : (u.team || '—');
-      const isIgl = u.role === 'igl';
-      const kd      = player?.stats?.kd      ?? player?.kd      ?? null;
+    const users   = DB.get('pl_users');
+    if (!players.length) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-dim);padding:30px">Нет игроков</td></tr>`; return; }
+    tbody.innerHTML = players.map((p, i) => {
+      const user = users.find(u => u.id === p.userId || (u.username || '').toLowerCase() === (p.nick || '').toLowerCase());
+      const isIgl = user?.role === 'igl';
+      const isAdmin = user?.role === 'admin';
+      const kd = p.stats?.kd ?? p.kd ?? null;
       const kdColor = kd !== null ? (parseFloat(kd) >= 1 ? 'var(--success)' : 'var(--danger)') : 'var(--text-dim)';
+      const photo = p.photo || user?.avatar || '';
+      const email = user?.email || '—';
+      const joinedAt = user?.joinedAt ? new Date(user.joinedAt).toLocaleDateString('ru-RU') : '—';
+      const teamName = p.team || '—';
+      const uid = user?.id ?? null;
       return `
       <tr>
         <td>${i + 1}</td>
         <td>
-          ${u.photo ? `<img src="${u.photo}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:8px" />` : `<i class="fas fa-user-circle" style="color:var(--text-dim);margin-right:8px;font-size:1.1rem;vertical-align:middle"></i>`}
-          <strong>${u.username}</strong>
+          ${photo ? `<img src="${photo}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:8px" />` : `<i class="fas fa-user-circle" style="color:var(--text-dim);margin-right:8px;font-size:1.1rem;vertical-align:middle"></i>`}
+          <strong>${p.nick}</strong>
           ${isIgl ? `<span style="font-size:0.72rem;color:var(--warning);margin-left:6px;font-weight:600">👑 IGL</span>` : ''}
         </td>
-        <td>${u.email}</td>
+        <td style="font-size:0.82rem">${email}</td>
         <td>${teamName !== '—' ? `<span style="color:var(--primary);font-weight:600">${teamName}</span>` : '<span style="color:var(--text-dim)">—</span>'}</td>
         <td style="white-space:nowrap">
           <span style="font-weight:700;color:${kdColor}">${kd !== null ? parseFloat(kd).toFixed(2) : '—'}</span>
         </td>
-        <td>${u.joinedAt ? new Date(u.joinedAt).toLocaleDateString('ru-RU') : '—'}</td>
+        <td>${joinedAt}</td>
         <td>
           <div class="action-btns">
-            ${u.role !== 'admin' ? `
-              <button class="btn btn-sm btn-outline" onclick="openStatsEditor(${u.id})" title="Редактировать статистику" style="color:var(--accent);border-color:var(--accent)"><i class="fas fa-chart-bar"></i></button>
+            ${!isAdmin && uid ? `
+              <button class="btn btn-sm btn-outline" onclick="openStatsEditor(${uid})" title="Редактировать K/D" style="color:var(--accent);border-color:var(--accent)"><i class="fas fa-chart-bar"></i></button>
               ${isIgl
-                ? `<button class="btn btn-sm btn-outline" onclick="setUserRole(${u.id}, 'user')" title="Снять роль IGL" style="color:var(--warning);border-color:var(--warning)"><i class="fas fa-crown"></i></button>`
-                : `<button class="btn btn-sm btn-outline" onclick="setUserRole(${u.id}, 'igl')" title="Назначить IGL"><i class="fas fa-crown"></i></button>`
+                ? `<button class="btn btn-sm btn-outline" onclick="setUserRole(${uid}, 'user')" title="Снять IGL" style="color:var(--warning);border-color:var(--warning)"><i class="fas fa-crown"></i></button>`
+                : `<button class="btn btn-sm btn-outline" onclick="setUserRole(${uid}, 'igl')" title="Назначить IGL"><i class="fas fa-crown"></i></button>`
               }
-              <button class="btn btn-sm btn-danger" onclick="deleteUser(${u.id})"><i class="fas fa-trash"></i></button>
-            ` : '<span style="color:var(--text-dim);font-size:0.8rem">Администратор</span>'}
+              <button class="btn btn-sm btn-danger" onclick="deleteUser(${uid})"><i class="fas fa-trash"></i></button>
+            ` : isAdmin ? '<span style="color:var(--text-dim);font-size:0.8rem">Администратор</span>' : '<span style="color:var(--text-dim);font-size:0.8rem">—</span>'}
           </div>
         </td>
       </tr>`;

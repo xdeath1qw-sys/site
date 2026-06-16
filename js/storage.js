@@ -288,15 +288,6 @@ function lsSet(key, val) {
 window._syncFromJSONBin = async function() {
   console.log('[DB] 🔄 Загрузка из Supabase...');
 
-  // Если в localStorage уже есть данные — сразу помечаем готовность
-  const hasCached = lsGet('pl_users') || lsGet('pl_players') || lsGet('pl_teams');
-  if (hasCached) {
-    _dbReady = true;
-    window._dbReady = true;
-    console.log('[DB] ⚡ Кэш найден — показываем сразу, обновляем в фоне');
-    if (window._afterSync) { window._afterSync(); window._afterSync = null; }
-  }
-
   try {
     const [users, players, teams] = await Promise.all([
       sbFetch('users'),
@@ -310,10 +301,13 @@ window._syncFromJSONBin = async function() {
 
     _dbReady = true;
     window._dbReady = true;
-    window.dispatchEvent(new CustomEvent('db-updated'));
 
-    // Вызываем _afterSync только если не вызвали раньше (нет кэша)
+    console.log(`[DB] ✅ Загружено: ${users.length} users, ${players.length} players`);
+
+    // Вызываем _afterSync ровно один раз
     if (window._afterSync) { window._afterSync(); window._afterSync = null; }
+
+    window.dispatchEvent(new CustomEvent('db-updated'));
 
     // Медленный синк остальных таблиц в фоне
     Promise.all([
@@ -331,12 +325,12 @@ window._syncFromJSONBin = async function() {
       if (!lsGet('pl_highlights'))    lsSet('pl_highlights', []);
       if (!lsGet('pl_awards'))        lsSet('pl_awards', []);
       if (!lsGet('pl_tourn_regs'))    lsSet('pl_tourn_regs', {});
-      console.log(`[DB] ✅ Загружено: ${users.length} users, ${players.length} players`);
       window.dispatchEvent(new CustomEvent('db-updated'));
     }).catch(e => console.warn('[DB] ⚠️ Медленный синк:', e.message));
 
   } catch(e) {
     console.error('[DB] ❌ Ошибка Supabase:', e.message);
+    // При ошибке используем кэш
     _dbReady = true;
     window._dbReady = true;
     if (window._afterSync) { window._afterSync(); window._afterSync = null; }

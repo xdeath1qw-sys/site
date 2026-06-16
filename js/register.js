@@ -13,8 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  let isRegistering = false;
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    if (isRegistering) return; // защита от двойного сабмита
+    isRegistering = true;
 
     const submitBtn = form.querySelector('[type="submit"]') || form.querySelector('button');
     const origBtnText = submitBtn ? submitBtn.innerHTML : '';
@@ -25,13 +30,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const password2 = document.getElementById('regPassword2').value;
 
     if (!username || username.length < 2) {
-      showAlert('Введите никнейм (минимум 2 символа)', 'error'); return;
+      showAlert('Введите никнейм (минимум 2 символа)', 'error'); isRegistering = false; return;
     }
     if (password !== password2) {
-      showAlert('Пароли не совпадают', 'error'); return;
+      showAlert('Пароли не совпадают', 'error'); isRegistering = false; return;
     }
     if (password.length < 6) {
-      showAlert('Пароль должен содержать минимум 6 символов', 'error'); return;
+      showAlert('Пароль должен содержать минимум 6 символов', 'error'); isRegistering = false; return;
     }
 
     if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Регистрация...'; }
@@ -54,12 +59,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (users.find(u => (u.username || '').toLowerCase() === username.toLowerCase())) {
       showAlert('Такой никнейм уже занят', 'error');
       if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origBtnText; }
-      return;
+      isRegistering = false; return;
     }
     if (users.find(u => u.email === email)) {
       showAlert('Этот email уже зарегистрирован', 'error');
       if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origBtnText; }
-      return;
+      isRegistering = false; return;
     }
 
     const newUser = {

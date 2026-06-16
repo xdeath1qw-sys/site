@@ -46,7 +46,13 @@ window.notifyNewTeam = async function(team) {
 };
 
 // ── Уведомление: Новый пользователь ───────────────────────────
+const _notifiedUsers = new Set();
 window.notifyNewUser = async function(user) {
+  // Защита от дублей — один раз на никнейм за сессию
+  const key = (user.username || '') + (user.email || '');
+  if (_notifiedUsers.has(key)) return;
+  _notifiedUsers.add(key);
+
   const embed = {
     title: '\u{1F464} \u041D\u043E\u0432\u0430\u044F \u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u044F!',
     color: 0x22c55e,

@@ -1,24 +1,34 @@
 ﻿// ── Home Page ──
 document.addEventListener('DOMContentLoaded', () => {
 
-  // Ждём загрузки данных из Supabase
+  let initialized = false;
+
   function tryInit() {
     if (window._dbReady) {
       init();
+      initialized = true;
     } else {
       setTimeout(tryInit, 100);
     }
   }
   tryInit();
 
-  // Перерисовываем при обновлении данных из Supabase
+  // Перерисовываем всё при обновлении данных из Supabase
   window.addEventListener('db-updated', () => {
-    const heroTeams   = document.getElementById('heroTeams');
-    const heroPlayers = document.getElementById('heroPlayers');
-    const heroNews    = document.getElementById('heroNews');
-    if (heroTeams)   animateCounter('heroTeams',   DB.get('pl_teams').length);
-    if (heroPlayers) animateCounter('heroPlayers', DB.get('pl_players').length);
-    if (heroNews)    animateCounter('heroNews',    DB.get('pl_news').length);
+    if (!initialized) {
+      init();
+      initialized = true;
+    } else {
+      // Обновляем счётчики и контент
+      const heroTeams   = document.getElementById('heroTeams');
+      const heroPlayers = document.getElementById('heroPlayers');
+      const heroNews    = document.getElementById('heroNews');
+      if (heroTeams)   animateCounter('heroTeams',   DB.get('pl_teams').length);
+      if (heroPlayers) animateCounter('heroPlayers', DB.get('pl_players').length);
+      if (heroNews)    animateCounter('heroNews',    DB.get('pl_news').length);
+      // Перерендериваем списки со свежими данными
+      if (typeof _renderHomeAll === 'function') _renderHomeAll();
+    }
   });
 
   function init() {
@@ -74,6 +84,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // News preview (top 3)
     renderHomeNews(news.slice(0, 3));
+
+    // Экспортируем функцию перерендера для db-updated
+    window._renderHomeAll = function() {
+      renderHomeTeams(currentTier);
+      renderHomePlayers();
+      renderHomeNews(DB.get('pl_news').slice(0, 3));
+    };
 
     // "Показать всех" button click
     document.addEventListener('click', e => {

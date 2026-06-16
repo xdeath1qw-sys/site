@@ -1,7 +1,7 @@
 // ── MongoDB connection helper ──
 const { MongoClient } = require('mongodb');
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://denisknjazx_db_user:IHsN06G4G9yD4te0@cluster0.8wxiixq.mongodb.net/efl_league?appName=Cluster0&retryWrites=true&w=majority';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://denisknjazx_db_user:EFLleague2026@cluster0.8wxiixq.mongodb.net/efl_league?appName=Cluster0&retryWrites=true&w=majority';
 const DB_NAME = 'efl_league';
 
 let client;

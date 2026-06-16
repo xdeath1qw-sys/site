@@ -427,7 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showToast(`K/D ${user?.username} сохранён`);
   };
 
-  window.setUserRole = (id, role) => {
+  window.setUserRole = async (id, role) => {
     const label = role === 'igl' ? 'назначить капитаном (IGL)' : 'снять роль IGL';
     if (!confirm(`${label}?`)) return;
     const users = DB.get('pl_users');
@@ -436,13 +436,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Если снимаем IGL — удаляем его команду (если есть)
     if (role === 'user' && users[idx].teamId) {
-      const teams = DB.get('pl_teams').filter(t => t.id !== users[idx].teamId);
-      DB.set('pl_teams', teams);
+      const teamId = users[idx].teamId;
+      const teams = DB.get('pl_teams').filter(t => t.id !== teamId);
+      lsSet('pl_teams', teams);
+      await DB.remove('pl_teams', teamId).catch(() => {});
       users[idx].teamId = null;
     }
 
     users[idx].role = role;
-    DB.set('pl_users', users);
+    lsSet('pl_users', users);
+
+    // Сохраняем в MongoDB
+    await DB.update('pl_users', id, { role, teamId: users[idx].teamId || null }).catch(e => console.warn('[ADMIN]', e.message));
 
     // Обновляем сессию если это текущий пользователь
     const cur = Auth.current();

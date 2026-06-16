@@ -368,16 +368,18 @@ const DB = {
   async update(lsKey, id, changes) {
     const cfg = colMap[lsKey];
     const arr = lsGet(lsKey) || [];
-    const idx = arr.findIndex(x => x.id === id);
+    // Сравниваем id как строки — MongoDB возвращает строки, localStorage может хранить числа
+    const idx = arr.findIndex(x => String(x.id) === String(id));
     if (idx !== -1) {
       arr[idx] = { ...arr[idx], ...changes };
       lsSet(lsKey, arr);
     }
     if (!cfg || !id) return;
     try {
-      const item = arr[idx] || changes;
+      // Берём полный объект если нашли, иначе только changes
+      const item = idx !== -1 ? arr[idx] : changes;
       const data = cfg.toMG(item);
-      await apiFetch(cfg.col, { method: 'PUT', id, body: data });
+      await apiFetch(cfg.col, { method: 'PUT', id: String(id), body: data });
       console.log(`[DB] ✅ ${cfg.col}: обновлено id=${id}`);
     } catch(e) {
       console.warn(`[DB] ⚠️ update ${lsKey}:`, e.message);
@@ -387,10 +389,10 @@ const DB = {
   async remove(lsKey, id) {
     const cfg = colMap[lsKey];
     const arr = lsGet(lsKey) || [];
-    lsSet(lsKey, arr.filter(x => x.id !== id));
+    lsSet(lsKey, arr.filter(x => String(x.id) !== String(id)));
     if (!cfg || !id) return;
     try {
-      await apiFetch(cfg.col, { method: 'DELETE', id });
+      await apiFetch(cfg.col, { method: 'DELETE', id: String(id) });
       console.log(`[DB] 🗑️ ${cfg.col}: удалено id=${id}`);
     } catch(e) {
       console.warn(`[DB] ⚠️ remove ${lsKey}:`, e.message);
@@ -403,12 +405,11 @@ async function _pushToMongo(key, val) {
   const cfg = colMap[key];
   if (!cfg || !Array.isArray(val)) return;
 
-  // Синкаем только изменённые записи — обновляем каждую по id
   for (const item of val) {
     if (!item.id) continue;
     try {
       const data = cfg.toMG(item);
-      await apiFetch(cfg.col, { method: 'PUT', id: item.id, body: data });
+      await apiFetch(cfg.col, { method: 'PUT', id: String(item.id), body: data });
     } catch(e) {
       // тихая ошибка — не блокируем UI
     }

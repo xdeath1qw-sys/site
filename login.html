@@ -196,6 +196,20 @@
   </script>
   <script src="js/theme.js"></script>
   <script src="js/login.js"></script>
+  <script>
+    // Глазик для пароля
+    document.getElementById('togglePass').addEventListener('click', function() {
+      const inp = document.getElementById('loginPassword');
+      const icon = this.querySelector('i');
+      if (inp.type === 'password') {
+        inp.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        inp.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    });
+  </script>
 
   <script>
     // -- Вход -----------------------------------------------------

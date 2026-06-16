@@ -27,9 +27,10 @@ function lsSet(key, val) {
   }
 }
 
-// ── Обрезаем base64 для localStorage ──────────────────────────
+// ── Проверка что значение это URL, а не base64 (legacy) ──────
 function stripBase64(val) {
   if (!val) return '';
+  // Если осталась старая base64 строка — отбрасываем, работаем только с URL
   if (val.startsWith('data:')) return '';
   return val;
 }

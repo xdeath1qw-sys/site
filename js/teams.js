@@ -132,16 +132,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const ctLogoArea = document.getElementById('ctLogoArea');
   const ctLogoInput = document.getElementById('ctLogoInput');
   ctLogoArea.addEventListener('click', () => ctLogoInput.click());
-  ctLogoInput.addEventListener('change', () => {
+  ctLogoInput.addEventListener('change', async () => {
     const file = ctLogoInput.files[0];
     if (!file) return;
+    // Превью сразу
     const reader = new FileReader();
     reader.onload = e => {
-      ctLogoData = e.target.result;
-      document.getElementById('ctLogoImg').src = ctLogoData;
+      document.getElementById('ctLogoImg').src = e.target.result;
       document.getElementById('ctLogoPreview').style.display = 'flex';
     };
     reader.readAsDataURL(file);
+    // Загрузка на ImgBB
+    document.getElementById('ctLogoImg').style.opacity = '0.5';
+    try {
+      ctLogoData = await uploadFileToImgBB(file);
+      document.getElementById('ctLogoImg').src = ctLogoData;
+      console.log('[IMGBB] ✅ Лого команды загружено:', ctLogoData);
+    } catch(e) {
+      console.error('[IMGBB] ❌', e.message);
+      showToast('Ошибка загрузки логотипа', 'error');
+      ctLogoData = '';
+    } finally {
+      document.getElementById('ctLogoImg').style.opacity = '1';
+    }
   });
   document.getElementById('ctRemoveLogo').addEventListener('click', () => {
     ctLogoData = '';

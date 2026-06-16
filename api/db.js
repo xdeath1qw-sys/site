@@ -1,7 +1,10 @@
 // ── MongoDB connection helper ──
 const { MongoClient } = require('mongodb');
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://denisknjazx_db_user:EFLleague2026@cluster0.8wxiixq.mongodb.net/efl_league?appName=Cluster0&retryWrites=true&w=majority';
+const MONGODB_URI = process.env.MONGODB_URI;
+if (!MONGODB_URI) {
+  throw new Error('MONGODB_URI environment variable is not set. Configure it in Vercel project settings.');
+}
 const DB_NAME = 'efl_league';
 
 let client;

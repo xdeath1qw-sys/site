@@ -38,34 +38,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const users = DB.get('pl_users');
     const toDelete = users.filter(u => u.role !== 'admin');
 
-    // Удаляем из Supabase: users и players
+    // Удаляем из MongoDB через API
     for (const u of toDelete) {
-      if (!u.id || u.id > 2000000000000) continue;
+      if (!u.id) continue;
       try {
-        // Удаляем игрока (players)
-        await fetch(`${SUPABASE_URL}/rest/v1/players?user_id=eq.${u.id}`, {
-          method: 'DELETE',
-          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-        });
-        await fetch(`${SUPABASE_URL}/rest/v1/players?nick=eq.${encodeURIComponent(u.username)}`, {
-          method: 'DELETE',
-          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-        });
-        // Удаляем пользователя (users)
-        await fetch(`${SUPABASE_URL}/rest/v1/users?id=eq.${u.id}`, {
-          method: 'DELETE',
-          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-        });
-      } catch(e) { console.warn('[ADMIN] ⚠️ Ошибка удаления:', e.message); }
+        await apiFetch('players', { method: 'DELETE', id: u.id });
+      } catch(e) { console.warn('[ADMIN] ⚠️ Ошибка удаления игрока:', e.message); }
+      try {
+        await apiFetch('users', { method: 'DELETE', id: u.id });
+      } catch(e) { console.warn('[ADMIN] ⚠️ Ошибка удаления пользователя:', e.message); }
     }
-
-    // Очищаем всё в Supabase одним запросом на случай если что-то осталось (кроме админов)
-    try {
-      await fetch(`${SUPABASE_URL}/rest/v1/players?id=gt.0`, {
-        method: 'DELETE',
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-      });
-    } catch(e) {}
 
     // Оставляем только админов в localStorage
     const admins = users.filter(u => u.role === 'admin');
@@ -431,17 +413,9 @@ document.addEventListener('DOMContentLoaded', () => {
       lsSet('pl_players', players);
 
       const pid = players[pi].id;
-      if (pid && pid < 2000000000000) {
+      if (pid) {
         try {
-          await fetch(`${SUPABASE_URL}/rest/v1/players?id=eq.${pid}`, {
-            method: 'PATCH',
-            headers: {
-              'apikey': SUPABASE_KEY,
-              'Authorization': `Bearer ${SUPABASE_KEY}`,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ kd })
-          });
+          await DB.update('pl_players', pid, { kd, stats: players[pi].stats });
         } catch(e) { console.warn('[STATS] ⚠️', e.message); }
       }
     } else {
@@ -500,24 +474,13 @@ document.addEventListener('DOMContentLoaded', () => {
       ));
 
       if (playerToDelete) {
-        // Пробуем удалить по числовому Supabase ID
-        if (playerToDelete.id && playerToDelete.id < 2000000000000) {
+        // Удаляем игрока из MongoDB
+        if (playerToDelete.id) {
           try {
-            await fetch(`${SUPABASE_URL}/rest/v1/players?id=eq.${playerToDelete.id}`, {
-              method: 'DELETE',
-              headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-            });
-            console.log(`[DB] 🗑️ Игрок id=${playerToDelete.id} удалён из Supabase`);
+            await DB.remove('pl_players', playerToDelete.id);
+            console.log(`[DB] 🗑️ Игрок id=${playerToDelete.id} удалён из MongoDB`);
           } catch(e) { console.warn('[DB] ⚠️', e.message); }
         }
-        // Дополнительно удаляем по нику (на случай расхождения ID)
-        try {
-          await fetch(`${SUPABASE_URL}/rest/v1/players?nick=eq.${encodeURIComponent(user.username)}`, {
-            method: 'DELETE',
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-          });
-          console.log(`[DB] 🗑️ Игрок nick=${user.username} удалён из Supabase`);
-        } catch(e) { console.warn('[DB] ⚠️', e.message); }
       }
     }
 
@@ -525,13 +488,10 @@ document.addEventListener('DOMContentLoaded', () => {
     updateDashboard();
     showToast('Пользователь удалён', 'error');
 
-    // Удаляем пользователя из Supabase
+    // Удаляем пользователя из MongoDB
     try {
-      await fetch(`${SUPABASE_URL}/rest/v1/users?id=eq.${id}`, {
-        method: 'DELETE',
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-      });
-      console.log(`[DB] 🗑️ Пользователь id=${id} удалён из Supabase`);
+      await DB.remove('pl_users', id);
+      console.log(`[DB] 🗑️ Пользователь id=${id} удалён из MongoDB`);
     } catch(e) { console.warn('[DB] ⚠️', e.message); }
   };
 
@@ -1009,14 +969,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function processFile(file) {
+      // Показываем превью сразу локально
       const reader = new FileReader();
       reader.onload = (e) => {
-        const data = e.target.result;
-        img.src = data;
+        img.src = e.target.result;
         preview.style.display = 'flex';
-        onLoad(data);
       };
       reader.readAsDataURL(file);
+
+      // Загружаем на ImgBB
+      img.style.opacity = '0.5';
+      uploadFileToImgBB(file).then(url => {
+        img.src = url;
+        img.style.opacity = '1';
+        onLoad(url);
+        console.log('[IMGBB] ✅ Загружено:', url);
+      }).catch(e => {
+        img.style.opacity = '1';
+        console.error('[IMGBB] ❌', e.message);
+        showToast('Ошибка загрузки изображения', 'error');
+        onLoad('');
+      });
     }
   }
 
@@ -1040,16 +1013,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const awardImageImg   = document.getElementById('awardImageImg');
 
   awardImageArea.addEventListener('click', () => awardImageInput.click());
-  awardImageInput.addEventListener('change', () => {
+  awardImageInput.addEventListener('change', async () => {
     const file = awardImageInput.files[0];
     if (!file) return;
+    // Превью сразу
     const reader = new FileReader();
     reader.onload = e => {
-      awardImageData = e.target.result;
-      awardImageImg.src = awardImageData;
+      awardImageImg.src = e.target.result;
       awardImagePreview.style.display = 'flex';
     };
     reader.readAsDataURL(file);
+    // Загрузка на ImgBB
+    awardImageImg.style.opacity = '0.5';
+    try {
+      awardImageData = await uploadFileToImgBB(file);
+      awardImageImg.src = awardImageData;
+      console.log('[IMGBB] ✅ Награда загружена:', awardImageData);
+    } catch(e) {
+      console.error('[IMGBB] ❌', e.message);
+      showToast('Ошибка загрузки изображения', 'error');
+      awardImageData = '';
+    } finally {
+      awardImageImg.style.opacity = '1';
+    }
   });
   document.getElementById('removeAwardImage').addEventListener('click', () => {
     awardImageData = '';
@@ -1493,46 +1479,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const firstTeamName = firstTeam === 'team1' ? match.team1 : match.team2;
     const createdAt = new Date().toISOString();
 
-    const sbData = {
-      team1:             match.team1,
-      team2:             match.team2,
-      team1_captain_id:  team1CaptainId || null,
-      team2_captain_id:  team2CaptainId || null,
-      tournament:        match.tournament || '',
-      format:            format,
-      status:            'waiting',
-      current_turn:      firstStep.turn || 'team1',
-      action:            firstStep.action || 'ban',
-      maps:              JSON.parse(JSON.stringify(VETO_DEFAULT_MAPS)),
-      picked_maps:       [],
-      banned_maps:       [],
-      log:               [],
-      steps:             steps,
-      current_step:      0,
-      started_at:        null,
-      finished_at:       null,
-      created_at:        createdAt
-    };
-
     try {
-      // Сохраняем напрямую в Supabase и получаем реальный ID
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/vetos`, {
-        method: 'POST',
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=representation'
-        },
-        body: JSON.stringify(sbData)
-      });
-      const inserted = await res.json();
-      const realId = inserted[0] ? inserted[0].id : Date.now();
-      console.log(`[DB] ✅ Вето создано в Supabase, ID: ${realId}`);
-
-      // Сохраняем в localStorage с реальным Supabase ID
+      // Сохраняем через MongoDB API
       const veto = {
-        id:             realId,
         matchId:        matchId,
         team1:          match.team1,
         team2:          match.team2,
@@ -1554,9 +1503,8 @@ document.addEventListener('DOMContentLoaded', () => {
         finishedAt:     null,
       };
 
-      const vetos = DB.get('pl_vetos');
-      vetos.push(veto);
-      lsSet('pl_vetos', vetos);
+      const saved = await DB.insert('pl_vetos', veto);
+      console.log(`[DB] ✅ Вето создано в MongoDB, ID: ${saved.id}`);
 
       toggleForm('vetoForm', false);
       renderVetoTable();
@@ -1583,30 +1531,11 @@ document.addEventListener('DOMContentLoaded', () => {
   window.deleteVeto = async function(id) {
     if (!confirm('Удалить вето?')) return;
 
-    // 1. Удаляем из localStorage сразу
-    const vetos = DB.get('pl_vetos').filter(v => v.id !== id);
-    lsSet('pl_vetos', vetos);
+    // Удаляем через MongoDB API (localStorage + сервер)
+    await DB.remove('pl_vetos', id);
     renderVetoTable();
     showToast('Вето удалено', 'error');
-
-    // 2. Удаляем из Supabase напрямую по ID
-    try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/vetos?id=eq.${id}`, {
-        method: 'DELETE',
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`
-        }
-      });
-      if (res.ok) {
-        console.log(`[DB] 🗑️ Вето ${id} удалено из Supabase`);
-      } else {
-        const err = await res.text();
-        console.warn('[DB] ⚠️ Ошибка удаления из Supabase:', err);
-      }
-    } catch(e) {
-      console.warn('[DB] ⚠️ Ошибка удаления из Supabase:', e.message);
-    }
+    console.log(`[DB] 🗑️ Вето ${id} удалено из MongoDB`);
   };
 
   renderVetoTable();

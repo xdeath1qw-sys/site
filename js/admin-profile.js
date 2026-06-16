@@ -510,13 +510,25 @@
       });
     }
     function readTournImg(file) {
+      // Превью сразу локально
       const reader = new FileReader();
       reader.onload = e => {
-        _tournImageData = e.target.result;
-        if (imgEl)   imgEl.src = _tournImageData;
+        if (imgEl)   imgEl.src = e.target.result;
         if (preview) preview.style.display = 'flex';
       };
       reader.readAsDataURL(file);
+      // Загрузка на ImgBB
+      if (imgEl) imgEl.style.opacity = '0.5';
+      uploadFileToImgBB(file).then(url => {
+        _tournImageData = url;
+        if (imgEl) { imgEl.src = url; imgEl.style.opacity = '1'; }
+        console.log('[IMGBB] ✅ Баннер турнира загружен:', url);
+      }).catch(e => {
+        if (imgEl) imgEl.style.opacity = '1';
+        console.error('[IMGBB] ❌', e.message);
+        showToast('Ошибка загрузки изображения', 'error');
+        _tournImageData = '';
+      });
     }
   }
 

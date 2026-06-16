@@ -474,16 +474,31 @@ function renderProfile(user, player, layout, readOnly) {
     const preview   = document.getElementById('avatarPreview');
     const previewImg= document.getElementById('avatarPreviewImg');
     if (area) area.addEventListener('click', () => fileInput.click());
-    if (fileInput) fileInput.addEventListener('change', () => {
+    if (fileInput) fileInput.addEventListener('change', async () => {
       const file = fileInput.files[0];
       if (!file) return;
+
+      // Показываем превью сразу (локально)
       const reader = new FileReader();
       reader.onload = e => {
-        newAvatar = e.target.result;
-        previewImg.src = newAvatar;
+        previewImg.src = e.target.result;
         preview.style.display = 'flex';
       };
       reader.readAsDataURL(file);
+
+      // Загружаем на ImgBB
+      const uploadBtn = document.getElementById('saveProfileBtn');
+      if (uploadBtn) { uploadBtn.disabled = true; uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Загрузка фото...'; }
+      try {
+        newAvatar = await uploadFileToImgBB(file);
+        previewImg.src = newAvatar;
+        console.log('[IMGBB] ✅ Аватар загружен:', newAvatar);
+      } catch(e) {
+        console.error('[IMGBB] ❌', e.message);
+        if (typeof showToast === 'function') showToast('Ошибка загрузки фото', 'error');
+      } finally {
+        if (uploadBtn) { uploadBtn.disabled = false; uploadBtn.innerHTML = '<i class="fas fa-save"></i> Сохранить'; }
+      }
     });
 
     const saveBtn = document.getElementById('saveProfileBtn');

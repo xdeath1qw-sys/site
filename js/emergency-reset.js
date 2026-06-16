@@ -1,5 +1,6 @@
 // ══════════════════════════════════════════════════════════════
-//  EMERGENCY RESET UTILITY - Аварийный сброс и восстановление
+//  EMERGENCY RESET UTILITY — Аварийный сброс и восстановление
+//  (MongoDB edition)
 // ══════════════════════════════════════════════════════════════
 //
 // Используйте эти функции в консоли браузера (F12) для
@@ -7,122 +8,73 @@
 //
 // ══════════════════════════════════════════════════════════════
 
-/**
- * Принудительно сохранить ВСЕ локальные данные в Supabase
- * Используйте СРАЗУ после изменения данных чтобы сохранить их
- */
-async function emergencyBackupToSupabase() {
-  console.log('🚨 АВАРИЙНОЕ СОХРАНЕНИЕ В SUPABASE');
-  
-  if (!window._dbReady || !window._supabase) {
-    console.error('❌ Supabase не готов! Подождите несколько секунд.');
-    return;
-  }
-
-  const keys = [
-    'pl_users','pl_teams','pl_players','pl_matches','pl_news',
-    'pl_invites','pl_tournaments','pl_tourn_regs','pl_vetos',
-    'pl_highlights','pl_awards','pl_notifications'
-  ];
-
-  for (const key of keys) {
-    try {
-      const localRaw = localStorage.getItem(key);
-      if (localRaw) {
-        const localVal = JSON.parse(localRaw);
-        await window._supabase.from('kv_store').upsert({ key, data: localVal });
-        console.log('✅', key, '- сохранено');
-      } else {
-        console.log('⚪', key, '- пусто');
-      }
-    } catch(e) {
-      console.error('❌', key, '- ошибка:', e.message);
-    }
-  }
-  
-  console.log('✅ СОХРАНЕНИЕ ЗАВЕРШЕНО');
-  alert('✅ Все данные сохранены в Supabase!');
-}
+const EMERGENCY_KEYS = [
+  'pl_users', 'pl_teams', 'pl_players', 'pl_matches', 'pl_news',
+  'pl_invites', 'pl_tournaments', 'pl_tourn_regs', 'pl_vetos',
+  'pl_highlights', 'pl_awards', 'pl_notifications'
+];
 
 /**
- * Загрузить ВСЕ данные из Supabase в localStorage
- * ВНИМАНИЕ: Перезапишет локальные данные!
- */
-async function emergencyRestoreFromSupabase() {
-  const confirm = window.confirm(
-    '⚠️ ВНИМАНИЕ!\n\n' +
-    'Эта операция ПЕРЕЗАПИШЕТ все локальные данные данными из Supabase.\n\n' +
-    'Используйте только если локальные данные потеряны!\n\n' +
-    'Продолжить?'
-  );
-  
-  if (!confirm) {
-    console.log('❌ Операция отменена');
-    return;
-  }
-
-  console.log('🚨 ВОССТАНОВЛЕНИЕ ИЗ SUPABASE');
-  
-  if (!window._dbReady || !window._supabase) {
-    console.error('❌ Supabase не готов! Подождите несколько секунд.');
-    return;
-  }
-
-  const keys = [
-    'pl_users','pl_teams','pl_players','pl_matches','pl_news',
-    'pl_invites','pl_tournaments','pl_tourn_regs','pl_vetos',
-    'pl_highlights','pl_awards','pl_notifications'
-  ];
-
-  for (const key of keys) {
-    try {
-      const { data: row, error } = await window._supabase
-        .from('kv_store')
-        .select('data')
-        .eq('key', key)
-        .single();
-        
-      if (!error && row) {
-        localStorage.setItem(key, JSON.stringify(row.data));
-        console.log('✅', key, '- восстановлено');
-      } else {
-        console.log('⚪', key, '- нет в Supabase');
-      }
-    } catch(e) {
-      console.error('❌', key, '- ошибка:', e.message);
-    }
-  }
-  
-  console.log('✅ ВОССТАНОВЛЕНИЕ ЗАВЕРШЕНО');
-  alert('✅ Данные восстановлены из Supabase! Перезагрузите страницу.');
-}
-
-/**
- * Показать текущее состояние данных
+ * Показать текущее состояние данных в localStorage
  */
 function showDataStatus() {
   console.log('📊 СТАТУС ДАННЫХ:');
   console.log('================');
-  
-  const keys = [
-    'pl_users','pl_teams','pl_players','pl_matches','pl_news',
-    'pl_invites','pl_tournaments','pl_tourn_regs','pl_vetos',
-    'pl_highlights','pl_awards','pl_notifications'
-  ];
-  
-  keys.forEach(key => {
+  EMERGENCY_KEYS.forEach(key => {
     const raw = localStorage.getItem(key);
     if (raw) {
-      const val = JSON.parse(raw);
-      const count = Array.isArray(val) ? val.length : (typeof val === 'object' ? Object.keys(val).length : '?');
-      console.log(`📦 ${key}: ${count} записей`);
+      try {
+        const val = JSON.parse(raw);
+        const count = Array.isArray(val) ? val.length : (typeof val === 'object' ? Object.keys(val).length : '?');
+        console.log(`📦 ${key}: ${count} записей`);
+      } catch(_) {
+        console.log(`⚠️ ${key}: ошибка парсинга`);
+      }
     } else {
       console.log(`⚪ ${key}: пусто`);
     }
   });
-  
   console.log('================');
-  console.log('👤 Текущая сессия:', Auth.current());
+  if (typeof Auth !== 'undefined') {
+    console.log('👤 Текущая сессия:', Auth.current());
+  }
+}
+
+/**
+ * Принудительно перезагрузить ВСЕ данные из MongoDB
+ * Используйте если localStorage устарел или повреждён
+ */
+async function emergencyRestoreFromMongo() {
+  const ok = window.confirm(
+    '⚠️ ВНИМАНИЕ!\n\n' +
+    'Эта операция ПЕРЕЗАПИШЕТ все локальные данные данными из MongoDB.\n\n' +
+    'Используйте только если локальные данные потеряны!\n\n' +
+    'Продолжить?'
+  );
+  if (!ok) { console.log('❌ Операция отменена'); return; }
+
+  console.log('🚨 ВОССТАНОВЛЕНИЕ ИЗ MONGODB...');
+
+  const cols = ['users', 'players', 'teams', 'news', 'tournaments', 'matches', 'vetos'];
+  const keyMap = {
+    users: 'pl_users', players: 'pl_players', teams: 'pl_teams',
+    news: 'pl_news', tournaments: 'pl_tournaments', matches: 'pl_matches', vetos: 'pl_vetos'
+  };
+
+  for (const col of cols) {
+    try {
+      const res = await fetch(`/api/data?col=${col}`);
+      if (!res.ok) throw new Error(await res.text());
+      const data = await res.json();
+      localStorage.setItem(keyMap[col], JSON.stringify(data));
+      console.log(`✅ ${keyMap[col]}: восстановлено (${data.length} записей)`);
+    } catch(e) {
+      console.error(`❌ ${col}: ошибка — ${e.message}`);
+    }
+  }
+
+  console.log('✅ ВОССТАНОВЛЕНИЕ ЗАВЕРШЕНО');
+  alert('✅ Данные восстановлены из MongoDB!\nПерезагрузите страницу.');
 }
 
 /**
@@ -130,22 +82,14 @@ function showDataStatus() {
  */
 function downloadBackup() {
   console.log('💾 Создание бэкапа...');
-  
   const backup = {};
-  const keys = [
-    'pl_users','pl_teams','pl_players','pl_matches','pl_news',
-    'pl_invites','pl_tournaments','pl_tourn_regs','pl_vetos',
-    'pl_highlights','pl_awards','pl_notifications'
-  ];
-  
-  keys.forEach(key => {
+  EMERGENCY_KEYS.forEach(key => {
     const raw = localStorage.getItem(key);
     if (raw) {
-      backup[key] = JSON.parse(raw);
+      try { backup[key] = JSON.parse(raw); } catch(_) {}
     }
   });
-  
-  // Создаём ссылку для скачивания
+
   const dataStr = JSON.stringify(backup, null, 2);
   const blob = new Blob([dataStr], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
@@ -154,39 +98,30 @@ function downloadBackup() {
   link.download = `efl-backup-${new Date().toISOString().split('T')[0]}.json`;
   link.click();
   URL.revokeObjectURL(url);
-  
   console.log('✅ Бэкап скачан!');
 }
 
 /**
- * Восстановить данные из JSON файла
+ * Восстановить данные из JSON файла в localStorage
  */
 function uploadBackup() {
   const input = document.createElement('input');
   input.type = 'file';
   input.accept = 'application/json';
-  
+
   input.onchange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    
     const reader = new FileReader();
     reader.onload = (event) => {
       try {
         const backup = JSON.parse(event.target.result);
-        
         Object.keys(backup).forEach(key => {
           localStorage.setItem(key, JSON.stringify(backup[key]));
-          console.log('✅', key, '- восстановлено из файла');
+          console.log(`✅ ${key} — восстановлено из файла`);
         });
-        
         console.log('✅ ДАННЫЕ ВОССТАНОВЛЕНЫ ИЗ ФАЙЛА');
-        alert('✅ Данные восстановлены! Перезагрузите страницу.');
-        
-        // Автоматически сохраняем в Supabase
-        if (window._dbReady) {
-          emergencyBackupToSupabase();
-        }
+        alert('✅ Данные восстановлены!\nПерезагрузите страницу.');
       } catch(e) {
         console.error('❌ Ошибка чтения файла:', e);
         alert('❌ Ошибка чтения файла!');
@@ -194,7 +129,7 @@ function uploadBackup() {
     };
     reader.readAsText(file);
   };
-  
+
   input.click();
 }
 
@@ -202,15 +137,13 @@ function uploadBackup() {
 console.log(`
 ╔══════════════════════════════════════════════════════════╗
 ║         🚨 АВАРИЙНЫЕ ФУНКЦИИ ВОССТАНОВЛЕНИЯ 🚨           ║
+║                  (MongoDB edition)                       ║
 ╚══════════════════════════════════════════════════════════╝
 
 Доступные функции в консоли:
 
-📤 emergencyBackupToSupabase()
-   Принудительно сохранить ВСЕ данные в Supabase
-
-📥 emergencyRestoreFromSupabase()
-   Восстановить данные из Supabase (перезапишет локальные!)
+📥 emergencyRestoreFromMongo()
+   Восстановить данные из MongoDB (перезапишет локальные!)
 
 📊 showDataStatus()
    Показать текущее состояние данных
@@ -222,20 +155,9 @@ console.log(`
    Восстановить из JSON файла
 
 ════════════════════════════════════════════════════════════
-
-💡 РЕКОМЕНДУЕТСЯ:
-   1. Сразу после изменений запускайте emergencyBackupToSupabase()
-   2. Периодически делайте downloadBackup()
-   3. Храните бэкапы в безопасном месте
-
-════════════════════════════════════════════════════════════
 `);
 
-// Экспортируем функции в глобальную область для использования в консоли и других скриптах
-window.syncUsersToPlayers = syncUsersToPlayers;
-window.seedData = seedData;
-window.emergencyBackupToSupabase = emergencyBackupToSupabase;
-window.emergencyRestoreFromSupabase = emergencyRestoreFromSupabase;
+window.emergencyRestoreFromMongo = emergencyRestoreFromMongo;
 window.showDataStatus = showDataStatus;
 window.downloadBackup = downloadBackup;
 window.uploadBackup = uploadBackup;

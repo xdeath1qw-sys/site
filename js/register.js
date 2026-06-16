@@ -36,18 +36,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Регистрация...'; }
 
-    // Если БД ещё грузится — ждём максимум 5 секунд
+    // Если БД ещё грузится — загружаем только users напрямую из Supabase
+    let users;
     if (!window._dbReady) {
-      showAlert('Подключение к базе данных...', 'success');
-      await new Promise(resolve => {
-        const t = setTimeout(resolve, 5000);
-        const check = setInterval(() => {
-          if (window._dbReady) { clearInterval(check); clearTimeout(t); resolve(); }
-        }, 100);
-      });
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/users?select=id,username,email`, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+        const data = await res.json();
+        users = Array.isArray(data) ? data.map(u => ({ id: u.id, username: u.username, email: u.email })) : [];
+      } catch(e) {
+        users = DB.get('pl_users');
+      }
+    } else {
+      users = DB.get('pl_users');
     }
-
-    const users = DB.get('pl_users');
     if (users.find(u => (u.username || '').toLowerCase() === username.toLowerCase())) {
       showAlert('Такой никнейм уже занят', 'error');
       if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origBtnText; }

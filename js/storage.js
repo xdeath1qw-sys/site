@@ -45,6 +45,13 @@ async function sbFetch(table, options = {}) {
 
 // ── Конвертеры: Supabase ↔ localStorage формат ───────────────
 
+// Обрезаем base64 для localStorage — оставляем только URL
+function stripBase64(val) {
+  if (!val) return '';
+  if (val.startsWith('data:')) return ''; // base64 не храним в localStorage
+  return val;
+}
+
 // Пользователи
 function userFromSB(u) {
   return {
@@ -54,7 +61,7 @@ function userFromSB(u) {
     password: u.password,
     role: u.role || 'user',
     team: u.team || '',
-    avatar: u.avatar || '',
+    avatar: stripBase64(u.avatar || ''),
     faceitUrl: u.faceit_url || '',
     steamUrl: u.steam_url || '',
     joinedAt: u.joined_at
@@ -83,7 +90,7 @@ function playerFromSB(p) {
     role: p.role || '',
     country: p.country || '',
     rating: p.rating || 0,
-    photo: p.photo || '',
+    photo: stripBase64(p.photo || ''),
     userId: p.user_id,
     stats: {
       kd: p.kd || 0,
@@ -120,7 +127,7 @@ function teamFromSB(t) {
     tier: t.tier || 3,
     country: t.country || '',
     rating: t.rating || 0,
-    logo: t.logo || '',
+    logo: stripBase64(t.logo || ''),
     description: t.description || '',
     ownerId: t.owner_id || null,
     matches: t.matches || 0,

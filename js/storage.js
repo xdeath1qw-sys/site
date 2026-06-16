@@ -307,8 +307,8 @@ window._syncFromJSONBin = async function() {
     // Вызываем _afterSync ровно один раз
     if (window._afterSync) { window._afterSync(); window._afterSync = null; }
 
-    // Небольшая задержка чтобы lsSet успел записать перед рендером
-    setTimeout(() => window.dispatchEvent(new CustomEvent('db-updated')), 50);
+    // Диспатчим db-updated — lsSet уже записал данные (синхронно)
+    window.dispatchEvent(new CustomEvent('db-updated'));
     // Медленный синк остальных таблиц в фоне
     Promise.all([
       sbFetch('news'),

@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const players = DB.get('pl_players');
     const news    = DB.get('pl_news');
 
+    console.log('[HOME] init: teams=', teams.length, 'players=', players.length);
     // Hero counters
     animateCounter('heroTeams',   teams.length);
     animateCounter('heroPlayers', players.length);

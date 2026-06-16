@@ -772,8 +772,8 @@ window._afterSync = function() {
     }
   }
 
-  // Авто-создание записей players для пользователей у которых их нет
-  _syncMissingPlayers();
+  // _syncMissingPlayers отключена — данные уже синхронизированы
+  // _syncMissingPlayers();
 
   // Чистка сиротских игроков отключена
   // _cleanOrphanPlayers();

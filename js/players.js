@@ -41,6 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
     init();
   });
 
+  // Перерендериваем когда Supabase вернул свежие данные
+  window.addEventListener('db-updated', () => {
+    console.log('[PLAYERS] db-updated — обновляем список');
+    populateTeamFilter();
+    renderPlayers();
+  });
+
   function init() {
     const players = DB.get('pl_players');
     console.log('[PLAYERS] Загружено игроков:', players.length);

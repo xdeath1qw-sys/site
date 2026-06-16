@@ -533,4 +533,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('teamModal').style.display = 'none';
   };
   }); // конец whenDbReady
+
+  // Перерендериваем когда Supabase вернул свежие данные
+  window.addEventListener('db-updated', () => {
+    if (typeof renderTeams === 'function') renderTeams();
+  });
 }); // конец DOMContentLoaded

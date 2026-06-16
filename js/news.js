@@ -80,4 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.classList.add('active');
   };
   }); // конец whenDbReady
+
+  // Перерендериваем когда Supabase вернул свежие данные
+  window.addEventListener('db-updated', () => {
+    if (typeof renderNews === 'function') renderNews();
+  });
 }); // конец DOMContentLoaded

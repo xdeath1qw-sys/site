@@ -573,7 +573,13 @@ function saveProfile(user, newAvatar) {
     }
   }
 
-  DB.set('pl_users', users);
+  lsSet('pl_users', users);
+
+  // Сохраняем изменения в MongoDB через update
+  const updatedUser = users[idx];
+  if (updatedUser.id) {
+    DB.update('pl_users', updatedUser.id, updatedUser).catch(e => console.warn('[PROFILE] ⚠️ update user:', e.message));
+  }
 
   // Синхронизируем изменения с записью игрока
   const players = DB.get('pl_players');
@@ -581,7 +587,10 @@ function saveProfile(user, newAvatar) {
   if (pi !== -1) {
     players[pi].nick = newUsername;
     if (newAvatar) players[pi].photo = newAvatar;
-    DB.set('pl_players', players);
+    lsSet('pl_players', players);
+    if (players[pi].id) {
+      DB.update('pl_players', players[pi].id, players[pi]).catch(e => console.warn('[PROFILE] ⚠️ update player:', e.message));
+    }
   }
 
   const { password: _, ...safeUser } = users[idx];

@@ -400,8 +400,19 @@ const DB = {
 
 // ── Синк в MongoDB при изменениях через DB.set ────────────────
 async function _pushToMongo(key, val) {
-  // DB.set используется для массовых обновлений — пересинкаем всю коллекцию
-  // Для production лучше использовать DB.update/insert/remove напрямую
+  const cfg = colMap[key];
+  if (!cfg || !Array.isArray(val)) return;
+
+  // Синкаем только изменённые записи — обновляем каждую по id
+  for (const item of val) {
+    if (!item.id) continue;
+    try {
+      const data = cfg.toMG(item);
+      await apiFetch(cfg.col, { method: 'PUT', id: item.id, body: data });
+    } catch(e) {
+      // тихая ошибка — не блокируем UI
+    }
+  }
 }
 
 // ── _afterSync ─────────────────────────────────────────────────

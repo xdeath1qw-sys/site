@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!user || user.role !== 'igl') { wrap.innerHTML = ''; return; }
 
     const cd = getCdInfo(user);
-    const myTeam = DB.get('pl_teams').find(t => t.ownerId === user.id);
+    const myTeam = DB.get('pl_teams').find(t => String(t.ownerId) === String(user.id));
 
     if (myTeam) {
       // У IGL уже есть команда — показываем кнопку удаления
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cd = getCdInfo(user);
     if (cd) { showToast('КД ещё активен!', 'error'); return; }
 
-    const myTeam = DB.get('pl_teams').find(t => t.ownerId === user.id);
+    const myTeam = DB.get('pl_teams').find(t => String(t.ownerId) === String(user.id));
     if (myTeam) { showToast('У вас уже есть команда!', 'error'); return; }
 
     const name = document.getElementById('ctName').value.trim();
@@ -209,13 +209,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Сохраняем teamId у пользователя
     const users = DB.get('pl_users');
-    const idx = users.findIndex(u => u.id === user.id);
+    const idx = users.findIndex(u => String(u.id) === String(user.id));
     if (idx !== -1) {
       users[idx].teamId = saved.id;
+      users[idx].team = name;
       users[idx].teamDeletedAt = null;
-      DB.set('pl_users', users);
+      lsSet('pl_users', users);
+      await DB.update('pl_users', String(user.id), { teamId: saved.id, team: name, teamDeletedAt: null }).catch(() => {});
       const { password: _, ...safe } = users[idx];
       Auth.login(safe);
+    }
+
+    // Добавляем IGL как игрока команды если его ещё нет
+    const players = DB.get('pl_players');
+    const existingPlayer = players.find(p =>
+      String(p.userId) === String(user.id) ||
+      (p.nick || '').toLowerCase() === (user.username || '').toLowerCase()
+    );
+    if (existingPlayer) {
+      // Обновляем команду
+      await DB.update('pl_players', String(existingPlayer.id), { team: name, role: 'IGL' }).catch(() => {});
+      const pi = players.findIndex(p => String(p.id) === String(existingPlayer.id));
+      if (pi !== -1) { players[pi].team = name; players[pi].role = 'IGL'; lsSet('pl_players', players); }
+    } else {
+      // Создаём запись игрока
+      await DB.insert('pl_players', {
+        nick: user.username,
+        name: user.username,
+        team: name,
+        role: 'IGL',
+        country: '',
+        rating: 0,
+        photo: user.avatar || '',
+        userId: user.id,
+        stats: { kd: 0, hs: 0, adr: 0, matches: 0, wins: 0 }
+      });
     }
 
     btn.disabled = false;
@@ -285,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const logo = t.logo
           ? `<img src="${t.logo}" alt="${t.name}" class="list-logo" />`
           : `<span class="list-logo-placeholder">${t.name.substring(0,2).toUpperCase()}</span>`;
-        const isOwn = user && t.ownerId === user.id;
+        const isOwn = user && String(t.ownerId) === String(user.id);
         return `
           <div class="list-row${isOwn ? ' own-team-row' : ''}" style="cursor:pointer" onclick="openTeamModal(${t.id})">
             <span class="lh-num lr-num">${offset + i + 1}</span>
@@ -325,7 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const players = DB.get('pl_players').filter(p => p.team === t.name);
         const allUsers = DB.get('pl_users');
         const captain = allUsers.find(u => u.id === t.ownerId);
-        const isOwn = user && t.ownerId === user.id;
+        const isOwn = user && String(t.ownerId) === String(user.id);
 
         // Собираем 5 слотов: IGL + игроки + пустые
         const slots = [];
@@ -575,3 +603,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof renderTeams === 'function') renderTeams();
   });
 }); // конец DOMContentLoaded
+

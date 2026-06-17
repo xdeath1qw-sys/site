@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // ── Переменные состояния (объявляем до любых рендеров) ──
+  let _usersSearchQuery = '';
+
   whenDbReady(() => {
     updateDashboard();
     renderTeamsTable();
@@ -315,7 +318,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // ──────────────────────────────────
   // USERS
   // ──────────────────────────────────
-  let _usersSearchQuery = '';
 
   // Поиск
   const usersSearchInput = document.getElementById('usersSearch');

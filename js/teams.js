@@ -315,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
           : `<span class="list-logo-placeholder">${t.name.substring(0,2).toUpperCase()}</span>`;
         const isOwn = user && String(t.ownerId) === String(user.id);
         return `
-          <div class="list-row${isOwn ? ' own-team-row' : ''}" style="cursor:pointer" onclick="openTeamModal(${t.id})">
+          <div class="list-row${isOwn ? ' own-team-row' : ''}" style="cursor:pointer" onclick="openTeamModal('${t.id}')">
             <span class="lh-num lr-num">${offset + i + 1}</span>
             <span class="lh-name lr-name">${logo} <strong>${t.name}</strong>${isOwn ? ' <span class="own-badge"><i class="fas fa-crown"></i></span>' : ''}</span>
             <span class="lh-tier"><span class="tier-badge tier-${t.tier}">T${t.tier}</span></span>
@@ -352,7 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
           : `<span>${t.name.substring(0,2).toUpperCase()}</span>`;
         const players = DB.get('pl_players').filter(p => p.team === t.name);
         const allUsers = DB.get('pl_users');
-        const captain = allUsers.find(u => u.id === t.ownerId);
+        const captain = allUsers.find(u => String(u.id) === String(t.ownerId));
         const isOwn = user && String(t.ownerId) === String(user.id);
 
         // Собираем 5 слотов: IGL + игроки + пустые
@@ -376,7 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ).join('');
 
         return `
-          <div class="team-card${isOwn ? ' own-team-card' : ''}" style="cursor:pointer" onclick="openTeamModal(${t.id})">
+          <div class="team-card${isOwn ? ' own-team-card' : ''}" style="cursor:pointer" onclick="openTeamModal('${t.id}')">
             <div class="team-card-top">
               <div class="team-logo">${logo}</div>
               <div class="team-info">

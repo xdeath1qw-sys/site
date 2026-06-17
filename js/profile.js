@@ -1,5 +1,6 @@
 ﻿// ── Profile Page ──
 document.addEventListener('DOMContentLoaded', () => {
+  whenDbReady(() => {
   const params     = new URLSearchParams(window.location.search);
   const viewUser   = params.get('user'); // ник игрока для просмотра
 
@@ -65,7 +66,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   renderProfile(user, linkedPlayer, layout, false);
-});
+  }); // конец whenDbReady
+}); // конец DOMContentLoaded
 
 function renderProfile(user, player, layout, readOnly) {
   layout.className = 'player-profile-layout';

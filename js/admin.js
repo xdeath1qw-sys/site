@@ -1282,26 +1282,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const users = DB.get('pl_users');
     const players = DB.get('pl_players');
     const teams = DB.get('pl_teams');
-    const currentTeam = teams.find(t => t.id === currentRosterTeamId);
-    
+    const currentTeam = teams.find(t => String(t.id) === String(currentRosterTeamId));
+
     select.innerHTML = '<option value="">— Выберите пользователя —</option>';
-    
+
     users.forEach(u => {
-      // Пропускаем админов и IGL, которые уже являются капитанами других команд
+      // Пропускаем только администраторов
       if (u.role === 'admin') return;
-      if (u.role === 'igl' && String(u.id) !== String(currentTeam ? currentTeam.ownerId : null)) return;
-      
-      // Проверяем, есть ли уже игрок с таким ником в этой команде
-      const playerInTeam = players.find(p => p.nick === u.username && p.team === currentRosterTeamName);
-      if (playerInTeam) return;
-      
-      // Проверяем, является ли этот пользователь капитаном текущей команды
-      const isCaptain = currentTeam && String(currentTeam.ownerId) === String(u.id);
-      if (isCaptain) return;
-      
+
+      // Пропускаем капитана текущей команды (он уже в составе)
+      if (currentTeam && String(currentTeam.ownerId) === String(u.id)) return;
+
+      // Пропускаем тех, кто уже в этой команде
+      const alreadyInTeam = players.find(p =>
+        (p.nick || '').toLowerCase() === (u.username || '').toLowerCase() &&
+        p.team === currentRosterTeamName
+      );
+      if (alreadyInTeam) return;
+
       const opt = document.createElement('option');
       opt.value = u.id;
-      opt.textContent = `${u.username} (${u.email})${u.role === 'igl' ? ' — IGL' : ''}`;
+      opt.textContent = `${u.username} (${u.email})${u.role === 'igl' ? ' 👑 IGL' : ''}`;
       select.appendChild(opt);
     });
   }

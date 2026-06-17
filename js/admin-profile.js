@@ -207,13 +207,26 @@
   // PLAYERS
   // ══════════════════════════════════════════════════════════════
   let _editPlayerId = null;
+  let _playerSearchQuery = '';
 
   function renderPlayers() {
     const tbody = document.getElementById('apPlayersBody');
     if (!tbody) return;
-    const players = DB.get('pl_players');
+    let players = DB.get('pl_players');
+
+    // фильтрация по поиску
+    if (_playerSearchQuery) {
+      const q = _playerSearchQuery.toLowerCase();
+      players = players.filter(p =>
+        (p.nick || '').toLowerCase().includes(q) ||
+        (p.name || '').toLowerCase().includes(q) ||
+        (p.team || '').toLowerCase().includes(q) ||
+        (p.role || '').toLowerCase().includes(q)
+      );
+    }
+
     if (!players.length) {
-      tbody.innerHTML = `<tr><td colspan="6" class="ap-empty">Нет игроков</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" class="ap-empty">${_playerSearchQuery ? 'Ничего не найдено' : 'Нет игроков'}</td></tr>`;
       return;
     }
     tbody.innerHTML = players.map(p => `
@@ -244,6 +257,15 @@
   }
 
   function wirePlayers() {
+    // Поиск
+    const searchInput = document.getElementById('apPlayerSearch');
+    if (searchInput) {
+      searchInput.addEventListener('input', () => {
+        _playerSearchQuery = searchInput.value.trim();
+        renderPlayers();
+      });
+    }
+
     document.getElementById('apAddPlayerBtn')?.addEventListener('click', () => {
       _editPlayerId = null;
       const el = document.getElementById('apPlayerFormTitle');

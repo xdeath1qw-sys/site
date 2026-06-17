@@ -174,7 +174,10 @@
         <!-- -- PLAYERS -- -->
         <div class="ap-panel" id="ap-players">
           <div class="admin-panel-header" style="margin-bottom:20px">
-            <span></span>
+            <div class="search-box" style="flex:1;max-width:320px">
+              <i class="fas fa-search"></i>
+              <input type="text" id="apPlayerSearch" placeholder="Поиск по нику, команде, роли..." />
+            </div>
             <button class="btn btn-primary btn-sm" id="apAddPlayerBtn"><i class="fas fa-plus"></i> Добавить игрока</button>
           </div>
           <div class="admin-form-card" id="apPlayerForm" style="display:none">

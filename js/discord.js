@@ -12,10 +12,15 @@ async function sendDiscordNotification(embed) {
     return;
   }
 
+  // Таймаут 4 сек — если Discord заблокирован, не подвешиваем сайт
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 4000);
+
   try {
     await fetch(DISCORD_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
       body: JSON.stringify({
         username: 'EFL League Bot',
         avatar_url: 'https://i.imgur.com/4M34hi2.png',
@@ -24,7 +29,13 @@ async function sendDiscordNotification(embed) {
     });
     console.log('[DISCORD] ✅ Уведомление отправлено');
   } catch(e) {
-    console.warn('[DISCORD] ⚠️ Ошибка отправки:', e.message);
+    if (e.name === 'AbortError') {
+      console.warn('[DISCORD] ⏱ Таймаут — Discord недоступен');
+    } else {
+      console.warn('[DISCORD] ⚠️ Ошибка отправки:', e.message);
+    }
+  } finally {
+    clearTimeout(timer);
   }
 }
 

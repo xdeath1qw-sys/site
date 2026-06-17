@@ -23,10 +23,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  updateDashboard();
-  renderTeamsTable();
-  renderNewsTable();
-  renderUsersTable();
+  whenDbReady(() => {
+    updateDashboard();
+    renderTeamsTable();
+    renderNewsTable();
+    renderUsersTable();
+    renderMatchesTable();
+    renderTournamentsTable();
+  });
+
+  // Перерендерим когда Supabase вернул свежие данные
+  window.addEventListener('db-updated', () => {
+    updateDashboard();
+    renderTeamsTable();
+    renderNewsTable();
+    renderUsersTable();
+    renderMatchesTable();
+    renderTournamentsTable();
+  });
 
   document.getElementById('deleteAllUsersBtn').addEventListener('click', async () => {
     if (!confirm('Удалить ВСЕХ игроков (кроме администраторов)?\n\nЭто действие нельзя отменить!')) return;
@@ -66,8 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.innerHTML = '<i class="fas fa-trash-alt"></i> Удалить всех';
     showToast('Все игроки удалены', 'error');
   });
-  renderMatchesTable();
-  renderTournamentsTable();
 
   // ──────────────────────────────────
   // TEAMS

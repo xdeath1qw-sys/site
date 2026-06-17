@@ -761,13 +761,18 @@ img { max-width: 100%; height: auto; display: block; }
 .input-with-icon { position: relative; }
 .input-with-icon input { padding-right: 44px; }
 .toggle-pass {
-  position: absolute; right: 12px; top: 50%;
+  position: absolute; right: 10px; top: 50%;
   transform: translateY(-50%);
-  background: none; border: none; cursor: pointer;
-  color: var(--text-dim); font-size: 0.95rem;
+  background: none; border: none; outline: none;
+  box-shadow: none; -webkit-appearance: none;
+  cursor: pointer; padding: 4px 6px;
+  color: var(--text-dim); font-size: 1rem;
   transition: color 0.2s;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 6px;
 }
 .toggle-pass:hover { color: var(--primary); }
+.toggle-pass:focus { outline: none; box-shadow: none; }
 
 /* Alert */
 .alert {

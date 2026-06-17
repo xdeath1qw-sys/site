@@ -303,11 +303,33 @@ document.addEventListener('DOMContentLoaded', () => {
   // ──────────────────────────────────
   // USERS
   // ──────────────────────────────────
+  let _usersSearchQuery = '';
+
+  // Поиск
+  const usersSearchInput = document.getElementById('usersSearch');
+  if (usersSearchInput) {
+    usersSearchInput.addEventListener('input', () => {
+      _usersSearchQuery = usersSearchInput.value.trim().toLowerCase();
+      renderUsersTable();
+    });
+  }
+
   function renderUsersTable() {
     const tbody = document.getElementById('usersTableBody');
-    const players = DB.get('pl_players');
-    const users   = DB.get('pl_users');
-    if (!players.length) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-dim);padding:30px">Нет игроков</td></tr>`; return; }
+    let players = DB.get('pl_players');
+    const users = DB.get('pl_users');
+
+    // Фильтрация по поиску
+    if (_usersSearchQuery) {
+      players = players.filter(p => {
+        const user = users.find(u => String(u.id) === String(p.userId) || (u.username || '').toLowerCase() === (p.nick || '').toLowerCase());
+        return (p.nick || '').toLowerCase().includes(_usersSearchQuery) ||
+               (p.team || '').toLowerCase().includes(_usersSearchQuery) ||
+               (user?.email || '').toLowerCase().includes(_usersSearchQuery);
+      });
+    }
+
+    if (!players.length) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-dim);padding:30px">${_usersSearchQuery ? 'Ничего не найдено' : 'Нет игроков'}</td></tr>`; return; }
     tbody.innerHTML = players.map((p, i) => {
       const user = users.find(u => String(u.id) === String(p.userId) || (u.username || '').toLowerCase() === (p.nick || '').toLowerCase());
       const isIgl = user?.role === 'igl';

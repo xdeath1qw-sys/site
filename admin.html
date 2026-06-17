@@ -266,7 +266,13 @@
       <div class="admin-panel" id="panel-users">
         <div class="admin-panel-header">
           <h2 class="admin-title"><i class="fas fa-users"></i> Игроки</h2>
-          <button class="btn btn-danger" id="deleteAllUsersBtn" style="gap:8px"><i class="fas fa-trash-alt"></i> Удалить всех</button>
+          <div style="display:flex;align-items:center;gap:12px;margin-left:auto">
+            <div class="search-box">
+              <i class="fas fa-search"></i>
+              <input type="text" id="usersSearch" placeholder="Поиск по нику, команде, email..." />
+            </div>
+            <button class="btn btn-danger" id="deleteAllUsersBtn" style="gap:8px;white-space:nowrap"><i class="fas fa-trash-alt"></i> Удалить всех</button>
+          </div>
         </div>
         <div class="admin-table-wrap">
           <table class="admin-table">

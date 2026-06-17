@@ -436,15 +436,22 @@ document.addEventListener('DOMContentLoaded', () => {
       : `<div class="tm-logo-placeholder">${t.name.substring(0,2).toUpperCase()}</div>`;
 
     // ── Фотокарточки игроков ──
-    const playerCards = allMembers.slice(0, 5).map(p => `
+    let subIndex = 0;
+    const playerCards = allMembers.slice(0, 5).map(p => {
+      let roleLabel = p.role;
+      if ((p.role || '').toLowerCase() === 'substitute') {
+        roleLabel = `Замена ${subIndex++}`;
+      }
+      return `
       <div class="tm-player-card" onclick="window.location.href='profile.html?user=${encodeURIComponent(p.nick)}'">
         <div class="tm-player-photo">
           ${p.photo ? `<img src="${p.photo}" alt="${p.nick}">` : `<div class="tm-photo-placeholder">${p.nick.charAt(0).toUpperCase()}</div>`}
           ${p.isCaptain ? `<div class="tm-crown"><i class="fas fa-crown"></i></div>` : ''}
         </div>
         <div class="tm-player-nick">${p.nick}</div>
-        ${p.role ? `<div class="tm-player-role">${p.role}</div>` : ''}
-      </div>`).join('');
+        ${roleLabel ? `<div class="tm-player-role">${roleLabel}</div>` : ''}
+      </div>`;
+    }).join('');
 
     // ── Статистика команды — из данных команды или подсчёт из матчей ──
     const totalMatches = DB.get('pl_matches').filter(m => m.team1 === t.name || m.team2 === t.name);

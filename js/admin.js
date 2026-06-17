@@ -1289,14 +1289,14 @@ document.addEventListener('DOMContentLoaded', () => {
     users.forEach(u => {
       // Пропускаем админов и IGL, которые уже являются капитанами других команд
       if (u.role === 'admin') return;
-      if (u.role === 'igl' && u.id !== (currentTeam ? currentTeam.ownerId : null)) return;
+      if (u.role === 'igl' && String(u.id) !== String(currentTeam ? currentTeam.ownerId : null)) return;
       
       // Проверяем, есть ли уже игрок с таким ником в этой команде
       const playerInTeam = players.find(p => p.nick === u.username && p.team === currentRosterTeamName);
       if (playerInTeam) return;
       
       // Проверяем, является ли этот пользователь капитаном текущей команды
-      const isCaptain = currentTeam && currentTeam.ownerId === u.id;
+      const isCaptain = currentTeam && String(currentTeam.ownerId) === String(u.id);
       if (isCaptain) return;
       
       const opt = document.createElement('option');
@@ -1307,14 +1307,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   window.addUserToTeamRoster = function() {
-    const userId = parseInt(document.getElementById('rosterUserSelect').value);
+    const userId = document.getElementById('rosterUserSelect').value;
     if (!userId) {
       showToast('Выберите пользователя', 'error');
       return;
     }
     
     const users = DB.get('pl_users');
-    const user = users.find(u => u.id === userId);
+    const user = users.find(u => String(u.id) === String(userId));
     if (!user) {
       showToast('Пользователь не найден', 'error');
       return;

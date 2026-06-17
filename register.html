@@ -74,25 +74,5 @@
   </script>
   <script src="js/theme.js"></script>
   <script src="js/register.js"></script>
-  <script>
-    // Глазики для паролей
-    function setupToggle(btnId, inputId) {
-      const btn = document.getElementById(btnId);
-      if (!btn) return;
-      btn.addEventListener('click', function() {
-        const inp = document.getElementById(inputId);
-        const icon = this.querySelector('i');
-        if (inp.type === 'password') {
-          inp.type = 'text';
-          icon.classList.replace('fa-eye', 'fa-eye-slash');
-        } else {
-          inp.type = 'password';
-          icon.classList.replace('fa-eye-slash', 'fa-eye');
-        }
-      });
-    }
-    setupToggle('togglePass',  'regPassword');
-    setupToggle('togglePass2', 'regPassword2');
-  </script>
 </body>
 </html>

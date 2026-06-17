@@ -2,16 +2,20 @@
 document.addEventListener('DOMContentLoaded', () => {
   const form    = document.getElementById('registerForm');
   const alertEl = document.getElementById('regAlert');
-  const togglePass = document.getElementById('togglePass');
-  const passInput  = document.getElementById('regPassword');
 
-  if (togglePass && passInput) {
-    togglePass.addEventListener('click', () => {
-      const type = passInput.type === 'password' ? 'text' : 'password';
-      passInput.type = type;
-      togglePass.querySelector('i').className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+  // ── Глазики показать/скрыть пароль ──
+  function setupToggle(btnId, inputId) {
+    const btn = document.getElementById(btnId);
+    const inp = document.getElementById(inputId);
+    if (!btn || !inp) return;
+    btn.addEventListener('click', () => {
+      const isPass = inp.type === 'password';
+      inp.type = isPass ? 'text' : 'password';
+      btn.querySelector('i').className = isPass ? 'fas fa-eye-slash' : 'fas fa-eye';
     });
   }
+  setupToggle('togglePass',  'regPassword');
+  setupToggle('togglePass2', 'regPassword2');
 
   let isRegistering = false;
 

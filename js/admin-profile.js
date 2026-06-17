@@ -38,7 +38,6 @@
     renderNews();
     renderTournaments();
     renderMatches();
-    renderUsers();
 
     // Wire team form
     wireTeams();
@@ -46,7 +45,6 @@
     wireNews();
     wireTournaments();
     wireMatches();
-    wireUsers();
   }
 
   // ── Inject a "Управление" tab into the profile pp-tabs bar ──────

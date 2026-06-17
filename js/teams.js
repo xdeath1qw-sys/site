@@ -355,14 +355,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const captain = allUsers.find(u => String(u.id) === String(t.ownerId));
         const isOwn = user && String(t.ownerId) === String(user.id);
 
-        // Собираем 5 слотов: IGL + игроки + пустые
+        // Собираем 5 слотов: IGL + игроки + пустые (без дублей капитана)
         const slots = [];
         if (captain) {
           slots.push({ nick: captain.username, photo: captain.avatar || captain.photo || '', isCaptain: true });
         }
-        players.forEach(p => {
-          if (slots.length < 5) slots.push({ nick: p.nick, photo: p.photo || '', isCaptain: false });
-        });
+        players
+          .filter(p => !captain || (p.nick || '').toLowerCase() !== captain.username.toLowerCase())
+          .forEach(p => {
+            if (slots.length < 5) slots.push({ nick: p.nick, photo: p.photo || '', isCaptain: false });
+          });
         while (slots.length < 5) slots.push(null); // пустые слоты
 
         const rosterHTML = slots.map(s => s
@@ -421,10 +423,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const allUsers = DB.get('pl_users');
     const captain  = allUsers.find(u => u.id === t.ownerId);
 
-    // Все участники: капитан + игроки (макс 5 в ряду)
+    // Все участники: капитан + игроки (макс 5 в ряду), без дублей
     const allMembers = [
       ...(captain ? [{ nick: captain.username, photo: captain.avatar || '', role: 'IGL', isCaptain: true }] : []),
-      ...teamPlayers.map(p => ({ nick: p.nick || p.name, photo: p.photo || '', role: p.role || '', isCaptain: false }))
+      ...teamPlayers
+        .filter(p => !captain || (p.nick || p.name || '').toLowerCase() !== captain.username.toLowerCase())
+        .map(p => ({ nick: p.nick || p.name, photo: p.photo || '', role: p.role || '', isCaptain: false }))
     ];
 
     const logoHTML = t.logo

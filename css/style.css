@@ -1,5 +1,5 @@
 /* ============================================
-   EFL League — MAIN STYLESHEET
+   EFL League тАФ MAIN STYLESHEET
    Color palette:
    Primary: #6C63FF (violet)
    Accent:  #00D4FF (cyan)
@@ -7,9 +7,9 @@
    Danger:  #FF4757
 ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap&subset=cyrillic,latin');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-/* ── CSS Variables ── */
+/* тФАтФА CSS Variables тФАтФА */
 :root {
   --primary: #6C63FF;
   --primary-dark: #5a52d5;
@@ -50,13 +50,13 @@
   --shadow-card: 0 2px 16px rgba(60,50,160,0.12);
 }
 
-/* ── Reset & Base ── */
+/* тФАтФА Reset & Base тФАтФА */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-family: 'Inter', sans-serif;
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
@@ -69,12 +69,12 @@ a:hover { color: var(--accent); }
 
 img { max-width: 100%; height: auto; display: block; }
 
-/* ── Scrollbar ── */
+/* тФАтФА Scrollbar тФАтФА */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-secondary); }
 ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
 
-/* ── Utility ── */
+/* тФАтФА Utility тФАтФА */
 .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
 .gradient-text {
   background: linear-gradient(135deg, var(--primary), var(--accent));
@@ -83,7 +83,7 @@ img { max-width: 100%; height: auto; display: block; }
   background-clip: text;
 }
 
-/* ── Buttons ── */
+/* тФАтФА Buttons тФАтФА */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -123,7 +123,7 @@ img { max-width: 100%; height: auto; display: block; }
 .btn-lg { padding: 14px 28px; font-size: 1rem; }
 .btn-full { width: 100%; justify-content: center; }
 
-/* ── NAVBAR ── */
+/* тФАтФА NAVBAR тФАтФА */
 .navbar {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -230,7 +230,7 @@ img { max-width: 100%; height: auto; display: block; }
   box-shadow: var(--shadow);
   z-index: 999;
 }
-/* Невидимый мост между аватаром и дропдауном */
+/* ╨Э╨╡╨▓╨╕╨┤╨╕╨╝╤Л╨╣ ╨╝╨╛╤Б╤В ╨╝╨╡╨╢╨┤╤Г ╨░╨▓╨░╤В╨░╤А╨╛╨╝ ╨╕ ╨┤╤А╨╛╨┐╨┤╨░╤Г╨╜╨╛╨╝ */
 .user-dropdown::before {
   content: '';
   position: absolute;
@@ -255,7 +255,7 @@ img { max-width: 100%; height: auto; display: block; }
 .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
 .hamburger span { width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: all 0.3s; display: block; }
 
-/* ── HERO ── */
+/* тФАтФА HERO тФАтФА */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -328,7 +328,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .stat-label { font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; display: block; }
 
-/* ── SECTIONS ── */
+/* тФАтФА SECTIONS тФАтФА */
 .section { padding: 80px 0; }
 .section-alt { background: var(--bg-secondary); }
 .section-header {
@@ -346,7 +346,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .section-header h2 i { color: var(--primary); }
 
-/* ── PAGE HEADER ── */
+/* тФАтФА PAGE HEADER тФАтФА */
 .page-header {
   padding: 120px 0 60px;
   background: var(--bg-secondary);
@@ -357,7 +357,7 @@ img { max-width: 100%; height: auto; display: block; }
 .page-header h1 i { color: var(--primary); margin-right: 12px; }
 .page-header p { color: var(--text-muted); font-size: 1.05rem; }
 
-/* ── FILTER BAR ── */
+/* тФАтФА FILTER BAR тФАтФА */
 .filter-bar {
   display: flex;
   align-items: center;
@@ -433,7 +433,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .select-filter:focus { border-color: var(--primary); }
 
-/* ── TEAMS GRID ── */
+/* тФАтФА TEAMS GRID тФАтФА */
 .teams-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -482,7 +482,7 @@ img { max-width: 100%; height: auto; display: block; }
 .team-rating span { color: var(--accent); font-weight: 700; }
 .team-desc { font-size: 0.82rem; color: var(--text-muted); margin-top: 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-/* ── TEAM CARD ROSTER SLOTS ── */
+/* тФАтФА TEAM CARD ROSTER SLOTS тФАтФА */
 .tc-roster {
   display: flex;
   gap: 8px;
@@ -533,7 +533,7 @@ img { max-width: 100%; height: auto; display: block; }
   opacity: 0.4;
 }
 
-/* ── PLAYERS GRID ── */
+/* тФАтФА PLAYERS GRID тФАтФА */
 .players-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -585,7 +585,7 @@ img { max-width: 100%; height: auto; display: block; }
 .star-filled { color: #FFB300; }
 .star-empty { color: var(--text-dim); }
 
-/* ── NEWS GRID ── */
+/* тФАтФА NEWS GRID тФАтФА */
 .news-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -634,7 +634,7 @@ img { max-width: 100%; height: auto; display: block; }
 .cat-teams { background: #00B0FF; }
 .cat-players { background: var(--success); color: #000; }
 
-/* ── NEWS MODAL ── */
+/* тФАтФА NEWS MODAL тФАтФА */
 .modal-overlay {
   position: fixed; inset: 0;
   background: rgba(0,0,0,0.7);
@@ -679,7 +679,7 @@ img { max-width: 100%; height: auto; display: block; }
 .modal-news-meta { display: flex; gap: 16px; color: var(--text-muted); font-size: 0.82rem; margin-bottom: 24px; flex-wrap: wrap; }
 .modal-news-body { font-size: 0.97rem; line-height: 1.8; color: var(--text); white-space: pre-wrap; }
 
-/* ── EMPTY STATE ── */
+/* тФАтФА EMPTY STATE тФАтФА */
 .empty-state {
   grid-column: 1 / -1;
   text-align: center;
@@ -689,7 +689,7 @@ img { max-width: 100%; height: auto; display: block; }
 .empty-state i { font-size: 3rem; margin-bottom: 16px; display: block; }
 .empty-state p { font-size: 1rem; }
 
-/* ── AUTH PAGES ── */
+/* тФАтФА AUTH PAGES тФАтФА */
 .auth-page {
   min-height: 100vh;
   display: flex;
@@ -726,7 +726,7 @@ img { max-width: 100%; height: auto; display: block; }
 .auth-footer { text-align: center; margin-top: 20px; font-size: 0.85rem; color: var(--text-muted); }
 .auth-footer a { color: var(--primary); font-weight: 600; }
 
-/* ── FORMS ── */
+/* тФАтФА FORMS тФАтФА */
 .form-group { margin-bottom: 18px; }
 .form-group label {
   display: flex;
@@ -788,7 +788,7 @@ img { max-width: 100%; height: auto; display: block; }
 .alert-error { background: rgba(255,71,87,0.12); border: 1px solid rgba(255,71,87,0.3); color: var(--danger); }
 .alert-success { background: rgba(0,230,118,0.1); border: 1px solid rgba(0,230,118,0.3); color: var(--success); }
 
-/* ── PROFILE ── */
+/* тФАтФА PROFILE тФАтФА */
 .profile-layout {
   display: grid;
   grid-template-columns: 280px 1fr;
@@ -839,7 +839,7 @@ img { max-width: 100%; height: auto; display: block; }
 .profile-details h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
 .profile-details h3 i { color: var(--primary); }
 
-/* ── ADMIN LAYOUT ── */
+/* тФАтФА ADMIN LAYOUT тФАтФА */
 .admin-layout {
   display: flex;
   min-height: calc(100vh - 64px);
@@ -989,7 +989,7 @@ img { max-width: 100%; height: auto; display: block; }
 .admin-table-logo-placeholder { width: 36px; height: 36px; border-radius: 8px; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: var(--primary); border: 1px solid var(--border); }
 .action-btns { display: flex; gap: 6px; }
 
-/* ── FOOTER ── */
+/* тФАтФА FOOTER тФАтФА */
 .footer {
   background: var(--bg-secondary);
   border-top: 1px solid var(--border);
@@ -1005,7 +1005,7 @@ img { max-width: 100%; height: auto; display: block; }
 .footer-links a:hover { color: var(--primary); }
 .footer-bottom { border-top: 1px solid var(--border); padding-top: 24px; text-align: center; font-size: 0.8rem; color: var(--text-dim); }
 
-/* ── View toggle (grid / list) ── */
+/* тФАтФА View toggle (grid / list) тФАтФА */
 .view-toggle {
   display: flex;
   gap: 4px;
@@ -1028,7 +1028,7 @@ img { max-width: 100%; height: auto; display: block; }
 .view-btn:hover { color: var(--primary); }
 .view-btn.active { background: var(--primary); color: #fff; }
 
-/* ── List view ── */
+/* тФАтФА List view тФАтФА */
 .list-view {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -1133,7 +1133,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .footer-socials a:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-glow); }
 
-/* ── Notification toast ── */
+/* тФАтФА Notification toast тФАтФА */
 .toast {
   position: fixed;
   bottom: 30px; right: 30px;
@@ -1160,7 +1160,7 @@ img { max-width: 100%; height: auto; display: block; }
 .toast-info i { color: var(--accent); }
 .toast-warning i { color: var(--warning); }
 
-/* Стили для срочных уведомлений о матчах */
+/* ╨б╤В╨╕╨╗╨╕ ╨┤╨╗╤П ╤Б╤А╨╛╤З╨╜╤Л╤Е ╤Г╨▓╨╡╨┤╨╛╨╝╨╗╨╡╨╜╨╕╨╣ ╨╛ ╨╝╨░╤В╤З╨░╤Е */
 .toast-match {
   background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(0, 212, 255, 0.05));
   border: 2px solid var(--warning);
@@ -1182,13 +1182,13 @@ img { max-width: 100%; height: auto; display: block; }
   50% { transform: scale(1.02); }
 }
 
-/* Стили для срочных уведомлений в дропдауне */
+/* ╨б╤В╨╕╨╗╨╕ ╨┤╨╗╤П ╤Б╤А╨╛╤З╨╜╤Л╤Е ╤Г╨▓╨╡╨┤╨╛╨╝╨╗╨╡╨╜╨╕╨╣ ╨▓ ╨┤╤А╨╛╨┐╨┤╨░╤Г╨╜╨╡ */
 .nav-bell-urgent {
   background: linear-gradient(135deg, rgba(255, 71, 87, 0.15), rgba(255, 179, 0, 0.1));
   border: 1px solid var(--danger) !important;
 }
 
-/* Стили для уведомления о сбросе пароля */
+/* ╨б╤В╨╕╨╗╨╕ ╨┤╨╗╤П ╤Г╨▓╨╡╨┤╨╛╨╝╨╗╨╡╨╜╨╕╤П ╨╛ ╤Б╨▒╤А╨╛╤Б╨╡ ╨┐╨░╤А╨╛╨╗╤П */
 .nav-bell-password {
   background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.1));
   border: 1px solid var(--primary) !important;
@@ -1229,7 +1229,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 
 
-/* ── Highlights ── */
+/* тФАтФА Highlights тФАтФА */
 .highlights-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -1298,7 +1298,7 @@ img { max-width: 100%; height: auto; display: block; }
 .highlight-kd { font-size: 0.88rem; color: var(--text-muted); }
 .highlight-kd span { color: var(--accent); font-weight: 700; font-size: 1rem; }
 
-/* ── Player Profile ── */
+/* тФАтФА Player Profile тФАтФА */
 .player-profile-layout {
   max-width: 1100px;
   margin: 0 auto;
@@ -1521,7 +1521,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .pp-match-link:hover { color: var(--primary); }
 
-/* ── Responsive ── */
+/* тФАтФА Responsive тФАтФА */
 @media (max-width: 900px) {
   .nav-links { display: none; }
   .nav-links.open {
@@ -1556,7 +1556,7 @@ img { max-width: 100%; height: auto; display: block; }
   .modal { padding: 24px 16px; }
 }
 
-/* ── Additional fixes ── */
+/* тФАтФА Additional fixes тФАтФА */
 .player-stats-full {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1583,7 +1583,7 @@ body { animation: fadeBody 0.3s ease; }
 /* Tier badge in select */
 option { background: var(--bg-card); color: var(--text); }
 
-/* ── PROFILE INLINE ADMIN PANEL ─────────────────────────────── */
+/* тФАтФА PROFILE INLINE ADMIN PANEL тФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФА */
 #adminPanelSection {
   max-width: 1100px;
   margin: 0 auto;
@@ -1651,9 +1651,9 @@ option { background: var(--bg-card); color: var(--text); }
   .ap-tab  { padding: 8px 10px; font-size: 0.78rem; }
 }
 
-/* ══════════════════════════════════════════════════════════════
-   HIGHLIGHTS — redesign
-══════════════════════════════════════════════════════════════ */
+/* тХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХР
+   HIGHLIGHTS тАФ redesign
+тХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХР */
 .highlights-section { background: var(--bg); padding: 80px 0; }
 
 .hl-sub {
@@ -1721,7 +1721,7 @@ option { background: var(--bg-card); color: var(--text); }
 }
 .hl-overlay.playing {
   background: transparent;
-  pointer-events: none; /* allow click-through when playing — handled by video click */
+  pointer-events: none; /* allow click-through when playing тАФ handled by video click */
 }
 .hl-overlay.playing .hl-play-btn {
   opacity: 0;
@@ -1752,7 +1752,7 @@ option { background: var(--bg-card); color: var(--text); }
   transform: scale(1.12);
   background: var(--primary);
 }
-/* pause icon — no offset needed */
+/* pause icon тАФ no offset needed */
 .hl-play-btn:has(.fa-pause) { padding-left: 0; }
 
 /* K/D badge */
@@ -1845,9 +1845,9 @@ option { background: var(--bg-card); color: var(--text); }
   .hl-track { grid-template-columns: 1fr; }
 }
 
-/* ══════════════════════════════════════════════════════════════
+/* тХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХР
    HIGHLIGHT MODAL PLAYER
-══════════════════════════════════════════════════════════════ */
+тХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХР */
 .hl-modal-overlay {
   position: fixed;
   inset: 0;
@@ -1936,7 +1936,7 @@ option { background: var(--bg-card); color: var(--text); }
   color: var(--primary);
 }
 
-/* Play btn — now purely decorative (click handled by card) */
+/* Play btn тАФ now purely decorative (click handled by card) */
 .hl-play-btn {
   pointer-events: none;
 }
@@ -1946,9 +1946,9 @@ option { background: var(--bg-card); color: var(--text); }
 }
 
 
-/* ══════════════════════════════════════════
+/* тХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХР
    TEAM INVITES SYSTEM
-══════════════════════════════════════════ */
+тХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХР */
 
 /* Badge on notifications tab */
 .pp-invite-badge {
@@ -2095,11 +2095,11 @@ option { background: var(--bg-card); color: var(--text); }
 }
 
 
-/* ══════════════════════════════════════════
+/* тХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХР
    IGL TEAM CONTROLS
-══════════════════════════════════════════ */
+тХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХР */
 
-/* Блок управления командой капитана */
+/* ╨С╨╗╨╛╨║ ╤Г╨┐╤А╨░╨▓╨╗╨╡╨╜╨╕╤П ╨║╨╛╨╝╨░╨╜╨┤╨╛╨╣ ╨║╨░╨┐╨╕╤В╨░╨╜╨░ */
 .igl-team-controls {
   display: flex;
   align-items: center;
@@ -2128,7 +2128,7 @@ option { background: var(--bg-card); color: var(--text); }
   color: var(--primary);
 }
 
-/* Блок таймера КД */
+/* ╨С╨╗╨╛╨║ ╤В╨░╨╣╨╝╨╡╤А╨░ ╨Ъ╨Ф */
 .igl-cd-block {
   display: flex;
   align-items: center;
@@ -2159,7 +2159,7 @@ option { background: var(--bg-card); color: var(--text); }
   font-variant-numeric: tabular-nums;
 }
 
-/* Бейдж «Ваша» на карточке команды */
+/* ╨С╨╡╨╣╨┤╨╢ ┬л╨Т╨░╤И╨░┬╗ ╨╜╨░ ╨║╨░╤А╤В╨╛╤З╨║╨╡ ╨║╨╛╨╝╨░╨╜╨┤╤Л */
 .own-badge {
   display: inline-flex;
   align-items: center;
@@ -2189,9 +2189,9 @@ option { background: var(--bg-card); color: var(--text); }
 }
 
 
-/* ══════════════════════════════════════════
-   INVITES (приглашения в команду)
-══════════════════════════════════════════ */
+/* тХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХР
+   INVITES (╨┐╤А╨╕╨│╨╗╨░╤И╨╡╨╜╨╕╤П ╨▓ ╨║╨╛╨╝╨░╨╜╨┤╤Г)
+тХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХР */
 
 .pp-invite-badge {
   display: inline-flex;
@@ -2282,7 +2282,7 @@ option { background: var(--bg-card); color: var(--text); }
 }
 .btn-success:hover { background: #00c260; color: #000; transform: translateY(-1px); }
 
-/* "Отправлено" бейдж на карточке игрока */
+/* "╨Ю╤В╨┐╤А╨░╨▓╨╗╨╡╨╜╨╛" ╨▒╨╡╨╣╨┤╨╢ ╨╜╨░ ╨║╨░╤А╤В╨╛╤З╨║╨╡ ╨╕╨│╤А╨╛╨║╨░ */
 .invite-sent-badge {
   display: inline-flex;
   align-items: center;
@@ -2295,7 +2295,7 @@ option { background: var(--bg-card); color: var(--text); }
   padding: 5px 10px;
 }
 
-/* Колонка приглашения в list-view */
+/* ╨Ъ╨╛╨╗╨╛╨╜╨║╨░ ╨┐╤А╨╕╨│╨╗╨░╤И╨╡╨╜╨╕╤П ╨▓ list-view */
 .lh-invite { text-align: right; }
 
 @media (max-width: 600px) {
@@ -2305,9 +2305,9 @@ option { background: var(--bg-card); color: var(--text); }
 }
 
 
-/* ══════════════════════════════════════════
-   NAV BELL (колокольчик уведомлений)
-══════════════════════════════════════════ */
+/* тХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХР
+   NAV BELL (╨║╨╛╨╗╨╛╨║╨╛╨╗╤М╤З╨╕╨║ ╤Г╨▓╨╡╨┤╨╛╨╝╨╗╨╡╨╜╨╕╨╣)
+тХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХР */
 
 .nav-bell {
   position: relative;
@@ -2331,7 +2331,7 @@ option { background: var(--bg-card); color: var(--text); }
   background: var(--primary-glow);
 }
 
-/* Красный бейдж с числом */
+/* ╨Ъ╤А╨░╤Б╨╜╤Л╨╣ ╨▒╨╡╨╣╨┤╨╢ ╤Б ╤З╨╕╤Б╨╗╨╛╨╝ */
 .nav-bell-badge {
   position: absolute;
   top: -5px; right: -5px;
@@ -2349,7 +2349,7 @@ option { background: var(--bg-card); color: var(--text); }
   pointer-events: none;
 }
 
-/* Дропдаун */
+/* ╨Ф╤А╨╛╨┐╨┤╨░╤Г╨╜ */
 .nav-bell-dropdown {
   display: none;
   position: absolute;
@@ -2397,7 +2397,7 @@ option { background: var(--bg-card); color: var(--text); }
   gap: 8px;
 }
 
-/* Карточка одного приглашения */
+/* ╨Ъ╨░╤А╤В╨╛╤З╨║╨░ ╨╛╨┤╨╜╨╛╨│╨╛ ╨┐╤А╨╕╨│╨╗╨░╤И╨╡╨╜╨╕╤П */
 .nav-bell-item {
   display: flex;
   align-items: center;
@@ -2466,7 +2466,7 @@ option { background: var(--bg-card); color: var(--text); }
 }
 
 
-/* Компактная кнопка приглашения в list-view */
+/* ╨Ъ╨╛╨╝╨┐╨░╨║╤В╨╜╨░╤П ╨║╨╜╨╛╨┐╨║╨░ ╨┐╤А╨╕╨│╨╗╨░╤И╨╡╨╜╨╕╤П ╨▓ list-view */
 .lh-invite .btn-sm {
   width: 30px;
   height: 30px;
@@ -2479,9 +2479,9 @@ option { background: var(--bg-card); color: var(--text); }
 }
 
 
-/* ══════════════════════════════════════════
+/* тХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХР
    PLAYERS TABLE (list view)
-══════════════════════════════════════════ */
+тХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХР */
 
 .players-table-wrap {
   background: var(--bg-card);
@@ -2524,7 +2524,7 @@ option { background: var(--bg-card); color: var(--text); }
   font-size: 0.88rem;
 }
 
-/* Номер */
+/* ╨Э╨╛╨╝╨╡╤А */
 .pt-num {
   width: 40px;
   color: var(--text-dim);
@@ -2532,12 +2532,12 @@ option { background: var(--bg-card); color: var(--text); }
   font-weight: 600;
 }
 
-/* Ширина колонки игрока */
+/* ╨и╨╕╤А╨╕╨╜╨░ ╨║╨╛╨╗╨╛╨╜╨║╨╕ ╨╕╨│╤А╨╛╨║╨░ */
 .pt-player {
   width: auto;
 }
 
-/* Ячейка игрока */
+/* ╨п╤З╨╡╨╣╨║╨░ ╨╕╨│╤А╨╛╨║╨░ */
 .pt-player-cell {
   display: flex;
   align-items: center;
@@ -2589,7 +2589,7 @@ option { background: var(--bg-card); color: var(--text); }
   color: var(--text-muted);
 }
 
-/* Роль */
+/* ╨а╨╛╨╗╤М */
 .pt-role-badge {
   background: var(--primary-glow);
   color: var(--primary);
@@ -2600,7 +2600,7 @@ option { background: var(--bg-card); color: var(--text); }
   white-space: nowrap;
 }
 
-/* Команда */
+/* ╨Ъ╨╛╨╝╨░╨╜╨┤╨░ */
 .pt-team-name {
   display: flex;
   align-items: center;
@@ -2614,7 +2614,7 @@ option { background: var(--bg-card); color: var(--text); }
   font-size: 0.7rem;
 }
 
-/* Статы */
+/* ╨б╤В╨░╤В╤Л */
 .pt-stat {
   width: auto;
   white-space: nowrap;
@@ -2630,13 +2630,13 @@ option { background: var(--bg-card); color: var(--text); }
 
 .pt-dash { color: var(--text-dim); }
 
-/* Колонка действий */
+/* ╨Ъ╨╛╨╗╨╛╨╜╨║╨░ ╨┤╨╡╨╣╤Б╤В╨▓╨╕╨╣ */
 .pt-action {
   width: 130px;
   text-align: right;
 }
 
-/* Кнопка приглашения */
+/* ╨Ъ╨╜╨╛╨┐╨║╨░ ╨┐╤А╨╕╨│╨╗╨░╤И╨╡╨╜╨╕╤П */
 .pt-invite-btn {
   display: inline-flex;
   align-items: center;
@@ -2660,7 +2660,7 @@ option { background: var(--bg-card); color: var(--text); }
 }
 .pt-invite-btn i { font-size: 0.72rem; }
 
-/* "Отправлено" */
+/* "╨Ю╤В╨┐╤А╨░╨▓╨╗╨╡╨╜╨╛" */
 .pt-sent {
   display: inline-flex;
   align-items: center;
@@ -2671,7 +2671,7 @@ option { background: var(--bg-card); color: var(--text); }
 }
 .pt-sent i { color: var(--warning); }
 
-/* "В команде" */
+/* "╨Т ╨║╨╛╨╝╨░╨╜╨┤╨╡" */
 .pt-in-team {
   display: inline-flex;
   align-items: center;
@@ -2687,7 +2687,7 @@ option { background: var(--bg-card); color: var(--text); }
 }
 
 
-/* Блок нехватки игроков на турнире */
+/* ╨С╨╗╨╛╨║ ╨╜╨╡╤Е╨▓╨░╤В╨║╨╕ ╨╕╨│╤А╨╛╨║╨╛╨▓ ╨╜╨░ ╤В╤Г╤А╨╜╨╕╤А╨╡ */
 .tourn-need-players {
   flex-direction: column;
   align-items: flex-start !important;
@@ -2708,7 +2708,7 @@ option { background: var(--bg-card); color: var(--text); }
 }
 
 
-/* ── Tournament started label ── */
+/* тФАтФА Tournament started label тФАтФА */
 .tourn-started-label {
   display: inline-flex;
   align-items: center;
@@ -2722,7 +2722,7 @@ option { background: var(--bg-card); color: var(--text); }
 }
 
 
-/* ── Match already started ── */
+/* тФАтФА Match already started тФАтФА */
 .tourn-match-started {
   display: flex;
   align-items: center;
@@ -2742,7 +2742,7 @@ option { background: var(--bg-card); color: var(--text); }
 }
 
 
-/* ── Tournament registration modal roster ── */
+/* тФАтФА Tournament registration modal roster тФАтФА */
 .roster-player-row {
   display: flex;
   align-items: center;
@@ -2807,7 +2807,7 @@ option { background: var(--bg-card); color: var(--text); }
   margin-right: 3px;
 }
 
-/* ── Tournament reg team display ── */
+/* тФАтФА Tournament reg team display тФАтФА */
 .tourn-reg-team-header {
   display: flex;
   align-items: center;
@@ -2826,7 +2826,7 @@ option { background: var(--bg-card); color: var(--text); }
   font-size: 1.1rem;
 }
 
-/* ── IGL Team Panel ── */
+/* тФАтФА IGL Team Panel тФАтФА */
 .igl-team-header {
   display: flex;
   align-items: center;
@@ -2946,7 +2946,7 @@ option { background: var(--bg-card); color: var(--text); }
   gap: 4px;
 }
 
-/* ── IGL HLTV-style roster ── */
+/* тФАтФА IGL HLTV-style roster тФАтФА */
 .igl-header-logo {
   width: 52px;
   height: 52px;
@@ -3047,7 +3047,7 @@ option { background: var(--bg-card); color: var(--text); }
   white-space: nowrap;
 }
 
-/* ── Team Modal ── */
+/* тФАтФА Team Modal тФАтФА */
 .tm-header {
   display: flex;
   align-items: center;
@@ -3177,7 +3177,7 @@ option { background: var(--bg-card); color: var(--text); }
   text-align: center;
 }
 
-/* ── Profile tournament row ── */
+/* тФАтФА Profile tournament row тФАтФА */
 .pp-tourn-row {
   display: flex;
   align-items: center;
@@ -3263,7 +3263,7 @@ option { background: var(--bg-card); color: var(--text); }
   animation: pulse-dot 1s infinite;
 }
 
-/* ── Tournament highlight on navigate ── */
+/* тФАтФА Tournament highlight on navigate тФАтФА */
 @keyframes tourn-highlight-pulse {
   0%   { box-shadow: 0 0 0 0 rgba(108,99,255,0.7); border-color: var(--primary); }
   50%  { box-shadow: 0 0 0 10px rgba(108,99,255,0); border-color: var(--accent); }
@@ -3274,12 +3274,12 @@ option { background: var(--bg-card); color: var(--text); }
   border-color: var(--primary) !important;
 }
 
-/* ══════════════════════════════════════
-   Team Modal v2 — профиль команды
-══════════════════════════════════════ */
+/* тХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХР
+   Team Modal v2 тАФ ╨┐╤А╨╛╤Д╨╕╨╗╤М ╨║╨╛╨╝╨░╨╜╨┤╤Л
+тХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХР */
 .tm2-wrap { display: flex; flex-direction: column; }
 
-/* Шапка */
+/* ╨и╨░╨┐╨║╨░ */
 .tm2-header {
   display: flex;
   align-items: center;
@@ -3311,7 +3311,7 @@ option { background: var(--bg-card); color: var(--text); }
   max-width: 480px;
 }
 
-/* Ростер */
+/* ╨а╨╛╤Б╤В╨╡╤А */
 .tm2-roster {
   display: flex;
   background: var(--bg-card);
@@ -3349,7 +3349,7 @@ option { background: var(--bg-card); color: var(--text); }
   width: 100%;
 }
 
-/* Нижняя часть: стата + матчи */
+/* ╨Э╨╕╨╢╨╜╤П╤П ╤З╨░╤Б╤В╤М: ╤Б╤В╨░╤В╨░ + ╨╝╨░╤В╤З╨╕ */
 .tm2-bottom {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -3376,7 +3376,7 @@ option { background: var(--bg-card); color: var(--text); }
 }
 .tm2-section-title i { color: var(--primary); }
 
-/* Статкарточки */
+/* ╨б╤В╨░╤В╨║╨░╤А╤В╨╛╤З╨║╨╕ */
 .tm2-stat-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -3399,7 +3399,7 @@ option { background: var(--bg-card); color: var(--text); }
 .tm-stat-val { font-size: 1.1rem; font-weight: 800; color: var(--accent); }
 .tm-stat-label { font-size: 0.62rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
 
-/* Матч-строки */
+/* ╨Ь╨░╤В╤З-╤Б╤В╤А╨╛╨║╨╕ */
 .tm-match-row {
   display: flex;
   align-items: center;
@@ -3439,7 +3439,7 @@ option { background: var(--bg-card); color: var(--text); }
   .tm2-stats { border-right: none; border-bottom: 1px solid var(--border); }
 }
 
-/* ── Team results modal ── */
+/* тФАтФА Team results modal тФАтФА */
 .results-preview {
   display: flex;
   gap: 10px;
@@ -3463,9 +3463,9 @@ option { background: var(--bg-card); color: var(--text); }
 .res-item.wr     { background: rgba(108,99,255,0.1); border: 1px solid rgba(108,99,255,0.3); color: var(--primary); }
 .res-item strong { font-size: 1rem; margin-left: 2px; }
 
-/* ══════════════════════════════════════
+/* тХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХР
    Awards Strip
-══════════════════════════════════════ */
+тХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХР */
 .awards-strip {
   background: var(--bg-card);
   border-top: 1px solid var(--border);
@@ -3545,9 +3545,9 @@ option { background: var(--bg-card); color: var(--text); }
 }
 
 
-/* ══════════════════════════════════════
-   VETO SYSTEM — Система вето карт
-══════════════════════════════════════ */
+/* тХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХР
+   VETO SYSTEM тАФ ╨б╨╕╤Б╤В╨╡╨╝╨░ ╨▓╨╡╤В╨╛ ╨║╨░╤А╤В
+тХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХРтХР */
 
 .veto-page {
   min-height: calc(100vh - 70px);
@@ -3555,7 +3555,7 @@ option { background: var(--bg-card); color: var(--text); }
   padding-bottom: 60px;
 }
 
-/* ── Загрузка / не найдено ── */
+/* тФАтФА ╨Ч╨░╨│╤А╤Г╨╖╨║╨░ / ╨╜╨╡ ╨╜╨░╨╣╨┤╨╡╨╜╨╛ тФАтФА */
 .veto-loading,
 .veto-not-found {
   display: flex;
@@ -3572,7 +3572,7 @@ option { background: var(--bg-card); color: var(--text); }
 .veto-not-found h2 { color: var(--text); font-size: 1.5rem; }
 .veto-not-found p  { color: var(--text-muted); }
 
-/* ── Шапка ── */
+/* тФАтФА ╨и╨░╨┐╨║╨░ тФАтФА */
 .veto-header {
   background: var(--bg-card);
   border-bottom: 1px solid var(--border);
@@ -3652,7 +3652,7 @@ option { background: var(--bg-card); color: var(--text); }
   white-space: nowrap;
 }
 
-/* ── Ожидание ── */
+/* тФАтФА ╨Ю╨╢╨╕╨┤╨░╨╜╨╕╨╡ тФАтФА */
 .veto-waiting {
   display: flex;
   flex-direction: column;
@@ -3666,14 +3666,14 @@ option { background: var(--bg-card); color: var(--text); }
 .veto-waiting h3 { font-size: 1.3rem; color: var(--text); }
 .veto-waiting p  { font-size: 0.9rem; }
 
-/* ── Основной блок ── */
+/* тФАтФА ╨Ю╤Б╨╜╨╛╨▓╨╜╨╛╨╣ ╨▒╨╗╨╛╨║ тФАтФА */
 .veto-main {
   max-width: 1280px;
   margin: 0 auto;
   padding: 24px;
 }
 
-/* ── Индикатор хода ── */
+/* тФАтФА ╨Ш╨╜╨┤╨╕╨║╨░╤В╨╛╤А ╤Е╨╛╨┤╨░ тФАтФА */
 .veto-turn-indicator {
   margin-bottom: 24px;
   display: flex;
@@ -3711,7 +3711,7 @@ option { background: var(--bg-card); color: var(--text); }
   50%       { box-shadow: 0 0 0 8px rgba(108,99,255,0); }
 }
 
-/* ── Таймер вето ── */
+/* тФАтФА ╨в╨░╨╣╨╝╨╡╤А ╨▓╨╡╤В╨╛ тФАтФА */
 .veto-timer-wrap {
   position: relative;
   width: 52px;
@@ -3742,7 +3742,7 @@ option { background: var(--bg-card); color: var(--text); }
   to   { transform: translate(-50%, -50%) scale(1.25); }
 }
 
-/* ── Карты в ряд ── */
+/* тФАтФА ╨Ъ╨░╤А╤В╤Л ╨▓ ╤А╤П╨┤ тФАтФА */
 .veto-maps-row {
   display: flex;
   flex-direction: column;
@@ -3750,7 +3750,7 @@ option { background: var(--bg-card); color: var(--text); }
   padding: 0;
 }
 
-/* ── Карточка карты — полоска ── */
+/* тФАтФА ╨Ъ╨░╤А╤В╨╛╤З╨║╨░ ╨║╨░╤А╤В╤Л тАФ ╨┐╨╛╨╗╨╛╤Б╨║╨░ тФАтФА */
 .veto-map-card {
   position: relative;
   border-radius: 8px;
@@ -3821,7 +3821,7 @@ option { background: var(--bg-card); color: var(--text); }
   opacity: 0.7;
 }
 
-/* Активный ход */
+/* ╨Р╨║╤В╨╕╨▓╨╜╤Л╨╣ ╤Е╨╛╨┤ */
 .veto-map-card.active-turn {
   cursor: pointer;
   border-color: rgba(0,212,255,0.45);
@@ -3837,7 +3837,7 @@ option { background: var(--bg-card); color: var(--text); }
   animation: none;
 }
 
-/* Забанена — серая */
+/* ╨Ч╨░╨▒╨░╨╜╨╡╨╜╨░ тАФ ╤Б╨╡╤А╨░╤П */
 .veto-map-card.banned {
   opacity: 0.4;
   filter: grayscale(1) brightness(0.6);
@@ -3846,13 +3846,13 @@ option { background: var(--bg-card); color: var(--text); }
   box-shadow: none;
 }
 
-/* Запикана — зелёная обводка */
+/* ╨Ч╨░╨┐╨╕╨║╨░╨╜╨░ тАФ ╨╖╨╡╨╗╤С╨╜╨░╤П ╨╛╨▒╨▓╨╛╨┤╨║╨░ */
 .veto-map-card.picked {
   border-color: rgba(34,197,94,0.4);
   background: rgba(34,197,94,0.04);
 }
 
-/* Оверлей бана/пика — только текст на карте */
+/* ╨Ю╨▓╨╡╤А╨╗╨╡╨╣ ╨▒╨░╨╜╨░/╨┐╨╕╨║╨░ тАФ ╤В╨╛╨╗╤М╨║╨╛ ╤В╨╡╨║╤Б╤В ╨╜╨░ ╨║╨░╤А╤В╨╡ */
 .vmc-overlay {
   position: absolute;
   inset: 0;
@@ -3909,7 +3909,7 @@ option { background: var(--bg-card); color: var(--text); }
   white-space: nowrap;
 }
 
-/* ── Результат ── */
+/* тФАтФА ╨а╨╡╨╖╤Г╨╗╤М╤В╨░╤В тФАтФА */
 .veto-result {
   margin-top: 28px;
   background: var(--bg-card);
@@ -3992,7 +3992,7 @@ option { background: var(--bg-card); color: var(--text); }
   text-overflow: ellipsis;
 }
 
-/* ── Адаптив ── */
+/* тФАтФА ╨Р╨┤╨░╨┐╤В╨╕╨▓ тФАтФА */
 @media (max-width: 768px) {
   .veto-maps-row { gap: 8px; }
   .veto-map-card { min-width: 80px; }
@@ -4009,7 +4009,7 @@ option { background: var(--bg-card); color: var(--text); }
 
 
 
-/* ── SYNC INDICATOR ── */
+/* тФАтФА SYNC INDICATOR тФАтФА */
 .sync-indicator {
   position: fixed;
   bottom: 20px;

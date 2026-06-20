@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8">
@@ -6,9 +6,9 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>���� � EFL League</title>
+  <title>Вход — EFL League</title>
   <link rel="icon" type="image/svg+xml" href="efl-logo.svg">
-  <link rel="stylesheet" href="css/style.css?v=10">
+  <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     .reset-input {
@@ -79,35 +79,35 @@
         <i class="fas fa-bolt"></i>
         <span>EFL League</span>
       </div>
-      <h2>����� ����������</h2>
-      <p class="auth-subtitle">������� � ���� �������</p>
+      <h2>Добро пожаловать</h2>
+      <p class="auth-subtitle">Войдите в свой аккаунт</p>
 
       <div class="alert" id="loginAlert" style="display:none"></div>
 
       <form id="loginForm">
         <div class="form-group">
-          <label><i class="fas fa-envelope"></i> ����� ��� Email</label>
-          <input type="text" id="loginUsername" placeholder="������� �����" required>
+          <label><i class="fas fa-envelope"></i> Логин или Email</label>
+          <input type="text" id="loginUsername" placeholder="Введите логин" required>
         </div>
         <div class="form-group">
-          <label><i class="fas fa-lock"></i> ������</label>
+          <label><i class="fas fa-lock"></i> Пароль</label>
           <div class="input-with-icon">
-            <input type="password" id="loginPassword" placeholder="������� ������" required>
+            <input type="password" id="loginPassword" placeholder="Введите пароль" required>
             <button type="button" class="toggle-pass" id="togglePass">
               <i class="fas fa-eye"></i>
             </button>
           </div>
         </div>
         <button type="submit" class="btn btn-primary btn-full">
-          <i class="fas fa-sign-in-alt"></i> �����
+          <i class="fas fa-sign-in-alt"></i> Войти
         </button>
       </form>
 
       <div class="auth-footer">
-        <p>��� ��������? <a href="register.html">������������������</a></p>
+        <p>Нет аккаунта? <a href="register.html">Зарегистрироваться</a></p>
         <p style="margin-top:8px">
           <a href="#" id="forgotLink" style="color:var(--text-muted);font-size:0.85rem">
-            <i class="fas fa-key"></i> ������ ������?
+            <i class="fas fa-key"></i> Забыли пароль?
           </a>
         </p>
       </div>
@@ -115,62 +115,62 @@
   </div>
 
   <!-- ======================================
-       ������� ������ ������
+       МОДАЛКА СБРОСА ПАРОЛЯ
   ====================================== -->
   <div id="resetModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9999;align-items:center;justify-content:center;">
     <div style="background:var(--card);border-radius:16px;padding:28px 28px 24px;max-width:400px;width:92%;border:1px solid var(--border);box-shadow:0 10px 50px rgba(0,0,0,0.5);">
 
-      <h3 style="margin:0 0 4px"><i class="fas fa-key"></i> ����� ������</h3>
+      <h3 style="margin:0 0 4px"><i class="fas fa-key"></i> Сброс пароля</h3>
 
-      <!-- ��� 1: Email -->
+      <!-- ШАГ 1: Email -->
       <div id="rs1">
         <p style="color:var(--text-muted);font-size:0.86rem;margin:4px 0 18px;line-height:1.5">
-          ������� ����� ����������� � ��������.
+          Введите почту привязанную к аккаунту.
         </p>
         <div id="rs1err" class="reset-error"></div>
         <div style="margin-bottom:16px">
-          <label class="reset-label"><i class="fas fa-envelope"></i> Email ��������</label>
+          <label class="reset-label"><i class="fas fa-envelope"></i> Email аккаунта</label>
           <input type="email" id="rs1email" class="reset-input" placeholder="example@mail.com">
         </div>
         <div style="display:flex;gap:10px">
           <button id="rs1next" class="btn btn-primary" style="flex:1">
-            ����� <i class="fas fa-arrow-right"></i>
+            Далее <i class="fas fa-arrow-right"></i>
           </button>
-          <button id="rs1cancel" class="btn btn-outline" style="flex:1">������</button>
+          <button id="rs1cancel" class="btn btn-outline" style="flex:1">Отмена</button>
         </div>
       </div>
 
-      <!-- ��� 2: ��� -->
+      <!-- ШАГ 2: Ник -->
       <div id="rs2" style="display:none">
         <p style="color:var(--text-muted);font-size:0.86rem;margin:4px 0 18px;line-height:1.5">
-          ������ ������� ��� ������� (�����).
+          Теперь введите ваш никнейм (логин).
         </p>
         <div id="rs2err" class="reset-error"></div>
         <div style="margin-bottom:16px">
-          <label class="reset-label"><i class="fas fa-user"></i> ��� �������</label>
-          <input type="text" id="rs2nick" class="reset-input" placeholder="��� �����">
+          <label class="reset-label"><i class="fas fa-user"></i> Ваш никнейм</label>
+          <input type="text" id="rs2nick" class="reset-input" placeholder="Ваш логин">
         </div>
         <div style="display:flex;gap:10px">
           <button id="rs2confirm" class="btn btn-primary" style="flex:1">
-            <i class="fas fa-check"></i> �����������
+            <i class="fas fa-check"></i> Подтвердить
           </button>
           <button id="rs2back" class="btn btn-outline" style="flex:1">
-            <i class="fas fa-arrow-left"></i> �����
+            <i class="fas fa-arrow-left"></i> Назад
           </button>
         </div>
       </div>
 
-      <!-- ��� 3: ����� ������ -->
+      <!-- ШАГ 3: Новый пароль -->
       <div id="rs3" style="display:none;text-align:center">
         <div style="font-size:3rem;margin-bottom:12px">?</div>
-        <h4 style="margin:0 0 6px;color:#22c55e">������ �������!</h4>
-        <p style="color:var(--text-muted);font-size:0.86rem;margin:0 0 14px">��� ����� ������:</p>
+        <h4 style="margin:0 0 6px;color:#22c55e">Пароль сброшен!</h4>
+        <p style="color:var(--text-muted);font-size:0.86rem;margin:0 0 14px">Ваш новый пароль:</p>
         <div class="new-pass-box" id="rs3pass"></div>
         <p style="color:var(--text-muted);font-size:0.76rem;margin:0 0 18px">
-          ��������� ��� � ������� � ���������� �������.
+          Сохраните его и смените в настройках профиля.
         </p>
         <button id="rs3login" class="btn btn-primary" style="width:100%">
-          <i class="fas fa-sign-in-alt"></i> ����� ������
+          <i class="fas fa-sign-in-alt"></i> Войти сейчас
         </button>
       </div>
 
@@ -197,7 +197,7 @@
   <script src="js/theme.js"></script>
   <script src="js/login.js"></script>
   <script>
-    // ������ ��� ������
+    // Глазик для пароля
     document.getElementById('togglePass').addEventListener('click', function() {
       const inp = document.getElementById('loginPassword');
       const icon = this.querySelector('i');
@@ -212,10 +212,10 @@
   </script>
 
   <script>
-    // -- ���� -----------------------------------------------------
+    // -- Вход -----------------------------------------------------
     if (Auth && Auth.current()) window.location.href = 'index.html';
 
-    // -- ���������� ������ -----------------------------------------
+    // -- Переменные сброса -----------------------------------------
     var modal       = document.getElementById('resetModal');
     var rs1         = document.getElementById('rs1');
     var rs2         = document.getElementById('rs2');
@@ -229,7 +229,7 @@
     var foundUser   = null;
     var newPassword = '';
 
-    // -- ������� / ������� -----------------------------------------
+    // -- Открыть / закрыть -----------------------------------------
     document.getElementById('forgotLink').addEventListener('click', function(e) {
       e.preventDefault();
       openModal();
@@ -267,20 +267,20 @@
       el.style.display = 'flex';
     }
 
-    // -- ��� 1: ��������� email ------------------------------------
+    // -- Шаг 1: проверяем email ------------------------------------
     function step1() {
       var email = rs1email.value.trim().toLowerCase();
       rs1err.style.display = 'none';
 
-      if (!email) { showErr(rs1err, '������� email!'); return; }
+      if (!email) { showErr(rs1err, 'Введите email!'); return; }
 
-      // ��� �������� �� ���� �����
-      if (!window._dbReady) { showErr(rs1err, '�������� ������, ���������� ��� ���...'); return; }
+      // Ждём загрузки БД если нужно
+      if (!window._dbReady) { showErr(rs1err, 'Загрузка данных, попробуйте ещё раз...'); return; }
 
       var users = DB.get('pl_users');
       var found = users.find(function(u) { return (u.email || '').toLowerCase() === email; });
 
-      if (!found) { showErr(rs1err, '������� � ����� ������ �� ������!'); return; }
+      if (!found) { showErr(rs1err, 'Аккаунт с такой почтой не найден!'); return; }
 
       foundUser = found;
       rs2nick.value = '';
@@ -292,25 +292,25 @@
     document.getElementById('rs1next').addEventListener('click', step1);
     rs1email.addEventListener('keydown', function(e) { if (e.key === 'Enter') step1(); });
 
-    // -- ��� 2: ��������� ��� --------------------------------------
+    // -- Шаг 2: проверяем ник --------------------------------------
     function step2() {
       var nick = rs2nick.value.trim();
       rs2err.style.display = 'none';
 
-      if (!nick) { showErr(rs2err, '������� �������!'); return; }
+      if (!nick) { showErr(rs2err, 'Введите никнейм!'); return; }
       if (!foundUser) { showStep(1); return; }
 
       if (foundUser.username.toLowerCase() !== nick.toLowerCase()) {
-        showErr(rs2err, '������� �� ��������� � ���������!');
+        showErr(rs2err, 'Никнейм не совпадает с аккаунтом!');
         return;
       }
 
-      // ���������� ������
+      // Генерируем пароль
       var chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
       newPassword = '';
       for (var i = 0; i < 10; i++) newPassword += chars[Math.floor(Math.random() * chars.length)];
 
-      // ��������� � ��
+      // Сохраняем в БД
       var users = DB.get('pl_users');
       var idx   = users.findIndex(function(u) { return u.id === foundUser.id; });
       if (idx !== -1) {
@@ -331,11 +331,11 @@
       setTimeout(function(){ rs1email.focus(); }, 100);
     });
 
-    // -- ��� 3: ������ "����� ������" � ��������� ������� � ����� ������� --
+    // -- Шаг 3: кнопка "Войти сейчас" — закрывает модалку и сразу логинит --
     document.getElementById('rs3login').addEventListener('click', function() {
       if (!foundUser || !newPassword) { closeModal(); return; }
 
-      // ������� �����
+      // Логиним сразу
       var users = DB.get('pl_users');
       var fresh = users.find(function(u) { return u.id === foundUser.id; });
       if (fresh) {

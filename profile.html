@@ -1,11 +1,11 @@
-п»ї<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>РџСЂРѕС„РёР»СЊ вЂ” EFL League</title>
+  <title>Профиль — EFL League</title>
   <link rel="icon" type="image/svg+xml" href="efl-logo.svg" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style-new.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     /* -- INLINE ADMIN PANEL -- */
@@ -65,11 +65,11 @@
     <div class="nav-container">
       <a href="index.html" class="nav-logo"><img class="logo-img" src="efl-logo.svg" alt="EFL"> EFL League</a>
       <ul class="nav-links" id="navLinks">
-        <li><a href="index.html"><i class="fas fa-home"></i> Р“Р»Р°РІРЅР°СЏ</a></li>
-        <li><a href="teams.html"><i class="fas fa-shield-halved"></i> РљРѕРјР°РЅРґС‹</a></li>
-        <li><a href="players.html"><i class="fas fa-users"></i> РРіСЂРѕРєРё</a></li>
-        <li><a href="news.html"><i class="fas fa-newspaper"></i> РќРѕРІРѕСЃС‚Рё</a></li>
-        <li><a href="tournaments.html"><i class="fas fa-trophy"></i> РўСѓСЂРЅРёСЂС‹</a></li>
+        <li><a href="index.html"><i class="fas fa-home"></i> Главная</a></li>
+        <li><a href="teams.html"><i class="fas fa-shield-halved"></i> Команды</a></li>
+        <li><a href="players.html"><i class="fas fa-users"></i> Игроки</a></li>
+        <li><a href="news.html"><i class="fas fa-newspaper"></i> Новости</a></li>
+        <li><a href="tournaments.html"><i class="fas fa-trophy"></i> Турниры</a></li>
 
       </ul>
       <div class="nav-actions">
@@ -77,13 +77,13 @@
         <div id="userMenu" style="display:none" class="user-menu">
           <div class="user-avatar" id="userAvatarNav"><i class="fas fa-user"></i></div>
           <div class="user-dropdown" id="userDropdown">
-            <a href="profile.html"><i class="fas fa-id-card"></i> РџСЂРѕС„РёР»СЊ</a>
-            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Р’С‹Р№С‚Рё</a>
+            <a href="profile.html"><i class="fas fa-id-card"></i> Профиль</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
           </div>
         </div>
         <div id="authButtons">
-          <a href="login.html" class="btn btn-outline">Р’РѕР№С‚Рё</a>
-          <a href="register.html" class="btn btn-primary">Р РµРіРёСЃС‚СЂР°С†РёСЏ</a>
+          <a href="login.html" class="btn btn-outline">Войти</a>
+          <a href="register.html" class="btn btn-primary">Регистрация</a>
         </div>
         <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
       </div>
@@ -92,7 +92,7 @@
 
   <div class="page-header">
     <div class="container">
-      <h1><i class="fas fa-id-card"></i> Р›РёС‡РЅС‹Р№ РєР°Р±РёРЅРµС‚</h1>
+      <h1><i class="fas fa-id-card"></i> Личный кабинет</h1>
     </div>
   </div>
 
@@ -106,17 +106,17 @@
       <div id="adminPanelSection" style="display:none; margin-top:40px;">
 
         <div class="admin-panel-inline-header">
-          <h2><i class="fas fa-shield-halved"></i> РџР°РЅРµР»СЊ СѓРїСЂР°РІР»РµРЅРёСЏ</h2>
+          <h2><i class="fas fa-shield-halved"></i> Панель управления</h2>
         </div>
 
         <!-- Sub-tabs -->
         <div class="ap-tabs" id="apTabs">
-          <button class="ap-tab active" data-ap="ap-overview"><i class="fas fa-chart-pie"></i> РћР±Р·РѕСЂ</button>
-          <button class="ap-tab" data-ap="ap-teams"><i class="fas fa-shield-halved"></i> РљРѕРјР°РЅРґС‹</button>
-          <button class="ap-tab" data-ap="ap-players"><i class="fas fa-users"></i> РРіСЂРѕРєРё</button>
-          <button class="ap-tab" data-ap="ap-news"><i class="fas fa-newspaper"></i> РќРѕРІРѕСЃС‚Рё</button>
-          <button class="ap-tab" data-ap="ap-tournaments"><i class="fas fa-trophy"></i> РўСѓСЂРЅРёСЂС‹</button>
-          <button class="ap-tab" data-ap="ap-matches"><i class="fas fa-gamepad"></i> РњР°С‚С‡Рё</button>
+          <button class="ap-tab active" data-ap="ap-overview"><i class="fas fa-chart-pie"></i> Обзор</button>
+          <button class="ap-tab" data-ap="ap-teams"><i class="fas fa-shield-halved"></i> Команды</button>
+          <button class="ap-tab" data-ap="ap-players"><i class="fas fa-users"></i> Игроки</button>
+          <button class="ap-tab" data-ap="ap-news"><i class="fas fa-newspaper"></i> Новости</button>
+          <button class="ap-tab" data-ap="ap-tournaments"><i class="fas fa-trophy"></i> Турниры</button>
+          <button class="ap-tab" data-ap="ap-matches"><i class="fas fa-gamepad"></i> Матчи</button>
         </div>
 
         <!-- -- OVERVIEW -- -->
@@ -124,23 +124,23 @@
           <div class="admin-stats-grid" style="margin-bottom:0">
             <div class="admin-stat-card">
               <i class="fas fa-shield-halved"></i>
-              <div><span class="admin-stat-num" id="apStatTeams">0</span><span>РљРѕРјР°РЅРґС‹</span></div>
+              <div><span class="admin-stat-num" id="apStatTeams">0</span><span>Команды</span></div>
             </div>
             <div class="admin-stat-card">
               <i class="fas fa-users"></i>
-              <div><span class="admin-stat-num" id="apStatPlayers">0</span><span>РРіСЂРѕРєРё</span></div>
+              <div><span class="admin-stat-num" id="apStatPlayers">0</span><span>Игроки</span></div>
             </div>
             <div class="admin-stat-card">
               <i class="fas fa-newspaper"></i>
-              <div><span class="admin-stat-num" id="apStatNews">0</span><span>РќРѕРІРѕСЃС‚Рё</span></div>
+              <div><span class="admin-stat-num" id="apStatNews">0</span><span>Новости</span></div>
             </div>
             <div class="admin-stat-card">
               <i class="fas fa-trophy"></i>
-              <div><span class="admin-stat-num" id="apStatTournaments">0</span><span>РўСѓСЂРЅРёСЂС‹</span></div>
+              <div><span class="admin-stat-num" id="apStatTournaments">0</span><span>Турниры</span></div>
             </div>
             <div class="admin-stat-card">
               <i class="fas fa-gamepad"></i>
-              <div><span class="admin-stat-num" id="apStatMatches">0</span><span>РњР°С‚С‡Рё</span></div>
+              <div><span class="admin-stat-num" id="apStatMatches">0</span><span>Матчи</span></div>
             </div>
           </div>
         </div>
@@ -149,26 +149,26 @@
         <div class="ap-panel" id="ap-teams">
           <div class="admin-panel-header" style="margin-bottom:20px">
             <span></span>
-            <button class="btn btn-primary btn-sm" id="apAddTeamBtn"><i class="fas fa-plus"></i> Р”РѕР±Р°РІРёС‚СЊ РєРѕРјР°РЅРґСѓ</button>
+            <button class="btn btn-primary btn-sm" id="apAddTeamBtn"><i class="fas fa-plus"></i> Добавить команду</button>
           </div>
           <div class="admin-form-card" id="apTeamForm" style="display:none">
-            <h3 id="apTeamFormTitle">Р”РѕР±Р°РІРёС‚СЊ РєРѕРјР°РЅРґСѓ</h3>
+            <h3 id="apTeamFormTitle">Добавить команду</h3>
             <div class="form-grid">
-              <div class="form-group"><label>РќР°Р·РІР°РЅРёРµ *</label><input type="text" id="apTeamName" placeholder="РќР°Р·РІР°РЅРёРµ" /></div>
-              <div class="form-group"><label>РўРёСЂ</label>
+              <div class="form-group"><label>Название *</label><input type="text" id="apTeamName" placeholder="Название" /></div>
+              <div class="form-group"><label>Тир</label>
                 <select id="apTeamTier"><option value="1">Tier 1</option><option value="2">Tier 2</option><option value="3">Tier 3</option></select>
               </div>
-              <div class="form-group"><label>РЎС‚СЂР°РЅР°</label><input type="text" id="apTeamCountry" placeholder="Р РѕСЃСЃРёСЏ" /></div>
-              <div class="form-group"><label>Р РµР№С‚РёРЅРі</label><input type="number" id="apTeamRating" placeholder="1000" min="0" /></div>
-              <div class="form-group form-full"><label>РћРїРёСЃР°РЅРёРµ</label><textarea id="apTeamDesc" rows="2" placeholder="РћРїРёСЃР°РЅРёРµ..."></textarea></div>
+              <div class="form-group"><label>Страна</label><input type="text" id="apTeamCountry" placeholder="Россия" /></div>
+              <div class="form-group"><label>Рейтинг</label><input type="number" id="apTeamRating" placeholder="1000" min="0" /></div>
+              <div class="form-group form-full"><label>Описание</label><textarea id="apTeamDesc" rows="2" placeholder="Описание..."></textarea></div>
             </div>
             <input type="hidden" id="apTeamEditId" />
             <div class="form-actions">
-              <button class="btn btn-primary btn-sm" id="apSaveTeamBtn"><i class="fas fa-save"></i> РЎРѕС…СЂР°РЅРёС‚СЊ</button>
-              <button class="btn btn-outline btn-sm" id="apCancelTeamBtn"><i class="fas fa-times"></i> РћС‚РјРµРЅР°</button>
+              <button class="btn btn-primary btn-sm" id="apSaveTeamBtn"><i class="fas fa-save"></i> Сохранить</button>
+              <button class="btn btn-outline btn-sm" id="apCancelTeamBtn"><i class="fas fa-times"></i> Отмена</button>
             </div>
           </div>
-          <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>РљРѕРјР°РЅРґР°</th><th>РўРёСЂ</th><th>РЎС‚СЂР°РЅР°</th><th>Р РµР№С‚РёРЅРі</th><th>Р”РµР№СЃС‚РІРёСЏ</th></tr></thead><tbody id="apTeamsBody"></tbody></table></div>
+          <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Команда</th><th>Тир</th><th>Страна</th><th>Рейтинг</th><th>Действия</th></tr></thead><tbody id="apTeamsBody"></tbody></table></div>
         </div>
 
         <!-- -- PLAYERS -- -->
@@ -176,142 +176,142 @@
           <div class="admin-panel-header" style="margin-bottom:20px">
             <div class="search-box" style="flex:1;max-width:320px">
               <i class="fas fa-search"></i>
-              <input type="text" id="apPlayerSearch" placeholder="РџРѕРёСЃРє РїРѕ РЅРёРєСѓ, РєРѕРјР°РЅРґРµ, СЂРѕР»Рё..." />
+              <input type="text" id="apPlayerSearch" placeholder="Поиск по нику, команде, роли..." />
             </div>
-            <button class="btn btn-primary btn-sm" id="apAddPlayerBtn"><i class="fas fa-plus"></i> Р”РѕР±Р°РІРёС‚СЊ РёРіСЂРѕРєР°</button>
+            <button class="btn btn-primary btn-sm" id="apAddPlayerBtn"><i class="fas fa-plus"></i> Добавить игрока</button>
           </div>
           <div class="admin-form-card" id="apPlayerForm" style="display:none">
-            <h3 id="apPlayerFormTitle">Р”РѕР±Р°РІРёС‚СЊ РёРіСЂРѕРєР°</h3>
+            <h3 id="apPlayerFormTitle">Добавить игрока</h3>
             <div class="form-grid">
-              <div class="form-group"><label>РќРёРєРЅРµР№Рј *</label><input type="text" id="apPlayerNick" placeholder="РќРёРє" /></div>
-              <div class="form-group"><label>РРјСЏ</label><input type="text" id="apPlayerName" placeholder="РРјСЏ Р¤Р°РјРёР»РёСЏ" /></div>
-              <div class="form-group"><label>РљРѕРјР°РЅРґР°</label><select id="apPlayerTeam"><option value="">вЂ” Р‘РµР· РєРѕРјР°РЅРґС‹ вЂ”</option></select></div>
-              <div class="form-group"><label>Р РѕР»СЊ</label>
+              <div class="form-group"><label>Никнейм *</label><input type="text" id="apPlayerNick" placeholder="Ник" /></div>
+              <div class="form-group"><label>Имя</label><input type="text" id="apPlayerName" placeholder="Имя Фамилия" /></div>
+              <div class="form-group"><label>Команда</label><select id="apPlayerTeam"><option value="">— Без команды —</option></select></div>
+              <div class="form-group"><label>Роль</label>
                 <select id="apPlayerRole">
-                  <option value="">вЂ” Р‘РµР· СЂРѕР»Рё вЂ”</option>
+                  <option value="">— Без роли —</option>
                   <option value="IGL">IGL</option><option value="AWPer">AWPer</option>
                   <option value="Rifler">Rifler</option><option value="Entry Fragger">Entry Fragger</option>
                   <option value="Lurker">Lurker</option><option value="Support">Support</option><option value="Coach">Coach</option>
-                  <option value="Substitute">Р—Р°РјРµРЅР° (Substitute)</option>
+                  <option value="Substitute">Замена (Substitute)</option>
                 </select>
               </div>
-              <div class="form-group"><label>РЎС‚СЂР°РЅР°</label><input type="text" id="apPlayerCountry" placeholder="Р РѕСЃСЃРёСЏ" /></div>
+              <div class="form-group"><label>Страна</label><input type="text" id="apPlayerCountry" placeholder="Россия" /></div>
               <div class="form-group"><label>K/D</label><input type="number" id="apStatKD" placeholder="1.20" step="0.01" /></div>
               <div class="form-group"><label>HS %</label><input type="number" id="apStatHS" placeholder="50" min="0" max="100" /></div>
               <div class="form-group"><label>ADR</label><input type="number" id="apStatADR" placeholder="80" step="0.1" /></div>
-              <div class="form-group"><label>РџРѕР±РµРґ</label><input type="number" id="apStatWins" placeholder="100" min="0" /></div>
-              <div class="form-group"><label>РњР°С‚С‡РµР№</label><input type="number" id="apStatMatches" placeholder="200" min="0" /></div>
+              <div class="form-group"><label>Побед</label><input type="number" id="apStatWins" placeholder="100" min="0" /></div>
+              <div class="form-group"><label>Матчей</label><input type="number" id="apStatMatches" placeholder="200" min="0" /></div>
             </div>
             <input type="hidden" id="apPlayerEditId" />
             <div class="form-actions">
-              <button class="btn btn-primary btn-sm" id="apSavePlayerBtn"><i class="fas fa-save"></i> РЎРѕС…СЂР°РЅРёС‚СЊ</button>
-              <button class="btn btn-outline btn-sm" id="apCancelPlayerBtn"><i class="fas fa-times"></i> РћС‚РјРµРЅР°</button>
+              <button class="btn btn-primary btn-sm" id="apSavePlayerBtn"><i class="fas fa-save"></i> Сохранить</button>
+              <button class="btn btn-outline btn-sm" id="apCancelPlayerBtn"><i class="fas fa-times"></i> Отмена</button>
             </div>
           </div>
-          <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>РќРёРє</th><th>РРјСЏ</th><th>РљРѕРјР°РЅРґР°</th><th>Р РѕР»СЊ</th><th>K/D</th><th>Р”РµР№СЃС‚РІРёСЏ</th></tr></thead><tbody id="apPlayersBody"></tbody></table></div>
+          <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Ник</th><th>Имя</th><th>Команда</th><th>Роль</th><th>K/D</th><th>Действия</th></tr></thead><tbody id="apPlayersBody"></tbody></table></div>
         </div>
 
         <!-- -- NEWS -- -->
         <div class="ap-panel" id="ap-news">
           <div class="admin-panel-header" style="margin-bottom:20px">
             <span></span>
-            <button class="btn btn-primary btn-sm" id="apAddNewsBtn"><i class="fas fa-plus"></i> Р”РѕР±Р°РІРёС‚СЊ РЅРѕРІРѕСЃС‚СЊ</button>
+            <button class="btn btn-primary btn-sm" id="apAddNewsBtn"><i class="fas fa-plus"></i> Добавить новость</button>
           </div>
           <div class="admin-form-card" id="apNewsForm" style="display:none">
-            <h3 id="apNewsFormTitle">Р”РѕР±Р°РІРёС‚СЊ РЅРѕРІРѕСЃС‚СЊ</h3>
+            <h3 id="apNewsFormTitle">Добавить новость</h3>
             <div class="form-grid">
-              <div class="form-group form-full"><label>Р—Р°РіРѕР»РѕРІРѕРє *</label><input type="text" id="apNewsTitle" placeholder="Р—Р°РіРѕР»РѕРІРѕРє" /></div>
-              <div class="form-group form-full"><label>РљСЂР°С‚РєРѕРµ РѕРїРёСЃР°РЅРёРµ</label><input type="text" id="apNewsExcerpt" placeholder="РљСЂР°С‚РєРѕРµ РѕРїРёСЃР°РЅРёРµ" /></div>
-              <div class="form-group form-full"><label>РўРµРєСЃС‚ *</label><textarea id="apNewsContent" rows="6" placeholder="РўРµРєСЃС‚ РЅРѕРІРѕСЃС‚Рё..."></textarea></div>
-              <div class="form-group"><label>РљР°С‚РµРіРѕСЂРёСЏ</label>
+              <div class="form-group form-full"><label>Заголовок *</label><input type="text" id="apNewsTitle" placeholder="Заголовок" /></div>
+              <div class="form-group form-full"><label>Краткое описание</label><input type="text" id="apNewsExcerpt" placeholder="Краткое описание" /></div>
+              <div class="form-group form-full"><label>Текст *</label><textarea id="apNewsContent" rows="6" placeholder="Текст новости..."></textarea></div>
+              <div class="form-group"><label>Категория</label>
                 <select id="apNewsCategory">
-                  <option value="general">РћР±С‰РµРµ</option><option value="tournament">РўСѓСЂРЅРёСЂС‹</option>
-                  <option value="teams">РљРѕРјР°РЅРґС‹</option><option value="players">РРіСЂРѕРєРё</option>
+                  <option value="general">Общее</option><option value="tournament">Турниры</option>
+                  <option value="teams">Команды</option><option value="players">Игроки</option>
                 </select>
               </div>
             </div>
             <input type="hidden" id="apNewsEditId" />
             <div class="form-actions">
-              <button class="btn btn-primary btn-sm" id="apSaveNewsBtn"><i class="fas fa-save"></i> РћРїСѓР±Р»РёРєРѕРІР°С‚СЊ</button>
-              <button class="btn btn-outline btn-sm" id="apCancelNewsBtn"><i class="fas fa-times"></i> РћС‚РјРµРЅР°</button>
+              <button class="btn btn-primary btn-sm" id="apSaveNewsBtn"><i class="fas fa-save"></i> Опубликовать</button>
+              <button class="btn btn-outline btn-sm" id="apCancelNewsBtn"><i class="fas fa-times"></i> Отмена</button>
             </div>
           </div>
-          <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Р—Р°РіРѕР»РѕРІРѕРє</th><th>РљР°С‚РµРіРѕСЂРёСЏ</th><th>Р”Р°С‚Р°</th><th>Р”РµР№СЃС‚РІРёСЏ</th></tr></thead><tbody id="apNewsBody"></tbody></table></div>
+          <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Заголовок</th><th>Категория</th><th>Дата</th><th>Действия</th></tr></thead><tbody id="apNewsBody"></tbody></table></div>
         </div>
 
         <!-- -- TOURNAMENTS -- -->
         <div class="ap-panel" id="ap-tournaments">
           <div class="admin-panel-header" style="margin-bottom:20px">
             <span></span>
-            <button class="btn btn-primary btn-sm" id="apAddTournBtn"><i class="fas fa-plus"></i> Р”РѕР±Р°РІРёС‚СЊ С‚СѓСЂРЅРёСЂ</button>
+            <button class="btn btn-primary btn-sm" id="apAddTournBtn"><i class="fas fa-plus"></i> Добавить турнир</button>
           </div>
           <div class="admin-form-card" id="apTournForm" style="display:none">
-            <h3 id="apTournFormTitle">Р”РѕР±Р°РІРёС‚СЊ С‚СѓСЂРЅРёСЂ</h3>
+            <h3 id="apTournFormTitle">Добавить турнир</h3>
             <div class="form-grid">
-              <div class="form-group form-full"><label>РќР°Р·РІР°РЅРёРµ *</label><input type="text" id="apTournName" placeholder="РќР°Р·РІР°РЅРёРµ С‚СѓСЂРЅРёСЂР°" /></div>
-              <div class="form-group"><label>РЎС‚Р°С‚СѓСЃ</label>
+              <div class="form-group form-full"><label>Название *</label><input type="text" id="apTournName" placeholder="Название турнира" /></div>
+              <div class="form-group"><label>Статус</label>
                 <select id="apTournStatus">
-                  <option value="upcoming">РџСЂРµРґСЃС‚РѕСЏС‰РёР№</option>
-                  <option value="ongoing">РРґС‘С‚ СЃРµР№С‡Р°СЃ</option>
-                  <option value="finished">Р—Р°РІРµСЂС€С‘РЅ</option>
+                  <option value="upcoming">Предстоящий</option>
+                  <option value="ongoing">Идёт сейчас</option>
+                  <option value="finished">Завершён</option>
                 </select>
               </div>
-              <div class="form-group"><label>РџСЂРёР·РѕРІРѕР№ С„РѕРЅРґ</label><input type="text" id="apTournPrize" placeholder="$5 000" /></div>
-              <div class="form-group"><label>Р¤РѕСЂРјР°С‚</label><input type="text" id="apTournFormat" placeholder="Double Elimination" /></div>
-              <div class="form-group"><label>РљРѕРјР°РЅРґ</label><input type="number" id="apTournTeams" placeholder="16" min="2" /></div>
-              <div class="form-group"><label>РџР»РѕС‰Р°РґРєР°</label><input type="text" id="apTournLocation" placeholder="Online" /></div>
-              <div class="form-group"><label>Р”Р°С‚Р° РЅР°С‡Р°Р»Р°</label><input type="date" id="apTournDateStart" /></div>
-              <div class="form-group"><label>Р”Р°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ</label><input type="date" id="apTournDateEnd" /></div>
-              <div class="form-group form-full"><label>РћРїРёСЃР°РЅРёРµ</label><textarea id="apTournDesc" rows="2" placeholder="РћРїРёСЃР°РЅРёРµ С‚СѓСЂРЅРёСЂР°..."></textarea></div>
+              <div class="form-group"><label>Призовой фонд</label><input type="text" id="apTournPrize" placeholder="$5 000" /></div>
+              <div class="form-group"><label>Формат</label><input type="text" id="apTournFormat" placeholder="Double Elimination" /></div>
+              <div class="form-group"><label>Команд</label><input type="number" id="apTournTeams" placeholder="16" min="2" /></div>
+              <div class="form-group"><label>Площадка</label><input type="text" id="apTournLocation" placeholder="Online" /></div>
+              <div class="form-group"><label>Дата начала</label><input type="date" id="apTournDateStart" /></div>
+              <div class="form-group"><label>Дата окончания</label><input type="date" id="apTournDateEnd" /></div>
+              <div class="form-group form-full"><label>Описание</label><textarea id="apTournDesc" rows="2" placeholder="Описание турнира..."></textarea></div>
               <div class="form-group form-full">
-                <label>Р¤РѕС‚Рѕ С‚СѓСЂРЅРёСЂР° (Р±Р°РЅРЅРµСЂ)</label>
+                <label>Фото турнира (баннер)</label>
                 <div class="file-upload-area" id="apTournImageArea">
                   <i class="fas fa-cloud-upload-alt"></i>
-                  <p>РџРµСЂРµС‚Р°С‰РёС‚Рµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ РёР»Рё РЅР°Р¶РјРёС‚Рµ РґР»СЏ РІС‹Р±РѕСЂР°</p>
+                  <p>Перетащите изображение или нажмите для выбора</p>
                   <input type="file" id="apTournImage" accept="image/*" style="display:none" />
                 </div>
                 <div class="logo-preview" id="apTournImagePreview" style="display:none">
-                  <img id="apTournImageImg" src="" alt="Р‘Р°РЅРЅРµСЂ" style="width:160px;height:90px;object-fit:cover;border-radius:8px" />
+                  <img id="apTournImageImg" src="" alt="Баннер" style="width:160px;height:90px;object-fit:cover;border-radius:8px" />
                   <button type="button" class="btn btn-sm btn-danger" id="apRemoveTournImage"><i class="fas fa-trash"></i></button>
                 </div>
               </div>
             </div>
             <input type="hidden" id="apTournEditId" />
             <div class="form-actions">
-              <button class="btn btn-primary btn-sm" id="apSaveTournBtn"><i class="fas fa-save"></i> РЎРѕС…СЂР°РЅРёС‚СЊ</button>
-              <button class="btn btn-outline btn-sm" id="apCancelTournBtn"><i class="fas fa-times"></i> РћС‚РјРµРЅР°</button>
+              <button class="btn btn-primary btn-sm" id="apSaveTournBtn"><i class="fas fa-save"></i> Сохранить</button>
+              <button class="btn btn-outline btn-sm" id="apCancelTournBtn"><i class="fas fa-times"></i> Отмена</button>
             </div>
           </div>
-          <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Р‘Р°РЅРЅРµСЂ</th><th>РќР°Р·РІР°РЅРёРµ</th><th>РЎС‚Р°С‚СѓСЃ</th><th>РџСЂРёР·РѕРІРѕР№</th><th>Р”Р°С‚Р° РЅР°С‡Р°Р»Р°</th><th>Р”РµР№СЃС‚РІРёСЏ</th></tr></thead><tbody id="apTournamentsBody"></tbody></table></div>
+          <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Баннер</th><th>Название</th><th>Статус</th><th>Призовой</th><th>Дата начала</th><th>Действия</th></tr></thead><tbody id="apTournamentsBody"></tbody></table></div>
         </div>
 
         <!-- -- MATCHES -- -->
         <div class="ap-panel" id="ap-matches">
           <div class="admin-panel-header" style="margin-bottom:20px">
             <span></span>
-            <button class="btn btn-primary btn-sm" id="apAddMatchBtn"><i class="fas fa-plus"></i> Р”РѕР±Р°РІРёС‚СЊ РјР°С‚С‡</button>
+            <button class="btn btn-primary btn-sm" id="apAddMatchBtn"><i class="fas fa-plus"></i> Добавить матч</button>
           </div>
           <div class="admin-form-card" id="apMatchForm" style="display:none">
-            <h3 id="apMatchFormTitle">Р”РѕР±Р°РІРёС‚СЊ РјР°С‚С‡</h3>
+            <h3 id="apMatchFormTitle">Добавить матч</h3>
             <div class="form-grid">
-              <div class="form-group"><label>РљРѕРјР°РЅРґР° 1 *</label><select id="apMatchTeam1"><option value="">вЂ” Р’С‹Р±РµСЂРёС‚Рµ вЂ”</option></select></div>
-              <div class="form-group"><label>РљРѕРјР°РЅРґР° 2 *</label><select id="apMatchTeam2"><option value="">вЂ” Р’С‹Р±РµСЂРёС‚Рµ вЂ”</option></select></div>
-              <div class="form-group"><label>РЎС‡С‘С‚ 1</label><input type="number" id="apMatchScore1" value="0" min="0" /></div>
-              <div class="form-group"><label>РЎС‡С‘С‚ 2</label><input type="number" id="apMatchScore2" value="0" min="0" /></div>
-              <div class="form-group form-full"><label>РўСѓСЂРЅРёСЂ *</label><input type="text" id="apMatchTournament" placeholder="РќР°Р·РІР°РЅРёРµ С‚СѓСЂРЅРёСЂР°" /></div>
-              <div class="form-group form-full"><label>РЎСЃС‹Р»РєР° (xplay.gg)</label><input type="text" id="apMatchUrl" placeholder="https://xplay.gg/..." /></div>
-              <div class="form-group"><label>Р”Р°С‚Р° Рё РІСЂРµРјСЏ</label><input type="datetime-local" id="apMatchDate" /></div>
-              <div class="form-group"><label>РЎС‚Р°С‚СѓСЃ</label>
-                <select id="apMatchStatus"><option value="upcoming">РџСЂРµРґСЃС‚РѕСЏС‰РёР№</option><option value="finished">Р—Р°РІРµСЂС€С‘РЅ</option></select>
+              <div class="form-group"><label>Команда 1 *</label><select id="apMatchTeam1"><option value="">— Выберите —</option></select></div>
+              <div class="form-group"><label>Команда 2 *</label><select id="apMatchTeam2"><option value="">— Выберите —</option></select></div>
+              <div class="form-group"><label>Счёт 1</label><input type="number" id="apMatchScore1" value="0" min="0" /></div>
+              <div class="form-group"><label>Счёт 2</label><input type="number" id="apMatchScore2" value="0" min="0" /></div>
+              <div class="form-group form-full"><label>Турнир *</label><input type="text" id="apMatchTournament" placeholder="Название турнира" /></div>
+              <div class="form-group form-full"><label>Ссылка (xplay.gg)</label><input type="text" id="apMatchUrl" placeholder="https://xplay.gg/..." /></div>
+              <div class="form-group"><label>Дата и время</label><input type="datetime-local" id="apMatchDate" /></div>
+              <div class="form-group"><label>Статус</label>
+                <select id="apMatchStatus"><option value="upcoming">Предстоящий</option><option value="finished">Завершён</option></select>
               </div>
             </div>
             <input type="hidden" id="apMatchEditId" />
             <div class="form-actions">
-              <button class="btn btn-primary btn-sm" id="apSaveMatchBtn"><i class="fas fa-save"></i> РЎРѕС…СЂР°РЅРёС‚СЊ</button>
-              <button class="btn btn-outline btn-sm" id="apCancelMatchBtn"><i class="fas fa-times"></i> РћС‚РјРµРЅР°</button>
+              <button class="btn btn-primary btn-sm" id="apSaveMatchBtn"><i class="fas fa-save"></i> Сохранить</button>
+              <button class="btn btn-outline btn-sm" id="apCancelMatchBtn"><i class="fas fa-times"></i> Отмена</button>
             </div>
           </div>
-          <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>РљРѕРјР°РЅРґР° 1</th><th>РЎС‡С‘С‚</th><th>РљРѕРјР°РЅРґР° 2</th><th>РўСѓСЂРЅРёСЂ</th><th>Р”Р°С‚Р°</th><th>РЎС‚Р°С‚СѓСЃ</th><th>Р”РµР№СЃС‚РІРёСЏ</th></tr></thead><tbody id="apMatchesBody"></tbody></table></div>
+          <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Команда 1</th><th>Счёт</th><th>Команда 2</th><th>Турнир</th><th>Дата</th><th>Статус</th><th>Действия</th></tr></thead><tbody id="apMatchesBody"></tbody></table></div>
         </div>
 
       </div><!-- /adminPanelSection -->
@@ -323,7 +323,7 @@
       <div class="footer-content">
         <div class="footer-brand">
           <a href="index.html" class="nav-logo"><img class="logo-img" src="efl-logo.svg" alt="EFL"> EFL League</a>
-          <p>Р›СѓС‡С€РёР№ РїРѕСЂС‚Р°Р» Рѕ РєРёР±РµСЂСЃРїРѕСЂС‚Рµ. РЎР»РµРґРёС‚Рµ Р·Р° РєРѕРјР°РЅРґР°РјРё, РёРіСЂРѕРєР°РјРё Рё РЅРѕРІРѕСЃС‚СЏРјРё.</p>
+          <p>Лучший портал о киберспорте. Следите за командами, игроками и новостями.</p>
           <div class="footer-socials">
             <a href="https://t.me/EFLcs2" target="_blank" rel="noopener" title="Telegram"><i class="fab fa-telegram"></i></a>
             <a href="https://discord.gg/kCs9xAcq" target="_blank" rel="noopener" title="Discord"><i class="fab fa-discord"></i></a>
@@ -331,24 +331,24 @@
           </div>
         </div>
         <div class="footer-links">
-          <h4>РќР°РІРёРіР°С†РёСЏ</h4>
+          <h4>Навигация</h4>
           <ul>
-            <li><a href="teams.html">РљРѕРјР°РЅРґС‹</a></li>
-            <li><a href="players.html">РРіСЂРѕРєРё</a></li>
-            <li><a href="news.html">РќРѕРІРѕСЃС‚Рё</a></li>
-            <li><a href="tournaments.html">РўСѓСЂРЅРёСЂС‹</a></li>
+            <li><a href="teams.html">Команды</a></li>
+            <li><a href="players.html">Игроки</a></li>
+            <li><a href="news.html">Новости</a></li>
+            <li><a href="tournaments.html">Турниры</a></li>
           </ul>
         </div>
         <div class="footer-links">
-          <h4>РђРєРєР°СѓРЅС‚</h4>
+          <h4>Аккаунт</h4>
           <ul>
-            <li><a href="login.html">Р’РѕР№С‚Рё</a></li>
-            <li><a href="register.html">Р РµРіРёСЃС‚СЂР°С†РёСЏ</a></li>
-            <li><a href="profile.html">РџСЂРѕС„РёР»СЊ</a></li>
+            <li><a href="login.html">Войти</a></li>
+            <li><a href="register.html">Регистрация</a></li>
+            <li><a href="profile.html">Профиль</a></li>
           </ul>
         </div>
       </div>
-      <div class="footer-bottom"><p>&copy; 2026 EFL League. Р’СЃРµ РїСЂР°РІР° Р·Р°С‰РёС‰РµРЅС‹.</p></div>
+      <div class="footer-bottom"><p>&copy; 2026 EFL League. Все права защищены.</p></div>
     </div>
   </footer>
 

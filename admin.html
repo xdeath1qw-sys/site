@@ -1,11 +1,11 @@
-п»ї<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>РђРґРјРёРЅ РїР°РЅРµР»СЊ вЂ” EFL League</title>
+  <title>Админ панель — EFL League</title>
   <link rel="icon" type="image/svg+xml" href="efl-logo.svg" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style-new.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
@@ -13,20 +13,20 @@
     <div class="nav-container">
       <a href="index.html" class="nav-logo"><img class="logo-img" src="efl-logo.svg" alt="EFL"> EFL League</a>
       <ul class="nav-links" id="navLinks">
-        <li><a href="index.html"><i class="fas fa-home"></i> Р“Р»Р°РІРЅР°СЏ</a></li>
-        <li><a href="teams.html"><i class="fas fa-shield-halved"></i> РљРѕРјР°РЅРґС‹</a></li>
-        <li><a href="players.html"><i class="fas fa-users"></i> РРіСЂРѕРєРё</a></li>
-        <li><a href="news.html"><i class="fas fa-newspaper"></i> РќРѕРІРѕСЃС‚Рё</a></li>
-        <li><a href="tournaments.html"><i class="fas fa-trophy"></i> РўСѓСЂРЅРёСЂС‹</a></li>
-        <li><a href="admin.html" class="active"><i class="fas fa-cog"></i> РђРґРјРёРЅ</a></li>
+        <li><a href="index.html"><i class="fas fa-home"></i> Главная</a></li>
+        <li><a href="teams.html"><i class="fas fa-shield-halved"></i> Команды</a></li>
+        <li><a href="players.html"><i class="fas fa-users"></i> Игроки</a></li>
+        <li><a href="news.html"><i class="fas fa-newspaper"></i> Новости</a></li>
+        <li><a href="tournaments.html"><i class="fas fa-trophy"></i> Турниры</a></li>
+        <li><a href="admin.html" class="active"><i class="fas fa-cog"></i> Админ</a></li>
       </ul>
       <div class="nav-actions">
         <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon" id="themeIcon"></i></button>
         <div id="userMenu" style="display:none" class="user-menu">
           <div class="user-avatar" id="userAvatarNav"><i class="fas fa-user"></i></div>
           <div class="user-dropdown" id="userDropdown">
-            <a href="profile.html"><i class="fas fa-id-card"></i> РџСЂРѕС„РёР»СЊ</a>
-            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Р’С‹Р№С‚Рё</a>
+            <a href="profile.html"><i class="fas fa-id-card"></i> Профиль</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
           </div>
         </div>
         <div id="authButtons" style="display:none"></div>
@@ -40,35 +40,35 @@
     <aside class="admin-sidebar">
       <div class="admin-sidebar-header">
         <i class="fas fa-shield-halved"></i>
-        <span>РџР°РЅРµР»СЊ СѓРїСЂР°РІР»РµРЅРёСЏ</span>
+        <span>Панель управления</span>
       </div>
       <nav class="admin-nav">
         <button class="admin-nav-btn active" data-panel="dashboard">
-          <i class="fas fa-chart-pie"></i> РћР±Р·РѕСЂ
+          <i class="fas fa-chart-pie"></i> Обзор
         </button>
         <button class="admin-nav-btn" data-panel="teams">
-          <i class="fas fa-shield-halved"></i> РљРѕРјР°РЅРґС‹
+          <i class="fas fa-shield-halved"></i> Команды
         </button>
         <button class="admin-nav-btn" data-panel="news">
-          <i class="fas fa-newspaper"></i> РќРѕРІРѕСЃС‚Рё
+          <i class="fas fa-newspaper"></i> Новости
         </button>
         <button class="admin-nav-btn" data-panel="users">
-          <i class="fas fa-users"></i> РРіСЂРѕРєРё
+          <i class="fas fa-users"></i> Игроки
         </button>
         <button class="admin-nav-btn" data-panel="tournaments">
-          <i class="fas fa-trophy"></i> РўСѓСЂРЅРёСЂС‹
+          <i class="fas fa-trophy"></i> Турниры
         </button>
         <button class="admin-nav-btn" data-panel="highlights">
-          <i class="fas fa-film"></i> РҐР°Р№Р»Р°Р№С‚С‹
+          <i class="fas fa-film"></i> Хайлайты
         </button>
         <button class="admin-nav-btn" data-panel="matches">
-          <i class="fas fa-gamepad"></i> РњР°С‚С‡Рё
+          <i class="fas fa-gamepad"></i> Матчи
         </button>
         <button class="admin-nav-btn" data-panel="awards">
-          <i class="fas fa-medal"></i> РќР°РіСЂР°РґС‹
+          <i class="fas fa-medal"></i> Награды
         </button>
         <button class="admin-nav-btn" data-panel="veto">
-          <i class="fas fa-ban"></i> Р’РµС‚Рѕ РєР°СЂС‚
+          <i class="fas fa-ban"></i> Вето карт
         </button>
       </nav>
     </aside>
@@ -78,34 +78,34 @@
 
       <!-- DASHBOARD -->
       <div class="admin-panel active" id="panel-dashboard">
-        <h2 class="admin-title"><i class="fas fa-chart-pie"></i> РћР±Р·РѕСЂ</h2>
+        <h2 class="admin-title"><i class="fas fa-chart-pie"></i> Обзор</h2>
         <div class="admin-stats-grid">
           <div class="admin-stat-card">
             <i class="fas fa-shield-halved"></i>
             <div>
               <span class="admin-stat-num" id="statTeams">0</span>
-              <span>РљРѕРјР°РЅРґС‹</span>
+              <span>Команды</span>
             </div>
           </div>
           <div class="admin-stat-card">
             <i class="fas fa-users"></i>
             <div>
               <span class="admin-stat-num" id="statPlayers">0</span>
-              <span>РРіСЂРѕРєРё</span>
+              <span>Игроки</span>
             </div>
           </div>
           <div class="admin-stat-card">
             <i class="fas fa-newspaper"></i>
             <div>
               <span class="admin-stat-num" id="statNews">0</span>
-              <span>РќРѕРІРѕСЃС‚Рё</span>
+              <span>Новости</span>
             </div>
           </div>
           <div class="admin-stat-card">
             <i class="fas fa-trophy"></i>
             <div>
               <span class="admin-stat-num" id="statTournaments">0</span>
-              <span>РўСѓСЂРЅРёСЂС‹</span>
+              <span>Турниры</span>
             </div>
           </div>
         </div>
@@ -114,20 +114,20 @@
       <!-- TEAMS PANEL -->
       <div class="admin-panel" id="panel-teams">
         <div class="admin-panel-header">
-          <h2 class="admin-title"><i class="fas fa-shield-halved"></i> РЈРїСЂР°РІР»РµРЅРёРµ РєРѕРјР°РЅРґР°РјРё</h2>
-          <button class="btn btn-primary" id="addTeamBtn"><i class="fas fa-plus"></i> Р”РѕР±Р°РІРёС‚СЊ РєРѕРјР°РЅРґСѓ</button>
+          <h2 class="admin-title"><i class="fas fa-shield-halved"></i> Управление командами</h2>
+          <button class="btn btn-primary" id="addTeamBtn"><i class="fas fa-plus"></i> Добавить команду</button>
         </div>
 
         <!-- ADD/EDIT TEAM FORM -->
         <div class="admin-form-card" id="teamForm" style="display:none">
-          <h3 id="teamFormTitle">Р”РѕР±Р°РІРёС‚СЊ РєРѕРјР°РЅРґСѓ</h3>
+          <h3 id="teamFormTitle">Добавить команду</h3>
           <div class="form-grid">
             <div class="form-group">
-              <label>РќР°Р·РІР°РЅРёРµ РєРѕРјР°РЅРґС‹ *</label>
-              <input type="text" id="teamName" placeholder="РќР°Р·РІР°РЅРёРµ РєРѕРјР°РЅРґС‹" />
+              <label>Название команды *</label>
+              <input type="text" id="teamName" placeholder="Название команды" />
             </div>
             <div class="form-group">
-              <label>РўРёСЂ СѓСЂРѕРІРµРЅСЊ *</label>
+              <label>Тир уровень *</label>
               <select id="teamTier">
                 <option value="1">Tier 1</option>
                 <option value="2">Tier 2</option>
@@ -135,46 +135,46 @@
               </select>
             </div>
             <div class="form-group">
-              <label>РЎС‚СЂР°РЅР°</label>
-              <input type="text" id="teamCountry" placeholder="Р РѕСЃСЃРёСЏ" />
+              <label>Страна</label>
+              <input type="text" id="teamCountry" placeholder="Россия" />
             </div>
             <div class="form-group">
-              <label>Р РµР№С‚РёРЅРі</label>
+              <label>Рейтинг</label>
               <input type="number" id="teamRating" placeholder="1000" min="0" />
             </div>
             <div class="form-group">
-              <label>РњР°С‚С‡РµР№ СЃС‹РіСЂР°РЅРѕ</label>
+              <label>Матчей сыграно</label>
               <input type="number" id="teamMatches" placeholder="0" min="0" />
             </div>
             <div class="form-group">
-              <label>РџРѕР±РµРґ</label>
+              <label>Побед</label>
               <input type="number" id="teamWins" placeholder="0" min="0" />
             </div>
             <div class="form-group">
-              <label>РџРѕСЂР°Р¶РµРЅРёР№</label>
+              <label>Поражений</label>
               <input type="number" id="teamLosses" placeholder="0" min="0" />
             </div>
             <div class="form-group form-full">
-              <label>РћРїРёСЃР°РЅРёРµ</label>
-              <textarea id="teamDescription" placeholder="РћРїРёСЃР°РЅРёРµ РєРѕРјР°РЅРґС‹..." rows="3"></textarea>
+              <label>Описание</label>
+              <textarea id="teamDescription" placeholder="Описание команды..." rows="3"></textarea>
             </div>
             <div class="form-group form-full">
-              <label>Р›РѕРіРѕС‚РёРї РєРѕРјР°РЅРґС‹</label>
+              <label>Логотип команды</label>
               <div class="file-upload-area" id="teamLogoArea">
                 <i class="fas fa-cloud-upload-alt"></i>
-                <p>РџРµСЂРµС‚Р°С‰РёС‚Рµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ РёР»Рё РЅР°Р¶РјРёС‚Рµ РґР»СЏ РІС‹Р±РѕСЂР°</p>
+                <p>Перетащите изображение или нажмите для выбора</p>
                 <input type="file" id="teamLogo" accept="image/*" style="display:none" />
               </div>
               <div class="logo-preview" id="teamLogoPreview" style="display:none">
-                <img id="teamLogoImg" src="" alt="Р›РѕРіРѕС‚РёРї" />
+                <img id="teamLogoImg" src="" alt="Логотип" />
                 <button type="button" class="btn btn-sm btn-danger" id="removeTeamLogo"><i class="fas fa-trash"></i></button>
               </div>
             </div>
           </div>
           <input type="hidden" id="teamEditId" />
           <div class="form-actions">
-            <button class="btn btn-primary" id="saveTeamBtn"><i class="fas fa-save"></i> РЎРѕС…СЂР°РЅРёС‚СЊ</button>
-            <button class="btn btn-outline" id="cancelTeamBtn"><i class="fas fa-times"></i> РћС‚РјРµРЅР°</button>
+            <button class="btn btn-primary" id="saveTeamBtn"><i class="fas fa-save"></i> Сохранить</button>
+            <button class="btn btn-outline" id="cancelTeamBtn"><i class="fas fa-times"></i> Отмена</button>
           </div>
         </div>
 
@@ -182,12 +182,12 @@
           <table class="admin-table" id="teamsTable">
             <thead>
               <tr>
-                <th>Р›РѕРіРѕС‚РёРї</th>
-                <th>РљРѕРјР°РЅРґР°</th>
-                <th>РўРёСЂ</th>
-                <th>РЎС‚СЂР°РЅР°</th>
-                <th>Р РµР№С‚РёРЅРі</th>
-                <th>Р”РµР№СЃС‚РІРёСЏ</th>
+                <th>Логотип</th>
+                <th>Команда</th>
+                <th>Тир</th>
+                <th>Страна</th>
+                <th>Рейтинг</th>
+                <th>Действия</th>
               </tr>
             </thead>
             <tbody id="teamsTableBody"></tbody>
@@ -198,51 +198,51 @@
       <!-- NEWS PANEL -->
       <div class="admin-panel" id="panel-news">
         <div class="admin-panel-header">
-          <h2 class="admin-title"><i class="fas fa-newspaper"></i> РЈРїСЂР°РІР»РµРЅРёРµ РЅРѕРІРѕСЃС‚СЏРјРё</h2>
-          <button class="btn btn-primary" id="addNewsBtn"><i class="fas fa-plus"></i> Р”РѕР±Р°РІРёС‚СЊ РЅРѕРІРѕСЃС‚СЊ</button>
+          <h2 class="admin-title"><i class="fas fa-newspaper"></i> Управление новостями</h2>
+          <button class="btn btn-primary" id="addNewsBtn"><i class="fas fa-plus"></i> Добавить новость</button>
         </div>
 
         <div class="admin-form-card" id="newsForm" style="display:none">
-          <h3 id="newsFormTitle">Р”РѕР±Р°РІРёС‚СЊ РЅРѕРІРѕСЃС‚СЊ</h3>
+          <h3 id="newsFormTitle">Добавить новость</h3>
           <div class="form-grid">
             <div class="form-group form-full">
-              <label>Р—Р°РіРѕР»РѕРІРѕРє *</label>
-              <input type="text" id="newsTitle" placeholder="Р—Р°РіРѕР»РѕРІРѕРє РЅРѕРІРѕСЃС‚Рё" />
+              <label>Заголовок *</label>
+              <input type="text" id="newsTitle" placeholder="Заголовок новости" />
             </div>
             <div class="form-group form-full">
-              <label>РљСЂР°С‚РєРѕРµ РѕРїРёСЃР°РЅРёРµ</label>
-              <input type="text" id="newsExcerpt" placeholder="РљСЂР°С‚РєРѕРµ РѕРїРёСЃР°РЅРёРµ РґР»СЏ РїСЂРµРІСЊСЋ" />
+              <label>Краткое описание</label>
+              <input type="text" id="newsExcerpt" placeholder="Краткое описание для превью" />
             </div>
             <div class="form-group form-full">
-              <label>РўРµРєСЃС‚ РЅРѕРІРѕСЃС‚Рё *</label>
-              <textarea id="newsContent" rows="8" placeholder="РџРѕР»РЅС‹Р№ С‚РµРєСЃС‚ РЅРѕРІРѕСЃС‚Рё..."></textarea>
+              <label>Текст новости *</label>
+              <textarea id="newsContent" rows="8" placeholder="Полный текст новости..."></textarea>
             </div>
             <div class="form-group form-full">
-              <label>Р¤РѕС‚Рѕ РЅРѕРІРѕСЃС‚Рё</label>
+              <label>Фото новости</label>
               <div class="file-upload-area" id="newsImageArea">
                 <i class="fas fa-cloud-upload-alt"></i>
-                <p>РџРµСЂРµС‚Р°С‰РёС‚Рµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ РёР»Рё РЅР°Р¶РјРёС‚Рµ РґР»СЏ РІС‹Р±РѕСЂР°</p>
+                <p>Перетащите изображение или нажмите для выбора</p>
                 <input type="file" id="newsImage" accept="image/*" style="display:none" />
               </div>
               <div class="logo-preview" id="newsImagePreview" style="display:none">
-                <img id="newsImageImg" src="" alt="Р¤РѕС‚Рѕ РЅРѕРІРѕСЃС‚Рё" />
+                <img id="newsImageImg" src="" alt="Фото новости" />
                 <button type="button" class="btn btn-sm btn-danger" id="removeNewsImage"><i class="fas fa-trash"></i></button>
               </div>
             </div>
             <div class="form-group">
-              <label>РљР°С‚РµРіРѕСЂРёСЏ</label>
+              <label>Категория</label>
               <select id="newsCategory">
-                <option value="general">РћР±С‰РµРµ</option>
-                <option value="tournament">РўСѓСЂРЅРёСЂС‹</option>
-                <option value="teams">РљРѕРјР°РЅРґС‹</option>
-                <option value="players">РРіСЂРѕРєРё</option>
+                <option value="general">Общее</option>
+                <option value="tournament">Турниры</option>
+                <option value="teams">Команды</option>
+                <option value="players">Игроки</option>
               </select>
             </div>
           </div>
           <input type="hidden" id="newsEditId" />
           <div class="form-actions">
-            <button class="btn btn-primary" id="saveNewsBtn"><i class="fas fa-save"></i> РћРїСѓР±Р»РёРєРѕРІР°С‚СЊ</button>
-            <button class="btn btn-outline" id="cancelNewsBtn"><i class="fas fa-times"></i> РћС‚РјРµРЅР°</button>
+            <button class="btn btn-primary" id="saveNewsBtn"><i class="fas fa-save"></i> Опубликовать</button>
+            <button class="btn btn-outline" id="cancelNewsBtn"><i class="fas fa-times"></i> Отмена</button>
           </div>
         </div>
 
@@ -250,11 +250,11 @@
           <table class="admin-table" id="newsTable">
             <thead>
               <tr>
-                <th>Р¤РѕС‚Рѕ</th>
-                <th>Р—Р°РіРѕР»РѕРІРѕРє</th>
-                <th>РљР°С‚РµРіРѕСЂРёСЏ</th>
-                <th>Р”Р°С‚Р°</th>
-                <th>Р”РµР№СЃС‚РІРёСЏ</th>
+                <th>Фото</th>
+                <th>Заголовок</th>
+                <th>Категория</th>
+                <th>Дата</th>
+                <th>Действия</th>
               </tr>
             </thead>
             <tbody id="newsTableBody"></tbody>
@@ -265,13 +265,13 @@
       <!-- USERS PANEL -->
       <div class="admin-panel" id="panel-users">
         <div class="admin-panel-header">
-          <h2 class="admin-title"><i class="fas fa-users"></i> РРіСЂРѕРєРё</h2>
+          <h2 class="admin-title"><i class="fas fa-users"></i> Игроки</h2>
           <div style="display:flex;align-items:center;gap:12px;margin-left:auto">
             <div class="search-box">
               <i class="fas fa-search"></i>
-              <input type="text" id="usersSearch" placeholder="РџРѕРёСЃРє РїРѕ РЅРёРєСѓ, РєРѕРјР°РЅРґРµ, email..." />
+              <input type="text" id="usersSearch" placeholder="Поиск по нику, команде, email..." />
             </div>
-            <button class="btn btn-danger" id="deleteAllUsersBtn" style="gap:8px;white-space:nowrap"><i class="fas fa-trash-alt"></i> РЈРґР°Р»РёС‚СЊ РІСЃРµС…</button>
+            <button class="btn btn-danger" id="deleteAllUsersBtn" style="gap:8px;white-space:nowrap"><i class="fas fa-trash-alt"></i> Удалить всех</button>
           </div>
         </div>
         <div class="admin-table-wrap">
@@ -279,12 +279,12 @@
             <thead>
               <tr>
                 <th>#</th>
-                <th>РќРёРєРЅРµР№Рј</th>
+                <th>Никнейм</th>
                 <th>Email</th>
-                <th>РљРѕРјР°РЅРґР°</th>
+                <th>Команда</th>
                 <th>K/D</th>
-                <th>Р”Р°С‚Р° СЂРµРіРёСЃС‚СЂР°С†РёРё</th>
-                <th>Р”РµР№СЃС‚РІРёСЏ</th>
+                <th>Дата регистрации</th>
+                <th>Действия</th>
               </tr>
             </thead>
             <tbody id="usersTableBody"></tbody>
@@ -295,70 +295,70 @@
       <!-- TOURNAMENTS PANEL -->
       <div class="admin-panel" id="panel-tournaments">
         <div class="admin-panel-header">
-          <h2 class="admin-title"><i class="fas fa-trophy"></i> РЈРїСЂР°РІР»РµРЅРёРµ С‚СѓСЂРЅРёСЂР°РјРё</h2>
-          <button class="btn btn-primary" id="addTournamentBtn"><i class="fas fa-plus"></i> Р”РѕР±Р°РІРёС‚СЊ С‚СѓСЂРЅРёСЂ</button>
+          <h2 class="admin-title"><i class="fas fa-trophy"></i> Управление турнирами</h2>
+          <button class="btn btn-primary" id="addTournamentBtn"><i class="fas fa-plus"></i> Добавить турнир</button>
         </div>
 
         <div class="admin-form-card" id="tournamentForm" style="display:none">
-          <h3 id="tournamentFormTitle">Р”РѕР±Р°РІРёС‚СЊ С‚СѓСЂРЅРёСЂ</h3>
+          <h3 id="tournamentFormTitle">Добавить турнир</h3>
           <div class="form-grid">
             <div class="form-group form-full">
-              <label>РќР°Р·РІР°РЅРёРµ *</label>
-              <input type="text" id="tournamentName" placeholder="РќР°Р·РІР°РЅРёРµ С‚СѓСЂРЅРёСЂР°" />
+              <label>Название *</label>
+              <input type="text" id="tournamentName" placeholder="Название турнира" />
             </div>
             <div class="form-group">
-              <label>РЎС‚Р°С‚СѓСЃ</label>
+              <label>Статус</label>
               <select id="tournamentStatus">
-                <option value="upcoming">РџСЂРµРґСЃС‚РѕСЏС‰РёР№</option>
-                <option value="ongoing">РРґС‘С‚ СЃРµР№С‡Р°СЃ</option>
-                <option value="finished">Р—Р°РІРµСЂС€С‘РЅ</option>
+                <option value="upcoming">Предстоящий</option>
+                <option value="ongoing">Идёт сейчас</option>
+                <option value="finished">Завершён</option>
               </select>
             </div>
             <div class="form-group">
-              <label>РџСЂРёР·РѕРІРѕР№ С„РѕРЅРґ</label>
+              <label>Призовой фонд</label>
               <input type="text" id="tournamentPrize" placeholder="$5 000" />
             </div>
             <div class="form-group">
-              <label>Р¤РѕСЂРјР°С‚</label>
+              <label>Формат</label>
               <input type="text" id="tournamentFormat" placeholder="Double Elimination" />
             </div>
             <div class="form-group">
-              <label>РљРѕРјР°РЅРґ</label>
+              <label>Команд</label>
               <input type="number" id="tournamentTeams" placeholder="16" min="2" />
             </div>
             <div class="form-group">
-              <label>РџР»РѕС‰Р°РґРєР°</label>
+              <label>Площадка</label>
               <input type="text" id="tournamentLocation" placeholder="Online" />
             </div>
             <div class="form-group">
-              <label>Р”Р°С‚Р° РЅР°С‡Р°Р»Р°</label>
+              <label>Дата начала</label>
               <input type="date" id="tournamentDateStart" />
             </div>
             <div class="form-group">
-              <label>Р”Р°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ</label>
+              <label>Дата окончания</label>
               <input type="date" id="tournamentDateEnd" />
             </div>
             <div class="form-group form-full">
-              <label>РћРїРёСЃР°РЅРёРµ</label>
-              <textarea id="tournamentDesc" rows="3" placeholder="РћРїРёСЃР°РЅРёРµ С‚СѓСЂРЅРёСЂР°..."></textarea>
+              <label>Описание</label>
+              <textarea id="tournamentDesc" rows="3" placeholder="Описание турнира..."></textarea>
             </div>
             <div class="form-group form-full">
-              <label>Р¤РѕС‚Рѕ С‚СѓСЂРЅРёСЂР° (Р±Р°РЅРЅРµСЂ)</label>
+              <label>Фото турнира (баннер)</label>
               <div class="file-upload-area" id="tournamentImageArea">
                 <i class="fas fa-cloud-upload-alt"></i>
-                <p>РџРµСЂРµС‚Р°С‰РёС‚Рµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ РёР»Рё РЅР°Р¶РјРёС‚Рµ РґР»СЏ РІС‹Р±РѕСЂР°</p>
+                <p>Перетащите изображение или нажмите для выбора</p>
                 <input type="file" id="tournamentImage" accept="image/*" style="display:none" />
               </div>
               <div class="logo-preview" id="tournamentImagePreview" style="display:none">
-                <img id="tournamentImageImg" src="" alt="Р‘Р°РЅРЅРµСЂ" style="width:160px;height:90px;object-fit:cover;border-radius:8px" />
+                <img id="tournamentImageImg" src="" alt="Баннер" style="width:160px;height:90px;object-fit:cover;border-radius:8px" />
                 <button type="button" class="btn btn-sm btn-danger" id="removeTournamentImage"><i class="fas fa-trash"></i></button>
               </div>
             </div>
           </div>
           <input type="hidden" id="tournamentEditId" />
           <div class="form-actions">
-            <button class="btn btn-primary" id="saveTournamentBtn"><i class="fas fa-save"></i> РЎРѕС…СЂР°РЅРёС‚СЊ</button>
-            <button class="btn btn-outline" id="cancelTournamentBtn"><i class="fas fa-times"></i> РћС‚РјРµРЅР°</button>
+            <button class="btn btn-primary" id="saveTournamentBtn"><i class="fas fa-save"></i> Сохранить</button>
+            <button class="btn btn-outline" id="cancelTournamentBtn"><i class="fas fa-times"></i> Отмена</button>
           </div>
         </div>
 
@@ -366,13 +366,13 @@
           <table class="admin-table" id="tournamentsTable">
             <thead>
               <tr>
-                <th>РќР°Р·РІР°РЅРёРµ</th>
-                <th>РЎС‚Р°С‚СѓСЃ</th>
-                <th>РџСЂРёР·РѕРІРѕР№</th>
-                <th>Р¤РѕСЂРјР°С‚</th>
-                <th>Р”Р°С‚Р° РЅР°С‡Р°Р»Р°</th>
-                <th>Р”Р°С‚Р° РєРѕРЅС†Р°</th>
-                <th>Р”РµР№СЃС‚РІРёСЏ</th>
+                <th>Название</th>
+                <th>Статус</th>
+                <th>Призовой</th>
+                <th>Формат</th>
+                <th>Дата начала</th>
+                <th>Дата конца</th>
+                <th>Действия</th>
               </tr>
             </thead>
             <tbody id="tournamentsTableBody"></tbody>
@@ -383,15 +383,15 @@
       <!-- HIGHLIGHTS PANEL -->
       <div class="admin-panel" id="panel-highlights">
         <div class="admin-panel-header">
-          <h2 class="admin-title"><i class="fas fa-film"></i> РЈРїСЂР°РІР»РµРЅРёРµ С…Р°Р№Р»Р°Р№С‚Р°РјРё</h2>
-          <button class="btn btn-primary" id="addHighlightBtn"><i class="fas fa-plus"></i> Р”РѕР±Р°РІРёС‚СЊ С…Р°Р№Р»Р°Р№С‚</button>
+          <h2 class="admin-title"><i class="fas fa-film"></i> Управление хайлайтами</h2>
+          <button class="btn btn-primary" id="addHighlightBtn"><i class="fas fa-plus"></i> Добавить хайлайт</button>
         </div>
 
         <div class="admin-form-card" id="highlightForm" style="display:none">
-          <h3 id="highlightFormTitle">Р”РѕР±Р°РІРёС‚СЊ С…Р°Р№Р»Р°Р№С‚</h3>
+          <h3 id="highlightFormTitle">Добавить хайлайт</h3>
           <div class="form-grid">
             <div class="form-group">
-              <label>РќРёРєРЅРµР№Рј РёРіСЂРѕРєР° *</label>
+              <label>Никнейм игрока *</label>
               <input type="text" id="hlNick" placeholder="atoman" />
             </div>
             <div class="form-group">
@@ -399,42 +399,42 @@
               <input type="text" id="hlKd" placeholder="2.06" />
             </div>
             <div class="form-group">
-              <label>РџРѕРґРїРёСЃСЊ</label>
-              <input type="text" id="hlLabel" placeholder="РўРѕРї С…Р°Р№Р»Р°Р№С‚" />
+              <label>Подпись</label>
+              <input type="text" id="hlLabel" placeholder="Топ хайлайт" />
             </div>
             <div class="form-group">
-              <label>РџСѓС‚СЊ Рє РІРёРґРµРѕ *</label>
+              <label>Путь к видео *</label>
               <input type="text" id="hlVideo" placeholder="videos/nick 1.50.mp4" />
             </div>
             <div class="form-group form-full">
-              <label>РџСЂРµРІСЊСЋ-С„РѕС‚Рѕ (РЅРµРѕР±СЏР·Р°С‚РµР»СЊРЅРѕ)</label>
+              <label>Превью-фото (необязательно)</label>
               <div class="file-upload-area" id="hlThumbArea">
                 <i class="fas fa-image"></i>
-                <p>РџРµСЂРµС‚Р°С‰РёС‚Рµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ РёР»Рё РЅР°Р¶РјРёС‚Рµ РґР»СЏ РІС‹Р±РѕСЂР°</p>
+                <p>Перетащите изображение или нажмите для выбора</p>
                 <input type="file" id="hlThumbFile" accept="image/*" style="display:none" />
               </div>
               <div class="logo-preview" id="hlThumbPreview" style="display:none">
-                <img id="hlThumbImg" src="" alt="РїСЂРµРІСЊСЋ" style="width:160px;height:90px;object-fit:cover;border-radius:8px" />
+                <img id="hlThumbImg" src="" alt="превью" style="width:160px;height:90px;object-fit:cover;border-radius:8px" />
                 <button type="button" class="btn btn-sm btn-danger" id="removeHlThumb"><i class="fas fa-trash"></i></button>
               </div>
             </div>
             <div class="form-group">
-              <label>РђРІР°С‚Р°СЂ РёРіСЂРѕРєР°</label>
+              <label>Аватар игрока</label>
               <div class="file-upload-area" id="hlAvatarArea" style="padding:16px">
                 <i class="fas fa-user-circle" style="font-size:1.6rem"></i>
-                <p>Р¤РѕС‚Рѕ РґР»СЏ РєСЂСѓР¶РєР° РЅР° РєР°СЂС‚РѕС‡РєРµ</p>
+                <p>Фото для кружка на карточке</p>
                 <input type="file" id="hlAvatarFile" accept="image/*" style="display:none" />
               </div>
               <div class="logo-preview" id="hlAvatarPreview" style="display:none;align-items:center;gap:12px">
-                <img id="hlAvatarImg" src="" alt="Р°РІР°С‚Р°СЂ" style="width:56px;height:56px;object-fit:cover;border-radius:50%;border:2px solid var(--primary)" />
+                <img id="hlAvatarImg" src="" alt="аватар" style="width:56px;height:56px;object-fit:cover;border-radius:50%;border:2px solid var(--primary)" />
                 <button type="button" class="btn btn-sm btn-danger" id="removeHlAvatar"><i class="fas fa-trash"></i></button>
               </div>
             </div>
           </div>
           <input type="hidden" id="hlEditId" />
           <div class="form-actions">
-            <button class="btn btn-primary" id="saveHighlightBtn"><i class="fas fa-save"></i> РЎРѕС…СЂР°РЅРёС‚СЊ</button>
-            <button class="btn btn-outline" id="cancelHighlightBtn"><i class="fas fa-times"></i> РћС‚РјРµРЅР°</button>
+            <button class="btn btn-primary" id="saveHighlightBtn"><i class="fas fa-save"></i> Сохранить</button>
+            <button class="btn btn-outline" id="cancelHighlightBtn"><i class="fas fa-times"></i> Отмена</button>
           </div>
         </div>
 
@@ -442,12 +442,12 @@
           <table class="admin-table">
             <thead>
               <tr>
-                <th>РџСЂРµРІСЊСЋ</th>
-                <th>РќРёРє</th>
+                <th>Превью</th>
+                <th>Ник</th>
                 <th>K/D</th>
-                <th>РџРѕРґРїРёСЃСЊ</th>
-                <th>Р’РёРґРµРѕ</th>
-                <th>Р”РµР№СЃС‚РІРёСЏ</th>
+                <th>Подпись</th>
+                <th>Видео</th>
+                <th>Действия</th>
               </tr>
             </thead>
             <tbody id="highlightsTableBody"></tbody>
@@ -458,58 +458,58 @@
       <!-- MATCHES PANEL -->
       <div class="admin-panel" id="panel-matches">
         <div class="admin-panel-header">
-          <h2 class="admin-title"><i class="fas fa-gamepad"></i> РњР°С‚С‡Рё</h2>
-          <button class="btn btn-primary" id="addMatchBtn"><i class="fas fa-plus"></i> Р”РѕР±Р°РІРёС‚СЊ РјР°С‚С‡</button>
+          <h2 class="admin-title"><i class="fas fa-gamepad"></i> Матчи</h2>
+          <button class="btn btn-primary" id="addMatchBtn"><i class="fas fa-plus"></i> Добавить матч</button>
         </div>
 
         <div class="admin-form-card" id="matchForm" style="display:none">
-          <h3 id="matchFormTitle">Р”РѕР±Р°РІРёС‚СЊ РјР°С‚С‡</h3>
+          <h3 id="matchFormTitle">Добавить матч</h3>
           <div class="form-grid">
             <div class="form-group">
-              <label>РљРѕРјР°РЅРґР° 1 *</label>
+              <label>Команда 1 *</label>
               <select id="matchTeam1"></select>
             </div>
             <div class="form-group">
-              <label>РљРѕРјР°РЅРґР° 2 *</label>
+              <label>Команда 2 *</label>
               <select id="matchTeam2"></select>
             </div>
             <div class="form-group">
-              <label>РЎС‡С‘С‚ РєРѕРјР°РЅРґС‹ 1</label>
+              <label>Счёт команды 1</label>
               <input type="number" id="matchScore1" placeholder="0" min="0" />
             </div>
             <div class="form-group">
-              <label>РЎС‡С‘С‚ РєРѕРјР°РЅРґС‹ 2</label>
+              <label>Счёт команды 2</label>
               <input type="number" id="matchScore2" placeholder="0" min="0" />
             </div>
             <div class="form-group form-full">
-              <label>РўСѓСЂРЅРёСЂ *</label>
-              <input type="text" id="matchTournament" placeholder="РќР°Р·РІР°РЅРёРµ С‚СѓСЂРЅРёСЂР°" />
+              <label>Турнир *</label>
+              <input type="text" id="matchTournament" placeholder="Название турнира" />
             </div>
             <div class="form-group form-full">
-              <label><i class="fas fa-link"></i> РЎСЃС‹Р»РєР° РЅР° РјР°С‚С‡ (xplay.gg)</label>
+              <label><i class="fas fa-link"></i> Ссылка на матч (xplay.gg)</label>
               <div class="input-with-icon">
                 <input type="text" id="matchUrl" placeholder="https://xplay.gg/matches/..." />
-                <button type="button" class="toggle-pass" id="copyMatchUrlBtn" title="РЎРєРѕРїРёСЂРѕРІР°С‚СЊ СЃСЃС‹Р»РєСѓ">
+                <button type="button" class="toggle-pass" id="copyMatchUrlBtn" title="Скопировать ссылку">
                   <i class="fas fa-copy"></i>
                 </button>
               </div>
             </div>
             <div class="form-group">
-              <label>Р”Р°С‚Р° Рё РІСЂРµРјСЏ</label>
+              <label>Дата и время</label>
               <input type="datetime-local" id="matchDate" />
             </div>
             <div class="form-group">
-              <label>РЎС‚Р°С‚СѓСЃ</label>
+              <label>Статус</label>
               <select id="matchStatus">
-                <option value="upcoming">РџСЂРµРґСЃС‚РѕСЏС‰РёР№</option>
-                <option value="finished">Р—Р°РІРµСЂС€С‘РЅ</option>
+                <option value="upcoming">Предстоящий</option>
+                <option value="finished">Завершён</option>
               </select>
             </div>
           </div>
           <input type="hidden" id="matchEditId" />
           <div class="form-actions">
-            <button class="btn btn-primary" id="saveMatchBtn"><i class="fas fa-save"></i> РЎРѕС…СЂР°РЅРёС‚СЊ</button>
-            <button class="btn btn-outline" id="cancelMatchBtn"><i class="fas fa-times"></i> РћС‚РјРµРЅР°</button>
+            <button class="btn btn-primary" id="saveMatchBtn"><i class="fas fa-save"></i> Сохранить</button>
+            <button class="btn btn-outline" id="cancelMatchBtn"><i class="fas fa-times"></i> Отмена</button>
           </div>
         </div>
 
@@ -517,13 +517,13 @@
           <table class="admin-table" id="matchesTable">
             <thead>
               <tr>
-                <th>РљРѕРјР°РЅРґР° 1</th>
-                <th>РЎС‡С‘С‚</th>
-                <th>РљРѕРјР°РЅРґР° 2</th>
-                <th>РўСѓСЂРЅРёСЂ</th>
-                <th>Р”Р°С‚Р°</th>
-                <th>РЎС‚Р°С‚СѓСЃ</th>
-                <th>Р”РµР№СЃС‚РІРёСЏ</th>
+                <th>Команда 1</th>
+                <th>Счёт</th>
+                <th>Команда 2</th>
+                <th>Турнир</th>
+                <th>Дата</th>
+                <th>Статус</th>
+                <th>Действия</th>
               </tr>
             </thead>
             <tbody id="matchesTableBody"></tbody>
@@ -534,63 +534,63 @@
       <!-- AWARDS PANEL -->
       <div class="admin-panel" id="panel-awards">
         <div class="admin-panel-header">
-          <h2 class="admin-title"><i class="fas fa-medal"></i> РЈРїСЂР°РІР»РµРЅРёРµ РЅР°РіСЂР°РґР°РјРё</h2>
-          <button class="btn btn-primary" id="addAwardBtn"><i class="fas fa-plus"></i> Р”РѕР±Р°РІРёС‚СЊ РЅР°РіСЂР°РґСѓ</button>
+          <h2 class="admin-title"><i class="fas fa-medal"></i> Управление наградами</h2>
+          <button class="btn btn-primary" id="addAwardBtn"><i class="fas fa-plus"></i> Добавить награду</button>
         </div>
 
         <div class="admin-form-card" id="awardForm" style="display:none">
-          <h3 id="awardFormTitle">Р”РѕР±Р°РІРёС‚СЊ РЅР°РіСЂР°РґСѓ</h3>
+          <h3 id="awardFormTitle">Добавить награду</h3>
           <div class="form-grid">
             <div class="form-group">
-              <label>РќР°Р·РІР°РЅРёРµ *</label>
+              <label>Название *</label>
               <input type="text" id="awardName" placeholder="EFL League Champion 2026" />
             </div>
             <div class="form-group">
-              <label>РР·РѕР±СЂР°Р¶РµРЅРёРµ РЅР°РіСЂР°РґС‹ *</label>
+              <label>Изображение награды *</label>
               <div class="file-upload-area" id="awardImageArea">
                 <i class="fas fa-image"></i>
-                <p>РќР°Р¶РјРёС‚Рµ РґР»СЏ РІС‹Р±РѕСЂР° РёР·РѕР±СЂР°Р¶РµРЅРёСЏ</p>
+                <p>Нажмите для выбора изображения</p>
                 <input type="file" id="awardImageInput" accept="image/*" style="display:none" />
               </div>
               <div class="logo-preview" id="awardImagePreview" style="display:none">
-                <img id="awardImageImg" src="" alt="РќР°РіСЂР°РґР°" style="width:64px;height:64px;object-fit:cover;border-radius:10px" />
+                <img id="awardImageImg" src="" alt="Награда" style="width:64px;height:64px;object-fit:cover;border-radius:10px" />
                 <button type="button" class="btn btn-sm btn-danger" id="removeAwardImage"><i class="fas fa-trash"></i></button>
               </div>
             </div>
             <div class="form-group">
-              <label>Р¦РІРµС‚</label>
+              <label>Цвет</label>
               <select id="awardColor">
-                <option value="gold">?? Р—РѕР»РѕС‚Рѕ</option>
-                <option value="silver">?? РЎРµСЂРµР±СЂРѕ</option>
-                <option value="bronze">?? Р‘СЂРѕРЅР·Р°</option>
-                <option value="primary">?? Р¤РёРѕР»РµС‚РѕРІС‹Р№</option>
-                <option value="accent">?? Р“РѕР»СѓР±РѕР№</option>
+                <option value="gold">?? Золото</option>
+                <option value="silver">?? Серебро</option>
+                <option value="bronze">?? Бронза</option>
+                <option value="primary">?? Фиолетовый</option>
+                <option value="accent">?? Голубой</option>
               </select>
             </div>
             <div class="form-group">
-              <label>РљРѕРјСѓ РІС‹РґР°С‚СЊ</label>
+              <label>Кому выдать</label>
               <select id="awardTarget">
-                <option value="player">РРіСЂРѕРєСѓ</option>
-                <option value="team">РљРѕРјР°РЅРґРµ</option>
+                <option value="player">Игроку</option>
+                <option value="team">Команде</option>
               </select>
             </div>
             <div class="form-group">
-              <label>РРіСЂРѕРє / РљРѕРјР°РЅРґР° *</label>
+              <label>Игрок / Команда *</label>
               <select id="awardRecipient"></select>
             </div>
             <div class="form-group">
-              <label>РћРїРёСЃР°РЅРёРµ</label>
-              <input type="text" id="awardDesc" placeholder="РџРѕР±РµРґРёС‚РµР»СЊ С‚СѓСЂРЅРёСЂР°..." />
+              <label>Описание</label>
+              <input type="text" id="awardDesc" placeholder="Победитель турнира..." />
             </div>
             <div class="form-group">
-              <label>Р”Р°С‚Р°</label>
+              <label>Дата</label>
               <input type="date" id="awardDate" />
             </div>
           </div>
           <input type="hidden" id="awardEditId" />
           <div class="form-actions">
-            <button class="btn btn-primary" id="saveAwardBtn"><i class="fas fa-save"></i> РЎРѕС…СЂР°РЅРёС‚СЊ</button>
-            <button class="btn btn-outline" id="cancelAwardBtn"><i class="fas fa-times"></i> РћС‚РјРµРЅР°</button>
+            <button class="btn btn-primary" id="saveAwardBtn"><i class="fas fa-save"></i> Сохранить</button>
+            <button class="btn btn-outline" id="cancelAwardBtn"><i class="fas fa-times"></i> Отмена</button>
           </div>
         </div>
 
@@ -598,12 +598,12 @@
           <table class="admin-table">
             <thead>
               <tr>
-                <th>РРєРѕРЅРєР°</th>
-                <th>РќР°Р·РІР°РЅРёРµ</th>
-                <th>РљРѕРјСѓ</th>
-                <th>РўРёРї</th>
-                <th>Р”Р°С‚Р°</th>
-                <th>Р”РµР№СЃС‚РІРёСЏ</th>
+                <th>Иконка</th>
+                <th>Название</th>
+                <th>Кому</th>
+                <th>Тип</th>
+                <th>Дата</th>
+                <th>Действия</th>
               </tr>
             </thead>
             <tbody id="awardsTableBody"></tbody>
@@ -614,20 +614,20 @@
       <!-- VETO PANEL -->
       <div class="admin-panel" id="panel-veto">
         <div class="admin-panel-header">
-          <h2 class="admin-title"><i class="fas fa-ban"></i> Р’РµС‚Рѕ РєР°СЂС‚</h2>
-          <button class="btn btn-primary" id="addVetoBtn"><i class="fas fa-plus"></i> РЎРѕР·РґР°С‚СЊ РІРµС‚Рѕ</button>
+          <h2 class="admin-title"><i class="fas fa-ban"></i> Вето карт</h2>
+          <button class="btn btn-primary" id="addVetoBtn"><i class="fas fa-plus"></i> Создать вето</button>
         </div>
 
-        <!-- Р¤РѕСЂРјР° СЃРѕР·РґР°РЅРёСЏ РІРµС‚Рѕ -->
+        <!-- Форма создания вето -->
         <div class="admin-form-card" id="vetoForm" style="display:none">
-          <h3>РЎРѕР·РґР°С‚СЊ РІРµС‚Рѕ</h3>
+          <h3>Создать вето</h3>
           <div class="form-grid">
             <div class="form-group">
-              <label>РњР°С‚С‡</label>
+              <label>Матч</label>
               <select id="vetoMatchSelect"></select>
             </div>
             <div class="form-group">
-              <label>Р¤РѕСЂРјР°С‚</label>
+              <label>Формат</label>
               <select id="vetoFormat">
                 <option value="bo1">BO1</option>
                 <option value="bo3">BO3</option>
@@ -636,8 +636,8 @@
             </div>
           </div>
           <div class="form-actions">
-            <button class="btn btn-primary" id="saveVetoBtn"><i class="fas fa-save"></i> РЎРѕР·РґР°С‚СЊ</button>
-            <button class="btn btn-outline" id="cancelVetoBtn"><i class="fas fa-times"></i> РћС‚РјРµРЅР°</button>
+            <button class="btn btn-primary" id="saveVetoBtn"><i class="fas fa-save"></i> Создать</button>
+            <button class="btn btn-outline" id="cancelVetoBtn"><i class="fas fa-times"></i> Отмена</button>
           </div>
         </div>
 
@@ -645,11 +645,11 @@
           <table class="admin-table">
             <thead>
               <tr>
-                <th>РњР°С‚С‡</th>
-                <th>Р¤РѕСЂРјР°С‚</th>
-                <th>РЎС‚Р°С‚СѓСЃ</th>
-                <th>РЎРѕР·РґР°РЅРѕ</th>
-                <th>Р”РµР№СЃС‚РІРёСЏ</th>
+                <th>Матч</th>
+                <th>Формат</th>
+                <th>Статус</th>
+                <th>Создано</th>
+                <th>Действия</th>
               </tr>
             </thead>
             <tbody id="vetoTableBody"></tbody>
@@ -672,23 +672,23 @@
   <div class="modal-overlay" id="rosterModal" style="display:none">
     <div class="modal" style="max-width:700px">
       <button class="modal-close" onclick="closeRosterModal()"><i class="fas fa-times"></i></button>
-      <h2 id="rosterModalTitle" style="margin-bottom:24px"><i class="fas fa-users"></i> РЈРїСЂР°РІР»РµРЅРёРµ СЃРѕСЃС‚Р°РІРѕРј</h2>
+      <h2 id="rosterModalTitle" style="margin-bottom:24px"><i class="fas fa-users"></i> Управление составом</h2>
       
       <div style="margin-bottom:24px">
-        <h3 style="font-size:1rem;margin-bottom:12px">РўРµРєСѓС‰РёР№ СЃРѕСЃС‚Р°РІ</h3>
+        <h3 style="font-size:1rem;margin-bottom:12px">Текущий состав</h3>
         <div id="rosterCurrentList" style="display:flex;flex-direction:column;gap:8px"></div>
       </div>
 
       <div>
-        <h3 style="font-size:1rem;margin-bottom:12px">Р”РѕР±Р°РІРёС‚СЊ РёРіСЂРѕРєР°</h3>
+        <h3 style="font-size:1rem;margin-bottom:12px">Добавить игрока</h3>
         <div style="display:flex;gap:12px;align-items:flex-end">
           <div class="form-group" style="flex:1;margin:0">
-            <label>Р’С‹Р±РµСЂРёС‚Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ</label>
+            <label>Выберите пользователя</label>
             <select id="rosterUserSelect" style="width:100%">
-              <option value="">вЂ” Р’С‹Р±РµСЂРёС‚Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ вЂ”</option>
+              <option value="">— Выберите пользователя —</option>
             </select>
           </div>
-          <button class="btn btn-primary" onclick="addUserToTeamRoster()"><i class="fas fa-plus"></i> Р”РѕР±Р°РІРёС‚СЊ</button>
+          <button class="btn btn-primary" onclick="addUserToTeamRoster()"><i class="fas fa-plus"></i> Добавить</button>
         </div>
       </div>
     </div>

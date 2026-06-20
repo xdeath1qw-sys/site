@@ -1,11 +1,11 @@
-п»ї<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Р’РµС‚Рѕ Р·Р°РІРµСЂС€РµРЅРѕ вЂ” EFL League</title>
+  <title>Вето завершено — EFL League</title>
   <link rel="icon" type="image/svg+xml" href="efl-logo.svg" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style-new.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <script src="js/storage.js?v=6"></script>
   <script src="js/auth.js?v=6"></script>
@@ -39,7 +39,7 @@
       pointer-events: none;
     }
 
-    /* -- РћСЃРЅРѕРІРЅРѕР№ Р»РµР№Р°СѓС‚: 3 РєРѕР»РѕРЅРєРё -- */
+    /* -- Основной лейаут: 3 колонки -- */
     .vd-layout {
       position: relative;
       z-index: 1;
@@ -51,7 +51,7 @@
       align-items: start;
     }
 
-    /* -- РљРѕР»РѕРЅРєР° РёРіСЂРѕРєРѕРІ -- */
+    /* -- Колонка игроков -- */
     .vd-team-col {
       display: flex;
       flex-direction: column;
@@ -147,7 +147,7 @@
       to   { opacity: 1; transform: translateX(0); }
     }
 
-    /* -- Р¦РµРЅС‚СЂР°Р»СЊРЅР°СЏ РєРѕР»РѕРЅРєР° -- */
+    /* -- Центральная колонка -- */
     .vd-center {
       display: flex;
       flex-direction: column;
@@ -155,7 +155,7 @@
       gap: 20px;
     }
 
-    /* VS СЂР°Р·РґРµР»РёС‚РµР»СЊ РІ С€Р°РїРєРµ */
+    /* VS разделитель в шапке */
     .vd-vs-header {
       display: flex;
       align-items: center;
@@ -181,7 +181,7 @@
       padding: 4px 12px;
     }
 
-    /* РљР°СЂС‚РѕС‡РєР° СЃ СЂРµР·СѓР»СЊС‚Р°С‚РѕРј */
+    /* Карточка с результатом */
     .vd-result-card {
       background: var(--card, #1a1a2e);
       border: 1px solid var(--border);
@@ -213,7 +213,7 @@
       background-clip: text;
     }
 
-    /* Р‘Р»РѕРє РєР°СЂС‚С‹ */
+    /* Блок карты */
     .vd-map-block {
       background: var(--bg-secondary, #111);
       border: 2px solid var(--primary, #667eea);
@@ -243,7 +243,7 @@
       letter-spacing: 1px;
     }
 
-    /* РўРµРєСЃС‚-РїРѕРґСЃРєР°Р·РєР° */
+    /* Текст-подсказка */
     .vd-hint {
       font-size: 0.9rem;
       color: var(--text-muted);
@@ -255,7 +255,7 @@
       color: var(--text);
     }
 
-    /* xplay РєРЅРѕРїРєР° */
+    /* xplay кнопка */
     .btn-xplay {
       background: linear-gradient(135deg, #5865F2, #7289da);
       color: #fff;
@@ -306,14 +306,14 @@
       font-weight: 700;
     }
 
-    /* -- РђРґР°РїС‚РёРІ -- */
+    /* -- Адаптив -- */
     @media (max-width: 800px) {
       .vd-layout {
         grid-template-columns: 1fr;
         max-width: 480px;
       }
       .vd-team-col {
-        display: none; /* РЅР° РјРѕР±РёР»Рµ РїСЂСЏС‡РµРј Р±РѕРєРѕРІС‹Рµ РєРѕР»РѕРЅРєРё */
+        display: none; /* на мобиле прячем боковые колонки */
       }
       .vd-layout.mobile-show .vd-team-col {
         display: flex;
@@ -331,65 +331,65 @@
   <div class="vd-page">
     <div class="vd-layout" id="vdLayout">
 
-      <!-- Р›РµРІР°СЏ РєРѕР»РѕРЅРєР°: РєРѕРјР°РЅРґР° 1 -->
+      <!-- Левая колонка: команда 1 -->
       <div class="vd-team-col left" id="team1Col">
-        <div class="vd-team-label">РљРѕРјР°РЅРґР°</div>
-        <div class="vd-team-name" id="team1Name">вЂ”</div>
+        <div class="vd-team-label">Команда</div>
+        <div class="vd-team-name" id="team1Name">—</div>
         <div id="team1Players"></div>
       </div>
 
-      <!-- Р¦РµРЅС‚СЂ -->
+      <!-- Центр -->
       <div class="vd-center">
         <div class="vd-result-card">
           <span class="vd-icon">??</span>
-          <div class="vd-title">Р’РµС‚Рѕ Р·Р°РІРµСЂС€РµРЅРѕ!</div>
+          <div class="vd-title">Вето завершено!</div>
 
           <div class="vd-map-block" id="mapBlock" style="display:none">
-            <div class="vd-map-label"><i class="fas fa-map-marked-alt"></i> Р’С‹Р±СЂР°РЅРЅР°СЏ РєР°СЂС‚Р°</div>
-            <div class="vd-map-name" id="finalMapName">вЂ”</div>
+            <div class="vd-map-label"><i class="fas fa-map-marked-alt"></i> Выбранная карта</div>
+            <div class="vd-map-name" id="finalMapName">—</div>
           </div>
 
           <div class="vd-map-block" id="mapsMultiBlock" style="display:none">
-            <div class="vd-map-label"><i class="fas fa-check-circle"></i> Р’С‹Р±СЂР°РЅРЅС‹Рµ РєР°СЂС‚С‹</div>
+            <div class="vd-map-label"><i class="fas fa-check-circle"></i> Выбранные карты</div>
             <div id="mapsMultiList" style="display:flex;flex-direction:column;gap:6px;margin-top:4px"></div>
           </div>
 
-          <!-- Р—Р°Р±Р°РЅРµРЅРЅС‹Рµ РєР°СЂС‚С‹ -->
+          <!-- Забаненные карты -->
           <div id="bannedBlock" style="display:none;background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.25);border-radius:14px;padding:14px 16px;margin-bottom:16px;text-align:left;">
             <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(239,68,68,0.7);margin-bottom:8px;">
-              <i class="fas fa-ban"></i> Р—Р°Р±Р°РЅРµРЅРЅС‹Рµ РєР°СЂС‚С‹
+              <i class="fas fa-ban"></i> Забаненные карты
             </div>
             <div id="bannedList" style="display:flex;flex-direction:column;gap:5px;"></div>
           </div>
 
           <p class="vd-hint">
-            РџРµСЂРµС…РѕРґРёС‚Рµ РЅР° <strong>xplay</strong> РґР»СЏ РёРіСЂС‹.<br>
-            РЈРґР°С‡РЅРѕР№ РёРіСЂС‹ РЅР° РїСЂРµРєСЂР°СЃРЅРѕРј РїСЂРѕРµРєС‚Рµ <strong>EFL</strong>! ??
+            Переходите на <strong>xplay</strong> для игры.<br>
+            Удачной игры на прекрасном проекте <strong>EFL</strong>! ??
           </p>
 
           <a href="https://xplay.gg" target="_blank" rel="noopener" class="btn-xplay">
-            <i class="fas fa-gamepad"></i> РџРµСЂРµР№С‚Рё РЅР° xplay.gg
+            <i class="fas fa-gamepad"></i> Перейти на xplay.gg
           </a>
 
           <div class="vd-nav-btns">
             <a href="tournaments.html" class="btn btn-outline">
-              <i class="fas fa-trophy"></i> РўСѓСЂРЅРёСЂС‹
+              <i class="fas fa-trophy"></i> Турниры
             </a>
             <a href="index.html" class="btn btn-outline">
-              <i class="fas fa-home"></i> Р“Р»Р°РІРЅР°СЏ
+              <i class="fas fa-home"></i> Главная
             </a>
           </div>
 
           <div class="vd-countdown">
-            РџРµСЂРµС…РѕРґ РЅР° РіР»Р°РІРЅСѓСЋ С‡РµСЂРµР· <span id="countdown">20</span> СЃРµРє
+            Переход на главную через <span id="countdown">20</span> сек
           </div>
         </div>
       </div>
 
-      <!-- РџСЂР°РІР°СЏ РєРѕР»РѕРЅРєР°: РєРѕРјР°РЅРґР° 2 -->
+      <!-- Правая колонка: команда 2 -->
       <div class="vd-team-col right" id="team2Col">
-        <div class="vd-team-label">РљРѕРјР°РЅРґР°</div>
-        <div class="vd-team-name" id="team2Name">вЂ”</div>
+        <div class="vd-team-label">Команда</div>
+        <div class="vd-team-name" id="team2Name">—</div>
         <div id="team2Players"></div>
       </div>
 
@@ -401,7 +401,7 @@
     const mapParam  = params.get('map');
     const vetoId    = params.get('vetoId');
 
-    // Р–РґС‘Рј Р·Р°РіСЂСѓР·РєРё Р‘Р”
+    // Ждём загрузки БД
     function tryRender() {
       if (!window._dbReady) { setTimeout(tryRender, 150); return; }
       render();
@@ -409,23 +409,23 @@
     tryRender();
 
     function render() {
-      // РџСЂРѕР±СѓРµРј РїРѕР»СѓС‡РёС‚СЊ РІРµС‚Рѕ
+      // Пробуем получить вето
       let veto = null;
       if (vetoId) {
         const vetos = DB.get('pl_vetos');
         veto = vetos.find(v => String(v.id) === String(vetoId));
       }
 
-      // -- Р‘Р»РѕРє РєР°СЂС‚С‹ --
+      // -- Блок карты --
       if (veto && veto.pickedMaps && veto.pickedMaps.length > 1) {
-        // bo3/bo5 вЂ” РЅРµСЃРєРѕР»СЊРєРѕ РєР°СЂС‚
+        // bo3/bo5 — несколько карт
         const multi = document.getElementById('mapsMultiBlock');
         const list  = document.getElementById('mapsMultiList');
         multi.style.display = 'block';
         list.innerHTML = veto.pickedMaps.map((p, i) => {
           const byName = p.pickedBy === 'decider' ? 'Decider'
-            : p.pickedBy === 'team1' ? (veto.team1 || 'РљРѕРјР°РЅРґР° 1')
-            : (veto.team2 || 'РљРѕРјР°РЅРґР° 2');
+            : p.pickedBy === 'team1' ? (veto.team1 || 'Команда 1')
+            : (veto.team2 || 'Команда 2');
           return `
             <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.04);border-radius:8px;padding:8px 12px">
               <span style="font-weight:800;color:var(--accent,#00d4ff);font-size:1rem">#${i+1} ${p.map.toUpperCase()}</span>
@@ -433,7 +433,7 @@
             </div>`;
         }).join('');
       } else {
-        // bo1 вЂ” РѕРґРЅР° РєР°СЂС‚Р°
+        // bo1 — одна карта
         const name = veto
           ? (veto.pickedMaps?.[0]?.map || decodeURIComponent(mapParam || ''))
           : decodeURIComponent(mapParam || '');
@@ -443,14 +443,14 @@
         }
       }
 
-      // -- Р‘Р°РЅ-Р»РёСЃС‚ --
+      // -- Бан-лист --
       if (veto && veto.bannedMaps && veto.bannedMaps.length) {
         const bannedBlock = document.getElementById('bannedBlock');
         const bannedList  = document.getElementById('bannedList');
         bannedBlock.style.display = 'block';
         bannedList.innerHTML = veto.bannedMaps.map(b => {
-          const byName = b.bannedBy === 'team1' ? (veto.team1 || 'РљРѕРјР°РЅРґР° 1') : (veto.team2 || 'РљРѕРјР°РЅРґР° 2');
-          const isAuto = b.auto ? ' <span style="font-size:0.68rem;opacity:0.6">(Р°РІС‚Рѕ)</span>' : '';
+          const byName = b.bannedBy === 'team1' ? (veto.team1 || 'Команда 1') : (veto.team2 || 'Команда 2');
+          const isAuto = b.auto ? ' <span style="font-size:0.68rem;opacity:0.6">(авто)</span>' : '';
           return `
             <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(239,68,68,0.06);border-radius:7px;padding:6px 10px">
               <span style="display:flex;align-items:center;gap:6px;font-weight:700;color:rgba(239,68,68,0.85);font-size:0.88rem">
@@ -461,7 +461,7 @@
         }).join('');
       }
 
-      // -- РРіСЂРѕРєРё РєРѕРјР°РЅРґ --
+      // -- Игроки команд --
       if (veto) {
         renderTeamPlayers(veto.team1, 'team1Name', 'team1Players', 'left');
         renderTeamPlayers(veto.team2, 'team2Name', 'team2Players', 'right');
@@ -477,7 +477,7 @@
       const listEl  = document.getElementById(listElId);
 
       if (!players.length) {
-        listEl.innerHTML = `<div style="font-size:0.8rem;color:var(--text-muted);text-align:center;padding:8px">РРіСЂРѕРєРё РЅРµ РЅР°Р№РґРµРЅС‹</div>`;
+        listEl.innerHTML = `<div style="font-size:0.8rem;color:var(--text-muted);text-align:center;padding:8px">Игроки не найдены</div>`;
         return;
       }
 
@@ -496,7 +496,7 @@
       }).join('');
     }
 
-    // -- РўР°Р№РјРµСЂ РѕР±СЂР°С‚РЅРѕРіРѕ РѕС‚СЃС‡С‘С‚Р° --
+    // -- Таймер обратного отсчёта --
     let sec = 20;
     const el = document.getElementById('countdown');
     const interval = setInterval(() => {
@@ -512,7 +512,7 @@
       link.addEventListener('click', () => clearInterval(interval));
     });
 
-    // Р—РІСѓРє РїРѕР±РµРґС‹
+    // Звук победы
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       [523, 659, 784].forEach((freq, i) => {

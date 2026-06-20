@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+п»ї<!DOCTYPE html>
 <html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Команды — EFL League</title>
+  <title>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ EFL League</title>
   <link rel="icon" type="image/svg+xml" href="efl-logo.svg" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=10" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
@@ -13,24 +13,24 @@
     <div class="nav-container">
       <a href="index.html" class="nav-logo"><img class="logo-img" src="efl-logo.svg" alt="EFL"> EFL League</a>
       <ul class="nav-links" id="navLinks">
-        <li><a href="index.html"><i class="fas fa-home"></i> Главная</a></li>
-        <li><a href="teams.html" class="active"><i class="fas fa-shield-halved"></i> Команды</a></li>
-        <li><a href="players.html"><i class="fas fa-users"></i> Игроки</a></li>
-        <li><a href="news.html"><i class="fas fa-newspaper"></i> Новости</a></li>
-        <li><a href="tournaments.html"><i class="fas fa-trophy"></i> Турниры</a></li>
+        <li><a href="index.html"><i class="fas fa-home"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a></li>
+        <li><a href="teams.html" class="active"><i class="fas fa-shield-halved"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a></li>
+        <li><a href="players.html"><i class="fas fa-users"></i> пїЅпїЅпїЅпїЅпїЅпїЅ</a></li>
+        <li><a href="news.html"><i class="fas fa-newspaper"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a></li>
+        <li><a href="tournaments.html"><i class="fas fa-trophy"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a></li>
 
       </ul>
       <div class="nav-actions">
         <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon" id="themeIcon"></i></button>
         <div id="authButtons">
-          <a href="login.html" class="btn btn-outline">Войти</a>
-          <a href="register.html" class="btn btn-primary">Регистрация</a>
+          <a href="login.html" class="btn btn-outline">пїЅпїЅпїЅпїЅпїЅ</a>
+          <a href="register.html" class="btn btn-primary">пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a>
         </div>
         <div id="userMenu" style="display:none" class="user-menu">
           <div class="user-avatar" id="userAvatarNav"><i class="fas fa-user"></i></div>
           <div class="user-dropdown" id="userDropdown">
-            <a href="profile.html"><i class="fas fa-id-card"></i> Профиль</a>
-            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+            <a href="profile.html"><i class="fas fa-id-card"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> пїЅпїЅпїЅпїЅпїЅ</a>
           </div>
         </div>
         <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
@@ -40,32 +40,32 @@
 
   <div class="page-header">
     <div class="container">
-      <h1><i class="fas fa-shield-halved"></i> Команды</h1>
-      <p>Все зарегистрированные команды по тир-уровням</p>
+      <h1><i class="fas fa-shield-halved"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</h1>
+      <p>пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ-пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</p>
     </div>
   </div>
 
   <section class="section">
     <div class="container">
 
-      <!-- IGL controls (кнопка создать / таймер КД / управление своей командой) -->
+      <!-- IGL controls (пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ / пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ / пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) -->
       <div id="iglControlsWrap" style="margin-bottom:24px"></div>
 
       <div class="filter-bar">
         <div class="tier-tabs">
-          <button class="tier-tab active" data-tier="all">Все</button>
+          <button class="tier-tab active" data-tier="all">пїЅпїЅпїЅ</button>
           <button class="tier-tab" data-tier="1"><span class="tier-badge tier-1">T1</span> Tier 1</button>
           <button class="tier-tab" data-tier="2"><span class="tier-badge tier-2">T2</span> Tier 2</button>
           <button class="tier-tab" data-tier="3"><span class="tier-badge tier-3">T3</span> Tier 3</button>
         </div>
         <div style="display:flex;align-items:center;gap:10px;margin-left:auto;">
           <div class="view-toggle" id="teamsViewToggle">
-            <button class="view-btn" data-view="grid" title="Сетка"><i class="fas fa-th-large"></i></button>
-            <button class="view-btn active" data-view="list" title="Список"><i class="fas fa-list"></i></button>
+            <button class="view-btn" data-view="grid" title="пїЅпїЅпїЅпїЅпїЅ"><i class="fas fa-th-large"></i></button>
+            <button class="view-btn active" data-view="list" title="пїЅпїЅпїЅпїЅпїЅпїЅ"><i class="fas fa-list"></i></button>
           </div>
           <div class="search-box">
             <i class="fas fa-search"></i>
-            <input type="text" id="teamSearch" placeholder="Поиск команды..." />
+            <input type="text" id="teamSearch" placeholder="пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ..." />
           </div>
         </div>
       </div>
@@ -78,7 +78,7 @@
       <div class="footer-content">
         <div class="footer-brand">
           <a href="index.html" class="nav-logo"><img class="logo-img" src="efl-logo.svg" alt="EFL"> EFL League</a>
-          <p>Лучший портал о киберспорте. Следите за командами, игроками и новостями.</p>
+          <p>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</p>
           <div class="footer-socials">
             <a href="https://t.me/EFLcs2" target="_blank" rel="noopener" title="Telegram"><i class="fab fa-telegram"></i></a>
             <a href="https://discord.gg/kCs9xAcq" target="_blank" rel="noopener" title="Discord"><i class="fab fa-discord"></i></a>
@@ -86,23 +86,23 @@
           </div>
         </div>
         <div class="footer-links">
-          <h4>Навигация</h4>
+          <h4>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</h4>
           <ul>
-            <li><a href="teams.html">Команды</a></li>
-            <li><a href="players.html">Игроки</a></li>
-            <li><a href="news.html">Новости</a></li>
+            <li><a href="teams.html">пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a></li>
+            <li><a href="players.html">пїЅпїЅпїЅпїЅпїЅпїЅ</a></li>
+            <li><a href="news.html">пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a></li>
           </ul>
         </div>
         <div class="footer-links">
-          <h4>Аккаунт</h4>
+          <h4>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</h4>
           <ul>
-            <li><a href="login.html">Войти</a></li>
-            <li><a href="register.html">Регистрация</a></li>
-            <li><a href="profile.html">Профиль</a></li>
+            <li><a href="login.html">пїЅпїЅпїЅпїЅпїЅ</a></li>
+            <li><a href="register.html">пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a></li>
+            <li><a href="profile.html">пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a></li>
           </ul>
         </div>
       </div>
-      <div class="footer-bottom"><p>&copy; 2026 EFL League. Все права защищены.</p></div>
+      <div class="footer-bottom"><p>&copy; 2026 EFL League. пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</p></div>
     </div>
   </footer>
 
@@ -110,39 +110,39 @@
   <div class="modal-overlay" id="createTeamModal" style="display:none">
     <div class="modal" style="max-width:520px">
       <button class="modal-close" id="ctModalClose"><i class="fas fa-times"></i></button>
-      <h2 style="margin-bottom:6px"><i class="fas fa-shield-halved" style="color:var(--primary)"></i> Создать команду</h2>
-      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:24px">Вы можете создать только одну команду. При удалении — КД 7 дней.</p>
+      <h2 style="margin-bottom:6px"><i class="fas fa-shield-halved" style="color:var(--primary)"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</h2>
+      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:24px">пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅ 7 пїЅпїЅпїЅпїЅ.</p>
 
       <div class="alert alert-error" id="ctAlert" style="display:none"></div>
 
       <div class="form-group">
-        <label><i class="fas fa-font"></i> Название команды *</label>
-        <input type="text" id="ctName" placeholder="Название команды" maxlength="40" />
+        <label><i class="fas fa-font"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ *</label>
+        <input type="text" id="ctName" placeholder="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ" maxlength="40" />
       </div>
       <div class="form-group">
-        <label><i class="fas fa-location-dot"></i> Страна</label>
-        <input type="text" id="ctCountry" placeholder="Россия" maxlength="40" />
+        <label><i class="fas fa-location-dot"></i> пїЅпїЅпїЅпїЅпїЅпїЅ</label>
+        <input type="text" id="ctCountry" placeholder="пїЅпїЅпїЅпїЅпїЅпїЅ" maxlength="40" />
       </div>
       <div class="form-group">
-        <label><i class="fas fa-align-left"></i> Описание</label>
-        <textarea id="ctDescription" placeholder="Пара слов о команде..." rows="3" maxlength="200"></textarea>
+        <label><i class="fas fa-align-left"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</label>
+        <textarea id="ctDescription" placeholder="пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ..." rows="3" maxlength="200"></textarea>
       </div>
       <div class="form-group">
-        <label><i class="fas fa-image"></i> Логотип</label>
+        <label><i class="fas fa-image"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</label>
         <div class="file-upload-area" id="ctLogoArea">
           <i class="fas fa-cloud-upload-alt"></i>
-          <p>Нажмите для выбора изображения</p>
+          <p>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</p>
           <input type="file" id="ctLogoInput" accept="image/*" style="display:none" />
         </div>
         <div class="logo-preview" id="ctLogoPreview" style="display:none">
-          <img id="ctLogoImg" src="" alt="Логотип" />
+          <img id="ctLogoImg" src="" alt="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ" />
           <button type="button" class="btn btn-sm btn-danger" id="ctRemoveLogo"><i class="fas fa-trash"></i></button>
         </div>
       </div>
 
       <div class="form-actions" style="margin-top:8px">
-        <button class="btn btn-primary" id="ctSaveBtn"><i class="fas fa-plus"></i> Создать</button>
-        <button class="btn btn-outline" id="ctCancelBtn"><i class="fas fa-times"></i> Отмена</button>
+        <button class="btn btn-primary" id="ctSaveBtn"><i class="fas fa-plus"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</button>
+        <button class="btn btn-outline" id="ctCancelBtn"><i class="fas fa-times"></i> пїЅпїЅпїЅпїЅпїЅпїЅ</button>
       </div>
     </div>
   </div>

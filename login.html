@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+п»ї<!DOCTYPE html>
 <html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8">
@@ -6,9 +6,9 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>Вход — EFL League</title>
+  <title>пїЅпїЅпїЅпїЅ пїЅ EFL League</title>
   <link rel="icon" type="image/svg+xml" href="efl-logo.svg">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=10">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     .reset-input {
@@ -79,35 +79,35 @@
         <i class="fas fa-bolt"></i>
         <span>EFL League</span>
       </div>
-      <h2>Добро пожаловать</h2>
-      <p class="auth-subtitle">Войдите в свой аккаунт</p>
+      <h2>пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</h2>
+      <p class="auth-subtitle">пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</p>
 
       <div class="alert" id="loginAlert" style="display:none"></div>
 
       <form id="loginForm">
         <div class="form-group">
-          <label><i class="fas fa-envelope"></i> Логин или Email</label>
-          <input type="text" id="loginUsername" placeholder="Введите логин" required>
+          <label><i class="fas fa-envelope"></i> пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ Email</label>
+          <input type="text" id="loginUsername" placeholder="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ" required>
         </div>
         <div class="form-group">
-          <label><i class="fas fa-lock"></i> Пароль</label>
+          <label><i class="fas fa-lock"></i> пїЅпїЅпїЅпїЅпїЅпїЅ</label>
           <div class="input-with-icon">
-            <input type="password" id="loginPassword" placeholder="Введите пароль" required>
+            <input type="password" id="loginPassword" placeholder="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ" required>
             <button type="button" class="toggle-pass" id="togglePass">
               <i class="fas fa-eye"></i>
             </button>
           </div>
         </div>
         <button type="submit" class="btn btn-primary btn-full">
-          <i class="fas fa-sign-in-alt"></i> Войти
+          <i class="fas fa-sign-in-alt"></i> пїЅпїЅпїЅпїЅпїЅ
         </button>
       </form>
 
       <div class="auth-footer">
-        <p>Нет аккаунта? <a href="register.html">Зарегистрироваться</a></p>
+        <p>пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ? <a href="register.html">пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a></p>
         <p style="margin-top:8px">
           <a href="#" id="forgotLink" style="color:var(--text-muted);font-size:0.85rem">
-            <i class="fas fa-key"></i> Забыли пароль?
+            <i class="fas fa-key"></i> пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ?
           </a>
         </p>
       </div>
@@ -115,62 +115,62 @@
   </div>
 
   <!-- ======================================
-       МОДАЛКА СБРОСА ПАРОЛЯ
+       пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
   ====================================== -->
   <div id="resetModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9999;align-items:center;justify-content:center;">
     <div style="background:var(--card);border-radius:16px;padding:28px 28px 24px;max-width:400px;width:92%;border:1px solid var(--border);box-shadow:0 10px 50px rgba(0,0,0,0.5);">
 
-      <h3 style="margin:0 0 4px"><i class="fas fa-key"></i> Сброс пароля</h3>
+      <h3 style="margin:0 0 4px"><i class="fas fa-key"></i> пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ</h3>
 
-      <!-- ШАГ 1: Email -->
+      <!-- пїЅпїЅпїЅ 1: Email -->
       <div id="rs1">
         <p style="color:var(--text-muted);font-size:0.86rem;margin:4px 0 18px;line-height:1.5">
-          Введите почту привязанную к аккаунту.
+          пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
         </p>
         <div id="rs1err" class="reset-error"></div>
         <div style="margin-bottom:16px">
-          <label class="reset-label"><i class="fas fa-envelope"></i> Email аккаунта</label>
+          <label class="reset-label"><i class="fas fa-envelope"></i> Email пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</label>
           <input type="email" id="rs1email" class="reset-input" placeholder="example@mail.com">
         </div>
         <div style="display:flex;gap:10px">
           <button id="rs1next" class="btn btn-primary" style="flex:1">
-            Далее <i class="fas fa-arrow-right"></i>
+            пїЅпїЅпїЅпїЅпїЅ <i class="fas fa-arrow-right"></i>
           </button>
-          <button id="rs1cancel" class="btn btn-outline" style="flex:1">Отмена</button>
+          <button id="rs1cancel" class="btn btn-outline" style="flex:1">пїЅпїЅпїЅпїЅпїЅпїЅ</button>
         </div>
       </div>
 
-      <!-- ШАГ 2: Ник -->
+      <!-- пїЅпїЅпїЅ 2: пїЅпїЅпїЅ -->
       <div id="rs2" style="display:none">
         <p style="color:var(--text-muted);font-size:0.86rem;margin:4px 0 18px;line-height:1.5">
-          Теперь введите ваш никнейм (логин).
+          пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅ).
         </p>
         <div id="rs2err" class="reset-error"></div>
         <div style="margin-bottom:16px">
-          <label class="reset-label"><i class="fas fa-user"></i> Ваш никнейм</label>
-          <input type="text" id="rs2nick" class="reset-input" placeholder="Ваш логин">
+          <label class="reset-label"><i class="fas fa-user"></i> пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</label>
+          <input type="text" id="rs2nick" class="reset-input" placeholder="пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ">
         </div>
         <div style="display:flex;gap:10px">
           <button id="rs2confirm" class="btn btn-primary" style="flex:1">
-            <i class="fas fa-check"></i> Подтвердить
+            <i class="fas fa-check"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
           </button>
           <button id="rs2back" class="btn btn-outline" style="flex:1">
-            <i class="fas fa-arrow-left"></i> Назад
+            <i class="fas fa-arrow-left"></i> пїЅпїЅпїЅпїЅпїЅ
           </button>
         </div>
       </div>
 
-      <!-- ШАГ 3: Новый пароль -->
+      <!-- пїЅпїЅпїЅ 3: пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ -->
       <div id="rs3" style="display:none;text-align:center">
         <div style="font-size:3rem;margin-bottom:12px">?</div>
-        <h4 style="margin:0 0 6px;color:#22c55e">Пароль сброшен!</h4>
-        <p style="color:var(--text-muted);font-size:0.86rem;margin:0 0 14px">Ваш новый пароль:</p>
+        <h4 style="margin:0 0 6px;color:#22c55e">пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!</h4>
+        <p style="color:var(--text-muted);font-size:0.86rem;margin:0 0 14px">пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ:</p>
         <div class="new-pass-box" id="rs3pass"></div>
         <p style="color:var(--text-muted);font-size:0.76rem;margin:0 0 18px">
-          Сохраните его и смените в настройках профиля.
+          пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
         </p>
         <button id="rs3login" class="btn btn-primary" style="width:100%">
-          <i class="fas fa-sign-in-alt"></i> Войти сейчас
+          <i class="fas fa-sign-in-alt"></i> пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         </button>
       </div>
 
@@ -197,7 +197,7 @@
   <script src="js/theme.js"></script>
   <script src="js/login.js"></script>
   <script>
-    // Глазик для пароля
+    // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
     document.getElementById('togglePass').addEventListener('click', function() {
       const inp = document.getElementById('loginPassword');
       const icon = this.querySelector('i');
@@ -212,10 +212,10 @@
   </script>
 
   <script>
-    // -- Вход -----------------------------------------------------
+    // -- пїЅпїЅпїЅпїЅ -----------------------------------------------------
     if (Auth && Auth.current()) window.location.href = 'index.html';
 
-    // -- Переменные сброса -----------------------------------------
+    // -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ -----------------------------------------
     var modal       = document.getElementById('resetModal');
     var rs1         = document.getElementById('rs1');
     var rs2         = document.getElementById('rs2');
@@ -229,7 +229,7 @@
     var foundUser   = null;
     var newPassword = '';
 
-    // -- Открыть / закрыть -----------------------------------------
+    // -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅ / пїЅпїЅпїЅпїЅпїЅпїЅпїЅ -----------------------------------------
     document.getElementById('forgotLink').addEventListener('click', function(e) {
       e.preventDefault();
       openModal();
@@ -267,20 +267,20 @@
       el.style.display = 'flex';
     }
 
-    // -- Шаг 1: проверяем email ------------------------------------
+    // -- пїЅпїЅпїЅ 1: пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ email ------------------------------------
     function step1() {
       var email = rs1email.value.trim().toLowerCase();
       rs1err.style.display = 'none';
 
-      if (!email) { showErr(rs1err, 'Введите email!'); return; }
+      if (!email) { showErr(rs1err, 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ email!'); return; }
 
-      // Ждём загрузки БД если нужно
-      if (!window._dbReady) { showErr(rs1err, 'Загрузка данных, попробуйте ещё раз...'); return; }
+      // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+      if (!window._dbReady) { showErr(rs1err, 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ...'); return; }
 
       var users = DB.get('pl_users');
       var found = users.find(function(u) { return (u.email || '').toLowerCase() === email; });
 
-      if (!found) { showErr(rs1err, 'Аккаунт с такой почтой не найден!'); return; }
+      if (!found) { showErr(rs1err, 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!'); return; }
 
       foundUser = found;
       rs2nick.value = '';
@@ -292,25 +292,25 @@
     document.getElementById('rs1next').addEventListener('click', step1);
     rs1email.addEventListener('keydown', function(e) { if (e.key === 'Enter') step1(); });
 
-    // -- Шаг 2: проверяем ник --------------------------------------
+    // -- пїЅпїЅпїЅ 2: пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ --------------------------------------
     function step2() {
       var nick = rs2nick.value.trim();
       rs2err.style.display = 'none';
 
-      if (!nick) { showErr(rs2err, 'Введите никнейм!'); return; }
+      if (!nick) { showErr(rs2err, 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!'); return; }
       if (!foundUser) { showStep(1); return; }
 
       if (foundUser.username.toLowerCase() !== nick.toLowerCase()) {
-        showErr(rs2err, 'Никнейм не совпадает с аккаунтом!');
+        showErr(rs2err, 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!');
         return;
       }
 
-      // Генерируем пароль
+      // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
       var chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
       newPassword = '';
       for (var i = 0; i < 10; i++) newPassword += chars[Math.floor(Math.random() * chars.length)];
 
-      // Сохраняем в БД
+      // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅ
       var users = DB.get('pl_users');
       var idx   = users.findIndex(function(u) { return u.id === foundUser.id; });
       if (idx !== -1) {
@@ -331,11 +331,11 @@
       setTimeout(function(){ rs1email.focus(); }, 100);
     });
 
-    // -- Шаг 3: кнопка "Войти сейчас" — закрывает модалку и сразу логинит --
+    // -- пїЅпїЅпїЅ 3: пїЅпїЅпїЅпїЅпїЅпїЅ "пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ" пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ --
     document.getElementById('rs3login').addEventListener('click', function() {
       if (!foundUser || !newPassword) { closeModal(); return; }
 
-      // Логиним сразу
+      // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
       var users = DB.get('pl_users');
       var fresh = users.find(function(u) { return u.id === foundUser.id; });
       if (fresh) {

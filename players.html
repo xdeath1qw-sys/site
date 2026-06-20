@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+п»ї<!DOCTYPE html>
 <html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Игроки — EFL League</title>
+  <title>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ EFL League</title>
   <link rel="icon" type="image/svg+xml" href="efl-logo.svg" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=10" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
@@ -13,24 +13,24 @@
     <div class="nav-container">
       <a href="index.html" class="nav-logo"><img class="logo-img" src="efl-logo.svg" alt="EFL"> EFL League</a>
       <ul class="nav-links" id="navLinks">
-        <li><a href="index.html"><i class="fas fa-home"></i> Главная</a></li>
-        <li><a href="teams.html"><i class="fas fa-shield-halved"></i> Команды</a></li>
-        <li><a href="players.html" class="active"><i class="fas fa-users"></i> Игроки</a></li>
-        <li><a href="news.html"><i class="fas fa-newspaper"></i> Новости</a></li>
-        <li><a href="tournaments.html"><i class="fas fa-trophy"></i> Турниры</a></li>
+        <li><a href="index.html"><i class="fas fa-home"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a></li>
+        <li><a href="teams.html"><i class="fas fa-shield-halved"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a></li>
+        <li><a href="players.html" class="active"><i class="fas fa-users"></i> пїЅпїЅпїЅпїЅпїЅпїЅ</a></li>
+        <li><a href="news.html"><i class="fas fa-newspaper"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a></li>
+        <li><a href="tournaments.html"><i class="fas fa-trophy"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a></li>
 
       </ul>
       <div class="nav-actions">
         <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon" id="themeIcon"></i></button>
         <div id="authButtons">
-          <a href="login.html" class="btn btn-outline">Войти</a>
-          <a href="register.html" class="btn btn-primary">Регистрация</a>
+          <a href="login.html" class="btn btn-outline">пїЅпїЅпїЅпїЅпїЅ</a>
+          <a href="register.html" class="btn btn-primary">пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a>
         </div>
         <div id="userMenu" style="display:none" class="user-menu">
           <div class="user-avatar" id="userAvatarNav"><i class="fas fa-user"></i></div>
           <div class="user-dropdown" id="userDropdown">
-            <a href="profile.html"><i class="fas fa-id-card"></i> Профиль</a>
-            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+            <a href="profile.html"><i class="fas fa-id-card"></i> пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> пїЅпїЅпїЅпїЅпїЅ</a>
           </div>
         </div>
         <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
@@ -40,8 +40,8 @@
 
   <div class="page-header">
     <div class="container">
-      <h1><i class="fas fa-users"></i> Игроки</h1>
-      <p>Статистика и профили лучших игроков</p>
+      <h1><i class="fas fa-users"></i> пїЅпїЅпїЅпїЅпїЅпїЅ</h1>
+      <p>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</p>
     </div>
   </div>
 
@@ -50,14 +50,14 @@
       <div class="filter-bar">
         <div class="search-box">
           <i class="fas fa-search"></i>
-          <input type="text" id="playerSearch" placeholder="Поиск игрока или команды..." />
+          <input type="text" id="playerSearch" placeholder="пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ..." />
         </div>
         <select id="teamFilter" class="select-filter">
-          <option value="all">Все команды</option>
+          <option value="all">пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</option>
         </select>
         <div class="view-toggle" id="playersViewToggle" style="margin-left:auto;">
-          <button class="view-btn" data-view="grid" title="Сетка"><i class="fas fa-th-large"></i></button>
-          <button class="view-btn active" data-view="list" title="Список"><i class="fas fa-list"></i></button>
+          <button class="view-btn" data-view="grid" title="пїЅпїЅпїЅпїЅпїЅ"><i class="fas fa-th-large"></i></button>
+          <button class="view-btn active" data-view="list" title="пїЅпїЅпїЅпїЅпїЅпїЅ"><i class="fas fa-list"></i></button>
         </div>
       </div>
       <div class="players-grid full-grid" id="playersGrid"></div>
@@ -69,7 +69,7 @@
       <div class="footer-content">
         <div class="footer-brand">
           <a href="index.html" class="nav-logo"><img class="logo-img" src="efl-logo.svg" alt="EFL"> EFL League</a>
-          <p>Лучший портал о киберспорте. Следите за командами, игроками и новостями.</p>
+          <p>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</p>
           <div class="footer-socials">
             <a href="https://t.me/EFLcs2" target="_blank" rel="noopener" title="Telegram"><i class="fab fa-telegram"></i></a>
             <a href="https://discord.gg/kCs9xAcq" target="_blank" rel="noopener" title="Discord"><i class="fab fa-discord"></i></a>
@@ -77,24 +77,24 @@
           </div>
         </div>
         <div class="footer-links">
-          <h4>Навигация</h4>
+          <h4>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</h4>
           <ul>
-            <li><a href="teams.html">Команды</a></li>
-            <li><a href="players.html">Игроки</a></li>
-            <li><a href="news.html">Новости</a></li>
-            <li><a href="tournaments.html">Турниры</a></li>
+            <li><a href="teams.html">пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a></li>
+            <li><a href="players.html">пїЅпїЅпїЅпїЅпїЅпїЅ</a></li>
+            <li><a href="news.html">пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a></li>
+            <li><a href="tournaments.html">пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a></li>
           </ul>
         </div>
         <div class="footer-links">
-          <h4>Аккаунт</h4>
+          <h4>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</h4>
           <ul>
-            <li><a href="login.html">Войти</a></li>
-            <li><a href="register.html">Регистрация</a></li>
-            <li><a href="profile.html">Профиль</a></li>
+            <li><a href="login.html">пїЅпїЅпїЅпїЅпїЅ</a></li>
+            <li><a href="register.html">пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a></li>
+            <li><a href="profile.html">пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a></li>
           </ul>
         </div>
       </div>
-      <div class="footer-bottom"><p>&copy; 2026 EFL League. Все права защищены.</p></div>
+      <div class="footer-bottom"><p>&copy; 2026 EFL League. пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</p></div>
     </div>
   </footer>
 

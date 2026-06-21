@@ -331,10 +331,6 @@ function renderProfile(user, player, layout, readOnly) {
           <input type="email" id="pEmail" value="${user.email}" />
         </div>
         <div class="form-group">
-          <label><i class="fas fa-lock"></i> Новый пароль <span style="color:var(--text-dim);font-weight:400">(оставьте пустым если не меняете)</span></label>
-          <input type="password" id="pPassword" placeholder="Новый пароль" />
-        </div>
-        <div class="form-group">
           <label>
             <span class="pp-social-icon faceit-icon">F</span>
             Ссылка на Faceit профиль
@@ -516,7 +512,6 @@ function renderProfile(user, player, layout, readOnly) {
 function saveProfile(user, newAvatar) {
   const newUsername = document.getElementById('pUsername').value.trim();
   const newEmail    = document.getElementById('pEmail').value.trim().toLowerCase();
-  const newPassword = document.getElementById('pPassword').value;
   const alertEl     = document.getElementById('profileAlert');
 
   if (!newUsername || !newEmail) {
@@ -554,7 +549,6 @@ function saveProfile(user, newAvatar) {
 
   users[idx].username = newUsername;
   users[idx].email    = newEmail;
-  if (newPassword.length >= 6) users[idx].password = newPassword;
   if (newAvatar) users[idx].avatar = newAvatar;
 
   // Faceit ссылка
@@ -720,7 +714,7 @@ function renderIglTeamPanel(user) {
     return;
   }
 
-  const ROLES = ['AWPer', 'Rifler', 'Entry Fragger', 'Lurker', 'Support', 'Замена'];
+  const ROLES = ['IGL', 'AWPer', 'Rifler', 'Entry Fragger', 'Lurker', 'Support', 'Замена'];
 
   const allPlayers = DB.get('pl_players');
   const teamPlayers = allPlayers.filter(p => p.team === myTeam.name);
@@ -816,15 +810,21 @@ function renderIglTeamPanel(user) {
 }
 
 window.iglSetRole = function(select) {
-  const pid = parseInt(select.dataset.pid);
+  const pid = select.dataset.pid; // строка, не parseInt — совместимо с MongoDB
   const role = select.value;
+  if (!pid) return;
 
   const players = DB.get('pl_players');
-  const idx = players.findIndex(p => p.id === pid);
+  const idx = players.findIndex(p => String(p.id) === String(pid));
   if (idx === -1) return;
 
   players[idx].role = role;
   DB.set('pl_players', players);
+
+  // Синхронизируем с сервером
+  DB.update('pl_players', String(pid), { role }).catch(e =>
+    console.warn('[IGL] role update failed:', e.message)
+  );
 
   // Показываем подсказку "Сохранено"
   const hint = document.getElementById(`hint-${pid}`);

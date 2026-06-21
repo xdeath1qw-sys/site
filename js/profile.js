@@ -724,10 +724,12 @@ function renderIglTeamPanel(user) {
     : `<div class="igl-header-logo igl-logo-placeholder">${myTeam.name.substring(0,2).toUpperCase()}</div>`;
 
   // ── Карточки игроков (HLTV стиль) ──
-  // Сначала капитан, потом остальные
+  // Сначала капитан, потом остальные — без дублей капитана
   const allMembers = [
     { id: 'captain', nick: user.username, photo: user.avatar || '', role: 'IGL', isCaptain: true },
-    ...teamPlayers.map(p => ({ id: p.id, nick: p.nick || p.name, photo: p.photo || '', role: p.role || '', isCaptain: false }))
+    ...teamPlayers
+      .filter(p => (p.nick || p.name || '').toLowerCase() !== user.username.toLowerCase())
+      .map(p => ({ id: p.id, nick: p.nick || p.name, photo: p.photo || '', role: p.role || '', isCaptain: false }))
   ];
 
   const playerCards = allMembers.map(p => `
@@ -757,7 +759,11 @@ function renderIglTeamPanel(user) {
       </div>
     </div>`;
 
-  const playerRows = teamPlayers.map(p => {
+  const teamPlayersNoCaptain = teamPlayers.filter(
+    p => (p.nick || p.name || '').toLowerCase() !== user.username.toLowerCase()
+  );
+
+  const playerRows = teamPlayersNoCaptain.map(p => {
     const roleOpts = ROLES.map(r =>
       `<option value="${r}" ${p.role === r ? 'selected' : ''}>${r}</option>`
     ).join('');
@@ -787,7 +793,7 @@ function renderIglTeamPanel(user) {
       <div>
         <div class="igl-team-name">${myTeam.name}</div>
         <div class="igl-team-meta">
-          <span><i class="fas fa-users"></i> ${teamPlayers.length + 1} игроков</span>
+          <span><i class="fas fa-users"></i> ${allMembers.length} игроков</span>
           <span><i class="fas fa-location-dot"></i> ${myTeam.country || '—'}</span>
         </div>
       </div>
@@ -802,9 +808,9 @@ function renderIglTeamPanel(user) {
     <div class="igl-players-list" style="margin-top:24px">
       <div class="igl-list-title"><i class="fas fa-users"></i> Состав — назначьте роли</div>
       ${captainRow}
-      ${teamPlayers.length
+      ${teamPlayersNoCaptain.length
         ? playerRows
-        : `<div style="color:var(--text-dim);font-size:0.88rem;padding:16px 0">В команде пока нет других игроков</div>`
+        : `<div style="color:var(--bone-ghost);font-size:0.82rem;padding:16px 0">В команде пока нет других игроков</div>`
       }
     </div>`;
 }

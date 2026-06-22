@@ -1135,10 +1135,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (editingAwardId !== null) {
       const idx = list.findIndex(a => a.id === editingAwardId);
       if (idx !== -1) list[idx] = entry;
+      saveAwards(list);
+      DB.update('pl_awards', String(editingAwardId), entry).catch(e => console.warn('[AWARDS] update:', e.message));
     } else {
+      DB.insert('pl_awards', entry).then(saved => {
+        const arr = getAwards();
+        const i = arr.findIndex(a => String(a.id) === String(entry.id));
+        if (i !== -1) arr[i] = saved; else arr.push(saved);
+        saveAwards(arr);
+      }).catch(e => console.warn('[AWARDS] insert:', e.message));
       list.push(entry);
+      saveAwards(list);
     }
-    saveAwards(list);
     toggleForm('awardForm', false);
     renderAwardsTable();
     showToast(editingAwardId !== null ? 'Награда обновлена' : 'Награда выдана!');
@@ -1206,6 +1214,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.deleteAward = (id) => {
     if (!confirm('Удалить награду?')) return;
     saveAwards(getAwards().filter(a => String(a.id) !== String(id)));
+    DB.remove('pl_awards', String(id)).catch(e => console.warn('[AWARDS] remove:', e.message));
     renderAwardsTable();
     showToast('Награда удалена', 'error');
   };

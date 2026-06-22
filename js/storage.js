@@ -246,6 +246,32 @@ function vetoToMG(v) {
   };
 }
 
+// ── Awards конвертеры ─────────────────────────────────────────
+function awardFromMG(a) {
+  return {
+    id:        a.id || a._id?.toString(),
+    name:      a.name      || '',
+    image:     a.image     || '',
+    color:     a.color     || 'gold',
+    target:    a.target    || 'player',
+    recipient: a.recipient || '',
+    desc:      a.desc      || '',
+    date:      a.date      || ''
+  };
+}
+
+function awardToMG(a) {
+  return {
+    name:      a.name      || '',
+    image:     a.image     || '',
+    color:     a.color     || 'gold',
+    target:    a.target    || 'player',
+    recipient: a.recipient || '',
+    desc:      a.desc      || '',
+    date:      a.date      || ''
+  };
+}
+
 // ── Карта коллекций ────────────────────────────────────────────
 const colMap = {
   pl_users:       { col: 'users',       fromMG: userFromMG,   toMG: userToMG   },
@@ -254,7 +280,8 @@ const colMap = {
   pl_news:        { col: 'news',        fromMG: newsFromMG,   toMG: newsToMG   },
   pl_tournaments: { col: 'tournaments', fromMG: tournFromMG,  toMG: tournToMG  },
   pl_matches:     { col: 'matches',     fromMG: matchFromMG,  toMG: matchToMG  },
-  pl_vetos:       { col: 'vetos',       fromMG: vetoFromMG,   toMG: vetoToMG   }
+  pl_vetos:       { col: 'vetos',       fromMG: vetoFromMG,   toMG: vetoToMG   },
+  pl_awards:      { col: 'awards',      fromMG: awardFromMG,  toMG: awardToMG  }
 };
 
 // ── DB Ready ───────────────────────────────────────────────────
@@ -289,16 +316,17 @@ window._syncFromJSONBin = async function() {
       apiFetch('news'),
       apiFetch('tournaments'),
       apiFetch('matches'),
-      apiFetch('vetos')
-    ]).then(([news, tournaments, matches, vetos]) => {
+      apiFetch('vetos'),
+      apiFetch('awards')
+    ]).then(([news, tournaments, matches, vetos, awards]) => {
       lsSet('pl_news',        news.map(newsFromMG));
       lsSet('pl_tournaments', tournaments.map(tournFromMG));
       lsSet('pl_matches',     matches.map(matchFromMG));
       lsSet('pl_vetos',       vetos.map(vetoFromMG));
+      lsSet('pl_awards',      awards.map(awardFromMG));
       if (!lsGet('pl_invites'))       lsSet('pl_invites', []);
       if (!lsGet('pl_notifications')) lsSet('pl_notifications', []);
       if (!lsGet('pl_highlights'))    lsSet('pl_highlights', []);
-      if (!lsGet('pl_awards'))        lsSet('pl_awards', []);
       if (!lsGet('pl_tourn_regs'))    lsSet('pl_tourn_regs', {});
       window.dispatchEvent(new CustomEvent('db-updated'));
     }).catch(e => console.warn('[DB] ⚠️ Медленный синк:', e.message));

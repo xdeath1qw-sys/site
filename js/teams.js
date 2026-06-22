@@ -292,6 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const user = Auth.current();
 
     let teams = DB.get('pl_teams');
+    teams = teams.slice().sort((a, b) => (b.rating || 0) - (a.rating || 0));
     if (currentTier !== 'all') teams = teams.filter(t => String(t.tier) === String(currentTier));
     if (searchQuery) teams = teams.filter(t =>
       t.name.toLowerCase().includes(searchQuery) ||

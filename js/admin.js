@@ -1103,6 +1103,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('awardDesc').value = '';
     document.getElementById('awardDate').value = new Date().toISOString().slice(0,10);
     document.getElementById('awardEditId').value = '';
+    document.getElementById('awardCount').value = '1';
     document.getElementById('awardImagePreview').style.display = 'none';
     document.getElementById('awardImageImg').src = '';
     awardImageInput.value = '';
@@ -1119,33 +1120,43 @@ document.addEventListener('DOMContentLoaded', () => {
     const recipient = document.getElementById('awardRecipient').value;
     const desc      = document.getElementById('awardDesc').value.trim();
     const date      = document.getElementById('awardDate').value;
+    const count     = parseInt(document.getElementById('awardCount').value) || 1;
 
     if (!name || !recipient) { showToast('Заполните название и получателя', 'error'); return; }
     if (!awardImageData && editingAwardId === null) { showToast('Добавьте изображение награды', 'error'); return; }
 
     const list = getAwards();
     const existing = editingAwardId ? list.find(a => a.id === editingAwardId) : null;
-    const entry = {
-      id: editingAwardId || Date.now(),
-      name,
-      image: awardImageData || (existing ? existing.image : ''),
-      color, target, recipient, desc, date
-    };
 
     if (editingAwardId !== null) {
+      // Редактирование одной существующей награды
+      const entry = {
+        id: editingAwardId,
+        name,
+        image: awardImageData || (existing ? existing.image : ''),
+        color, target, recipient, desc, date
+      };
       const idx = list.findIndex(a => a.id === editingAwardId);
       if (idx !== -1) list[idx] = entry;
       saveAwards(list);
       DB.update('pl_awards', String(editingAwardId), entry).catch(e => console.warn('[AWARDS] update:', e.message));
+      showToast('Награда обновлена');
     } else {
-      DB.insert('pl_awards', entry).then(saved => {
-        const arr = getAwards();
-        const i = arr.findIndex(a => String(a.id) === String(entry.id));
-        if (i !== -1) arr[i] = saved; else arr.push(saved);
-        saveAwards(arr);
-      }).catch(e => console.warn('[AWARDS] insert:', e.message));
-      list.push(entry);
+      // Создание N копий награды
+      const imageToUse = awardImageData;
+      const newEntries = [];
+      for (let i = 0; i < count; i++) {
+        newEntries.push({
+          id: Date.now() + i,
+          name, image: imageToUse, color, target, recipient, desc, date
+        });
+      }
+      newEntries.forEach(entry => {
+        list.push(entry);
+        DB.insert('pl_awards', entry).catch(e => console.warn('[AWARDS] insert:', e.message));
+      });
       saveAwards(list);
+      showToast(count > 1 ? `Выдано ${count} наград!` : 'Награда выдана!');
     }
     toggleForm('awardForm', false);
     renderAwardsTable();

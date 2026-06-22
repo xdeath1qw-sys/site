@@ -3501,9 +3501,7 @@ option { background: var(--bg-card); color: var(--text); }
   cursor: default;
   min-width: 64px;
   max-width: 80px;
-  transition: transform 0.15s;
 }
-.award-item:hover { transform: translateY(-3px); }
 .award-icon {
   width: 52px;
   height: 52px;
@@ -3514,10 +3512,6 @@ option { background: var(--bg-card); color: var(--text); }
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
-  transition: box-shadow 0.2s;
-}
-.award-item:hover .award-icon {
-  box-shadow: 0 0 14px currentColor;
 }
 .award-emoji { font-size: 1.6rem; line-height: 1; }
 .award-name {

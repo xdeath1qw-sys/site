@@ -435,9 +435,21 @@ document.addEventListener('DOMContentLoaded', () => {
       ? `<img src="${t.logo}" class="tm-logo-img">`
       : `<div class="tm-logo-placeholder">${t.name.substring(0,2).toUpperCase()}</div>`;
 
-    // ── Фотокарточки игроков ──
+    // ── Фотокарточки игроков (всегда 5 слотов) ──
     let subIndex = 0;
-    const playerCards = allMembers.slice(0, 5).map(p => {
+    const memberSlots = allMembers.slice(0, 5);
+    while (memberSlots.length < 5) memberSlots.push(null); // пустые слоты
+
+    const playerCards = memberSlots.map(p => {
+      if (!p) {
+        return `
+        <div class="tm-player-card tm-player-card--empty">
+          <div class="tm-player-photo">
+            <div class="tm-photo-placeholder tm-photo-placeholder--empty"><i class="fas fa-user-plus"></i></div>
+          </div>
+          <div class="tm-player-nick" style="color:var(--text-dim);font-size:0.8rem">Нет игрока</div>
+        </div>`;
+      }
       let roleLabel = p.role;
       if ((p.role || '').toLowerCase() === 'substitute') {
         roleLabel = `Замена ${subIndex++}`;
@@ -572,7 +584,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <!-- Игроки в ряд -->
         <div class="tm2-roster">
-          ${playerCards || '<div class="tm2-empty">Игроков пока нет</div>'}
+          ${playerCards}
         </div>
 
         <!-- Награды -->

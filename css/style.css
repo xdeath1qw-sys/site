@@ -3177,6 +3177,20 @@ option { background: var(--bg-card); color: var(--text); }
   text-align: center;
 }
 
+/* Пустой слот в составе команды */
+.tm-player-card--empty {
+  cursor: default;
+  opacity: 0.45;
+}
+.tm-player-card--empty:hover {
+  background: transparent;
+}
+.tm-photo-placeholder--empty {
+  font-size: 1.8rem;
+  color: var(--text-dim);
+  opacity: 0.5;
+}
+
 /* тФАтФА Profile tournament row тФАтФА */
 .pp-tourn-row {
   display: flex;

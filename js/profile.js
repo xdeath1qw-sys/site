@@ -862,16 +862,31 @@ function buildAwardsStrip(recipientName, type) {
     accent:  '#00D4FF'
   };
 
-  const items = awards.map(a => {
+  // Группируем одинаковые награды по имени+цвету
+  const grouped = {};
+  awards.forEach(a => {
+    const key = `${a.name}__${a.color}`;
+    if (!grouped[key]) {
+      grouped[key] = { ...a, count: 1 };
+    } else {
+      grouped[key].count++;
+    }
+  });
+
+  const items = Object.values(grouped).map(a => {
     const color = colorMap[a.color] || '#FFB300';
     const iconHTML = a.image
       ? `<img src="${a.image}" alt="${a.name}" style="width:100%;height:100%;object-fit:cover;border-radius:8px">`
       : `<i class="fas fa-medal" style="color:${color};font-size:1.3rem"></i>`;
     const d = a.date ? new Date(a.date).getFullYear() : '';
+    const countBadge = a.count > 1
+      ? `<div class="award-count-badge">x${a.count}</div>`
+      : '';
     return `
-      <div class="award-item" title="${a.name}${a.desc ? ' — ' + a.desc : ''}${d ? ' (' + d + ')' : ''}">
-        <div class="award-icon" style="border-color:${color};box-shadow:0 0 8px ${color}33">
+      <div class="award-item" title="${a.name}${a.desc ? ' — ' + a.desc : ''}${d ? ' (' + d + ')' : ''}${a.count > 1 ? ' ×' + a.count : ''}">
+        <div class="award-icon" style="border-color:${color};box-shadow:0 0 8px ${color}33;position:relative">
           ${iconHTML}
+          ${countBadge}
         </div>
         <div class="award-name" style="color:${color}">${a.name}</div>
         ${d ? `<div class="award-year">${d}</div>` : ''}

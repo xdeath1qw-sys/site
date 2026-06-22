@@ -524,19 +524,29 @@ document.addEventListener('DOMContentLoaded', () => {
     })().filter(a => a.target === 'team' && (a.recipient||'').toLowerCase() === t.name.toLowerCase());
 
     const colorMap = { gold:'#FFB300', silver:'#9E9E9E', bronze:'#CD7F32', primary:'#6C63FF', accent:'#00D4FF' };
+
+    // Группируем одинаковые награды
+    const groupedAwards = {};
+    teamAwards.forEach(a => {
+      const key = `${a.name}__${a.color}`;
+      if (!groupedAwards[key]) groupedAwards[key] = { ...a, count: 1 };
+      else groupedAwards[key].count++;
+    });
+
     const awardsHTML = teamAwards.length ? `
       <div class="tm2-awards">
         <div class="tm2-section-title" style="padding:16px 24px 0"><i class="fas fa-medal"></i> Награды</div>
         <div class="tm2-awards-list">
-          ${teamAwards.map(a => {
+          ${Object.values(groupedAwards).map(a => {
             const color = colorMap[a.color] || '#FFB300';
             const iconHTML = a.image
               ? `<img src="${a.image}" alt="${a.name}" style="width:100%;height:100%;object-fit:cover;border-radius:8px">`
               : `<i class="fas fa-medal" style="color:${color};font-size:1.3rem"></i>`;
             const yr = a.date ? new Date(a.date).getFullYear() : '';
+            const countBadge = a.count > 1 ? `<div class="award-count-badge">x${a.count}</div>` : '';
             return `
-              <div class="award-item" title="${a.name}${a.desc?' — '+a.desc:''}${yr?' ('+yr+')':''}">
-                <div class="award-icon" style="border-color:${color};box-shadow:0 0 8px ${color}44">${iconHTML}</div>
+              <div class="award-item" title="${a.name}${a.desc?' — '+a.desc:''}${yr?' ('+yr+')':''}${a.count>1?' ×'+a.count:''}">
+                <div class="award-icon" style="border-color:${color};box-shadow:0 0 8px ${color}44;position:relative">${iconHTML}${countBadge}</div>
                 <div class="award-name" style="color:${color}">${a.name}</div>
                 ${yr ? `<div class="award-year">${yr}</div>` : ''}
               </div>`;

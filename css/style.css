@@ -3528,6 +3528,27 @@ option { background: var(--bg-card); color: var(--text); }
   text-align: center;
 }
 
+/* Счётчик количества наград */
+.award-count-badge {
+  position: absolute;
+  bottom: -5px;
+  right: -5px;
+  min-width: 18px;
+  height: 18px;
+  background: #5B8DEF;
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 800;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 1.5px solid var(--bg);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
 /* Team modal awards row */
 .tm2-awards {
   border-top: 1px solid var(--border);

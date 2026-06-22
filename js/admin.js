@@ -1103,7 +1103,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('awardDesc').value = '';
     document.getElementById('awardDate').value = new Date().toISOString().slice(0,10);
     document.getElementById('awardEditId').value = '';
-    document.getElementById('awardCount').value = '1';
+    document.getElementById('awardCount').disabled = false;
+    document.getElementById('awardCountGroup').style.display = '';
     document.getElementById('awardImagePreview').style.display = 'none';
     document.getElementById('awardImageImg').src = '';
     awardImageInput.value = '';
@@ -1111,7 +1112,11 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleForm('awardForm', true);
   });
 
-  document.getElementById('cancelAwardBtn').addEventListener('click', () => toggleForm('awardForm', false));
+  document.getElementById('cancelAwardBtn').addEventListener('click', () => {
+    document.getElementById('awardCountGroup').style.display = '';
+    document.getElementById('awardCount').disabled = false;
+    toggleForm('awardForm', false);
+  });
 
   document.getElementById('saveAwardBtn').addEventListener('click', () => {
     const name      = document.getElementById('awardName').value.trim();
@@ -1147,17 +1152,22 @@ document.addEventListener('DOMContentLoaded', () => {
       const newEntries = [];
       for (let i = 0; i < count; i++) {
         newEntries.push({
-          id: Date.now() + i,
           name, image: imageToUse, color, target, recipient, desc, date
         });
       }
-      newEntries.forEach(entry => {
-        list.push(entry);
-        DB.insert('pl_awards', entry).catch(e => console.warn('[AWARDS] insert:', e.message));
-      });
-      saveAwards(list);
-      showToast(count > 1 ? `Выдано ${count} наград!` : 'Награда выдана!');
+      // Сохраняем через DB.insert — он сам обновит localStorage с правильными MongoDB id
+      Promise.all(newEntries.map(entry => DB.insert('pl_awards', entry)))
+        .then(() => {
+          renderAwardsTable();
+          showToast(count > 1 ? `Выдано ${count} наград!` : 'Награда выдана!');
+        })
+        .catch(e => {
+          console.warn('[AWARDS] insert error:', e.message);
+          showToast('Ошибка сохранения', 'error');
+        });
     }
+    document.getElementById('awardCountGroup').style.display = '';
+    document.getElementById('awardCount').disabled = false;
     toggleForm('awardForm', false);
     renderAwardsTable();
     showToast(editingAwardId !== null ? 'Награда обновлена' : 'Награда выдана!');
@@ -1206,6 +1216,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('awardDesc').value    = a.desc || '';
     document.getElementById('awardDate').value    = a.date || '';
     document.getElementById('awardEditId').value  = a.id;
+    document.getElementById('awardCount').value   = '1';
+    document.getElementById('awardCount').disabled = true;
+    document.getElementById('awardCountGroup').style.display = 'none'; // скрываем при редактировании
     if (a.image) {
       awardImageImg.src = a.image;
       awardImagePreview.style.display = 'flex';

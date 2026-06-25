@@ -1,4 +1,30 @@
 ﻿// ── News Page ──
+
+// Глобальная функция открытия новости (доступна сразу)
+window.openNews = function(id) {
+  const newsList = DB.get('pl_news');
+  const n = newsList.find(x => x.id === id);
+  if (!n) return;
+  
+  const catLabels = { general: 'Общее', tournament: 'Турниры', teams: 'Команды', players: 'Игроки' };
+  const d = new Date(n.createdAt || n.date);
+  const dateStr = d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  
+  const modal = document.getElementById('newsModal');
+  const content = document.getElementById('newsModalContent');
+  if (!content || !modal) return;
+  
+  content.innerHTML = `
+    ${n.image ? `<img src="${n.image}" alt="${n.title}" class="modal-news-img" />` : ''}
+    <div style="display:inline-block;margin-bottom:12px" class="news-cat cat-${n.category}">${catLabels[n.category] || n.category}</div>
+    <h2 class="modal-news-title">${n.title}</h2>
+    <div class="modal-news-meta">
+      <span><i class="fas fa-calendar"></i> ${dateStr}</span>
+    </div>
+    <div class="modal-news-body">${n.content || ''}</div>`;
+  modal.classList.add('active');
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   whenDbReady(() => {
   let searchQuery = '';
@@ -61,28 +87,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }).join('');
   }
 
-  window.openNews = function(id) {
-    const newsList = DB.get('pl_news');
-    const n = newsList.find(x => x.id === id);
-    if (!n) return;
-    const d = new Date(n.createdAt || n.date);
-    const dateStr = d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-    const content = document.getElementById('newsModalContent');
-    if (!content) return;
-    content.innerHTML = `
-      ${n.image ? `<img src="${n.image}" alt="${n.title}" class="modal-news-img" />` : ''}
-      <div style="display:inline-block;margin-bottom:12px" class="news-cat cat-${n.category}">${catLabels[n.category] || n.category}</div>
-      <h2 class="modal-news-title">${n.title}</h2>
-      <div class="modal-news-meta">
-        <span><i class="fas fa-calendar"></i> ${dateStr}</span>
-      </div>
-      <div class="modal-news-body">${n.content || ''}</div>`;
-    modal.classList.add('active');
-  };
+  // Экспортируем renderNews для перерендера при обновлении БД
+  window._newsPageRender = renderNews;
+
   }); // конец whenDbReady
 
   // Перерендериваем когда Supabase вернул свежие данные
   window.addEventListener('db-updated', () => {
-    if (typeof renderNews === 'function') renderNews();
+    if (typeof window._newsPageRender === 'function') window._newsPageRender();
   });
 }); // конец DOMContentLoaded

@@ -272,7 +272,7 @@ function newsCard(n) {
   const d = new Date(n.date || n.createdAt);
   const dateStr = d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
   return `
-    <div class="news-card" onclick="window.location.href='news.html'">
+    <div class="news-card" onclick="openNewsModal(${n.id})">
       <div class="news-card-img">
         ${img}
         <span class="news-cat cat-${n.category}">${catLabels[n.category] || n.category}</span>
@@ -284,6 +284,50 @@ function newsCard(n) {
         <span class="news-read-more">Читать далее <i class="fas fa-arrow-right"></i></span>
       </div>
     </div>`;
+}
+
+// Открытие модального окна с новостью
+function openNewsModal(id) {
+  const newsList = DB.get('pl_news');
+  const n = newsList.find(x => x.id === id);
+  if (!n) return;
+  
+  const catLabels = { general: 'Общее', tournament: 'Турниры', teams: 'Команды', players: 'Игроки' };
+  const d = new Date(n.createdAt || n.date);
+  const dateStr = d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  
+  // Создаём модалку если её нет
+  let modal = document.getElementById('homeNewsModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'homeNewsModal';
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+      <div class="modal" onclick="event.stopPropagation()">
+        <button class="modal-close" id="homeNewsModalClose"><i class="fas fa-times"></i></button>
+        <div id="homeNewsModalContent"></div>
+      </div>`;
+    document.body.appendChild(modal);
+    
+    // Закрытие
+    document.getElementById('homeNewsModalClose').addEventListener('click', () => {
+      modal.classList.remove('active');
+    });
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.classList.remove('active');
+    });
+  }
+  
+  const content = document.getElementById('homeNewsModalContent');
+  content.innerHTML = `
+    ${n.image ? `<img src="${n.image}" alt="${n.title}" class="modal-news-img" />` : ''}
+    <div style="display:inline-block;margin-bottom:12px" class="news-cat cat-${n.category}">${catLabels[n.category] || n.category}</div>
+    <h2 class="modal-news-title">${n.title}</h2>
+    <div class="modal-news-meta">
+      <span><i class="fas fa-calendar"></i> ${dateStr}</span>
+    </div>
+    <div class="modal-news-body">${n.content || ''}</div>`;
+  modal.classList.add('active');
 }
 
 function renderStars(rating) {

@@ -42,6 +42,16 @@ document.addEventListener('DOMContentLoaded', () => {
       showAlert('Пароль должен содержать минимум 6 символов', 'error'); isRegistering = false; return;
     }
 
+    // Проверка согласия с лицензией
+    const licenseCheck = document.getElementById('licenseCheck');
+    if (!licenseCheck || !licenseCheck.checked) {
+      showAlert('Необходимо принять Лицензионное соглашение', 'error'); isRegistering = false; return;
+    }
+    const termsCheck = document.getElementById('termsCheck');
+    if (!termsCheck || !termsCheck.checked) {
+      showAlert('Необходимо принять Пользовательское соглашение', 'error'); isRegistering = false; return;
+    }
+
     if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Регистрация...'; }
 
     // Проверяем уникальность — сначала кэш, потом API

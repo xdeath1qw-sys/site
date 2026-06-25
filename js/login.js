@@ -32,6 +32,18 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    // Проверка согласия с лицензией
+    const licenseCheck = document.getElementById('licenseCheck');
+    if (!licenseCheck || !licenseCheck.checked) {
+      showAlert('Необходимо принять Лицензионное соглашение', 'error');
+      return;
+    }
+    const termsCheck = document.getElementById('termsCheck');
+    if (!termsCheck || !termsCheck.checked) {
+      showAlert('Необходимо принять Пользовательское соглашение', 'error');
+      return;
+    }
+
     // Save session (without password)
     const { password: _, ...safeUser } = user;
     Auth.login(safeUser);

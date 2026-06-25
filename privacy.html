@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Политика конфиденциальности — EFL League</title>
+  <link rel="icon" type="image/svg+xml" href="efl-logo.svg" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .rules-wrap { max-width: 860px; margin: 0 auto; padding: 0 16px 60px; }
+    .rules-section { background: var(--card); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 18px; overflow: hidden; }
+    .rules-section-header { display: flex; align-items: center; gap: 14px; padding: 18px 24px; cursor: pointer; user-select: none; transition: background .2s; }
+    .rules-section-header:hover { background: var(--bg-secondary); }
+    .rules-section-num { width: 36px; height: 36px; border-radius: 8px; background: linear-gradient(135deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; color: #fff; flex-shrink: 0; }
+    .rules-section-title { font-size: 1.05rem; font-weight: 700; color: var(--text); flex: 1; }
+    .rules-section-arrow { color: var(--text-muted); font-size: 0.8rem; transition: transform .25s; }
+    .rules-section-header.open .rules-section-arrow { transform: rotate(180deg); }
+    .rules-section-body { padding: 0 24px; max-height: 0; overflow: hidden; transition: max-height .35s ease, padding .25s; }
+    .rules-section-body.open { max-height: 2000px; padding: 0 24px 20px; }
+    .rules-item { display: flex; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .rules-item:last-child { border-bottom: none; }
+    .rules-item-num { font-size: 0.78rem; font-weight: 700; color: var(--primary); min-width: 38px; padding-top: 2px; }
+    .rules-item-text { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+    @media (max-width: 600px) { .rules-section-header { padding: 14px 16px; } .rules-section-body.open { padding: 0 16px 16px; } }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><img class="logo-img" src="efl-logo.svg" alt="EFL"> EFL League</a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html"><i class="fas fa-home"></i> Главная</a></li>
+        <li><a href="teams.html"><i class="fas fa-shield-halved"></i> Команды</a></li>
+        <li><a href="players.html"><i class="fas fa-users"></i> Игроки</a></li>
+        <li><a href="news.html"><i class="fas fa-newspaper"></i> Новости</a></li>
+        <li><a href="tournaments.html"><i class="fas fa-trophy"></i> Турниры</a></li>
+        <li><a href="rules.html"><i class="fas fa-gavel"></i> Правила</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon" id="themeIcon"></i></button>
+        <div id="authButtons">
+          <a href="login.html" class="btn btn-outline">Войти</a>
+          <a href="register.html" class="btn btn-primary">Регистрация</a>
+        </div>
+        <div id="userMenu" style="display:none" class="user-menu">
+          <div class="user-avatar" id="userAvatarNav"><i class="fas fa-user"></i></div>
+          <div class="user-dropdown" id="userDropdown">
+            <a href="profile.html"><i class="fas fa-id-card"></i> Профиль</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+          </div>
+        </div>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1><i class="fas fa-shield-alt"></i> Политика конфиденциальности</h1>
+      <p>Порядок сбора, хранения и обработки данных пользователей</p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="rules-wrap">
+
+      <div class="rules-section" id="s1">
+        <div class="rules-section-header open" onclick="toggleSection(this)">
+          <div class="rules-section-num">1</div>
+          <div class="rules-section-title">Общие положения</div>
+          <i class="fas fa-chevron-down rules-section-arrow"></i>
+        </div>
+        <div class="rules-section-body open">
+          <div class="rules-item"><span class="rules-item-num">1.1</span><span class="rules-item-text">Настоящая Политика конфиденциальности определяет порядок сбора, хранения и обработки данных пользователей платформы EFL League.</span></div>
+          <div class="rules-item"><span class="rules-item-num">1.2</span><span class="rules-item-text">Используя сайт EFL League, пользователь соглашается с условиями настоящей Политики.</span></div>
+          <div class="rules-item"><span class="rules-item-num">1.3</span><span class="rules-item-text">Администрация вправе изменять Политику конфиденциальности без предварительного уведомления пользователей.</span></div>
+          <div class="rules-item"><span class="rules-item-num">1.4</span><span class="rules-item-text">Продолжение использования сайта после внесения изменений означает согласие пользователя с обновлённой редакцией документа.</span></div>
+        </div>
+      </div>
+
+      <div class="rules-section" id="s2">
+        <div class="rules-section-header" onclick="toggleSection(this)">
+          <div class="rules-section-num">2</div>
+          <div class="rules-section-title">Собираемые данные</div>
+          <i class="fas fa-chevron-down rules-section-arrow"></i>
+        </div>
+        <div class="rules-section-body">
+          <div class="rules-item"><span class="rules-item-num">2.1</span><span class="rules-item-text">При регистрации могут собираться следующие данные: имя пользователя; адрес электронной почты; Steam ID; Discord ID; IP-адрес; технические данные браузера и устройства.</span></div>
+          <div class="rules-item"><span class="rules-item-num">2.2</span><span class="rules-item-text">Администрация может автоматически собирать информацию о действиях пользователя на сайте.</span></div>
+          <div class="rules-item"><span class="rules-item-num">2.3</span><span class="rules-item-text">Пользователь самостоятельно несёт ответственность за достоверность предоставленных данных.</span></div>
+        </div>
+      </div>
+
+      <div class="rules-section" id="s3">
+        <div class="rules-section-header" onclick="toggleSection(this)">
+          <div class="rules-section-num">3</div>
+          <div class="rules-section-title">Цели обработки данных</div>
+          <i class="fas fa-chevron-down rules-section-arrow"></i>
+        </div>
+        <div class="rules-section-body">
+          <div class="rules-item"><span class="rules-item-num">3.1</span><span class="rules-item-text">Данные используются для работы платформы.</span></div>
+          <div class="rules-item"><span class="rules-item-num">3.2</span><span class="rules-item-text">Для регистрации команд и игроков.</span></div>
+          <div class="rules-item"><span class="rules-item-num">3.3</span><span class="rules-item-text">Для проведения турниров и матчей.</span></div>
+          <div class="rules-item"><span class="rules-item-num">3.4</span><span class="rules-item-text">Для обеспечения безопасности аккаунтов.</span></div>
+          <div class="rules-item"><span class="rules-item-num">3.5</span><span class="rules-item-text">Для связи с пользователями.</span></div>
+          <div class="rules-item"><span class="rules-item-num">3.6</span><span class="rules-item-text">Для предотвращения мошенничества и нарушений правил.</span></div>
+        </div>
+      </div>
+
+      <div class="rules-section" id="s4">
+        <div class="rules-section-header" onclick="toggleSection(this)">
+          <div class="rules-section-num">4</div>
+          <div class="rules-section-title">Хранение и защита данных</div>
+          <i class="fas fa-chevron-down rules-section-arrow"></i>
+        </div>
+        <div class="rules-section-body">
+          <div class="rules-item"><span class="rules-item-num">4.1</span><span class="rules-item-text">Администрация принимает разумные меры для защиты данных пользователей.</span></div>
+          <div class="rules-item"><span class="rules-item-num">4.2</span><span class="rules-item-text">Доступ к данным имеют только уполномоченные лица.</span></div>
+          <div class="rules-item"><span class="rules-item-num">4.3</span><span class="rules-item-text">Несмотря на принимаемые меры, администрация не может гарантировать абсолютную защиту данных в сети Интернет.</span></div>
+        </div>
+      </div>
+
+      <div class="rules-section" id="s5">
+        <div class="rules-section-header" onclick="toggleSection(this)">
+          <div class="rules-section-num">5</div>
+          <div class="rules-section-title">Передача данных</div>
+          <i class="fas fa-chevron-down rules-section-arrow"></i>
+        </div>
+        <div class="rules-section-body">
+          <div class="rules-item"><span class="rules-item-num">5.1</span><span class="rules-item-text">Персональные данные не передаются третьим лицам без согласия пользователя.</span></div>
+          <div class="rules-item"><span class="rules-item-num">5.2</span><span class="rules-item-text">Исключением являются случаи, предусмотренные законодательством.</span></div>
+          <div class="rules-item"><span class="rules-item-num">5.3</span><span class="rules-item-text">Для работы отдельных функций сайта могут использоваться сторонние сервисы.</span></div>
+        </div>
+      </div>
+
+      <div class="rules-section" id="s6">
+        <div class="rules-section-header" onclick="toggleSection(this)">
+          <div class="rules-section-num">6</div>
+          <div class="rules-section-title">Права пользователя</div>
+          <i class="fas fa-chevron-down rules-section-arrow"></i>
+        </div>
+        <div class="rules-section-body">
+          <div class="rules-item"><span class="rules-item-num">6.1</span><span class="rules-item-text">Пользователь имеет право запросить информацию о своих данных.</span></div>
+          <div class="rules-item"><span class="rules-item-num">6.2</span><span class="rules-item-text">Пользователь имеет право запросить исправление некорректных данных.</span></div>
+          <div class="rules-item"><span class="rules-item-num">6.3</span><span class="rules-item-text">Пользователь имеет право запросить удаление аккаунта и связанных данных.</span></div>
+        </div>
+      </div>
+
+      <div class="rules-section" id="s7">
+        <div class="rules-section-header" onclick="toggleSection(this)">
+          <div class="rules-section-num">7</div>
+          <div class="rules-section-title">Cookie-файлы</div>
+          <i class="fas fa-chevron-down rules-section-arrow"></i>
+        </div>
+        <div class="rules-section-body">
+          <div class="rules-item"><span class="rules-item-num">7.1</span><span class="rules-item-text">Сайт может использовать Cookie для корректной работы.</span></div>
+          <div class="rules-item"><span class="rules-item-num">7.2</span><span class="rules-item-text">Использование сайта означает согласие пользователя на использование Cookie.</span></div>
+        </div>
+      </div>
+
+      <div class="rules-section" id="s8">
+        <div class="rules-section-header" onclick="toggleSection(this)">
+          <div class="rules-section-num">8</div>
+          <div class="rules-section-title">Заключительные положения</div>
+          <i class="fas fa-chevron-down rules-section-arrow"></i>
+        </div>
+        <div class="rules-section-body">
+          <div class="rules-item"><span class="rules-item-num">8.1</span><span class="rules-item-text">Настоящая Политика действует на протяжении всего времени использования платформы.</span></div>
+          <div class="rules-item"><span class="rules-item-num">8.2</span><span class="rules-item-text">Все вопросы, связанные с обработкой данных, решаются через администрацию EFL League.</span></div>
+          <div class="rules-item"><span class="rules-item-num">8.3</span><span class="rules-item-text">Используя платформу, пользователь подтверждает своё согласие с данной Политикой конфиденциальности.</span></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <a href="index.html" class="nav-logo"><img class="logo-img" src="efl-logo.svg" alt="EFL"> EFL League</a>
+          <p>Лучший портал о киберспорте. Следите за командами, игроками и новостями.</p>
+          <div class="footer-socials">
+            <a href="https://t.me/EFLcs2" target="_blank" rel="noopener" title="Telegram"><i class="fab fa-telegram"></i></a>
+            <a href="https://discord.gg/kCs9xAcq" target="_blank" rel="noopener" title="Discord"><i class="fab fa-discord"></i></a>
+            <a href="https://www.twitch.tv/eflcs" target="_blank" rel="noopener" title="Twitch"><i class="fab fa-twitch"></i></a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <h4>Навигация</h4>
+          <ul>
+            <li><a href="teams.html">Команды</a></li>
+            <li><a href="players.html">Игроки</a></li>
+            <li><a href="news.html">Новости</a></li>
+            <li><a href="tournaments.html">Турниры</a></li>
+            <li><a href="rules.html">Правила</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Документы</h4>
+          <ul>
+            <li><a href="rules.html">Регламент лиги</a></li>
+            <li><a href="privacy.html">Политика конфиденциальности</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom"><p>&copy; 2026 EFL League. Все права защищены.</p></div>
+    </div>
+  </footer>
+
+  <script src="js/storage.js?v=6"></script>
+  <script src="js/auth.js?v=6"></script>
+  <script src="js/theme.js"></script>
+  <script>
+    function toggleSection(header) {
+      const body = header.nextElementSibling;
+      const isOpen = header.classList.contains('open');
+      header.classList.toggle('open', !isOpen);
+      body.classList.toggle('open', !isOpen);
+    }
+  </script>
+</body>
+</html>

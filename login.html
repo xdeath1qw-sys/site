@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8">
@@ -11,52 +11,92 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    .reset-input {
-      width: 100%;
-      padding: 11px 13px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--input-bg);
-      color: var(--text);
-      font-size: 0.95rem;
-      outline: none;
-      box-sizing: border-box;
-      transition: border-color 0.2s;
+    /* ── Блок соглашений (вход) ── */
+    .license-check-wrap {
+      margin: 16px 0 18px;
+      padding: 14px 16px;
+      background: rgba(108,99,255,0.06);
+      border: 1px solid rgba(108,99,255,0.2);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
-    .reset-input:focus { border-color: var(--primary, #667eea); }
-    .reset-label {
-      display: block;
-      font-size: 0.83rem;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: var(--text-muted);
-    }
-    .reset-error {
-      display: none;
-      padding: 10px 13px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      background: rgba(239,68,68,0.1);
-      border: 1px solid rgba(239,68,68,0.3);
-      color: #f87171;
-      margin-bottom: 14px;
+    .license-check-label {
+      display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
     }
-    .new-pass-box {
-      background: var(--input-bg);
-      border: 2px solid var(--primary, #667eea);
-      border-radius: 10px;
-      padding: 16px;
-      font-size: 1.6rem;
-      font-weight: 800;
-      letter-spacing: 4px;
-      text-align: center;
-      color: var(--text);
-      font-family: monospace;
-      word-break: break-all;
-      margin-bottom: 8px;
+    /* Скрываем нативный чекбокс */
+    .license-check-label input[type="checkbox"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
     }
+    /* Кастомный чекбокс */
+    .license-check-label .check-box {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 2px solid var(--border);
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+    .license-check-label .check-box i {
+      font-size: 0.65rem;
+      color: #fff;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .license-check-label input[type="checkbox"]:checked ~ .check-box {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-color: var(--primary);
+    }
+    .license-check-label input[type="checkbox"]:checked ~ .check-box i {
+      opacity: 1;
+    }
+    .license-check-label .check-text {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .license-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      border-bottom: 1px solid rgba(108,99,255,0.4);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .license-link:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+    .license-err { display: none; font-size: 0.8rem; color: #f87171; margin-top: 6px; padding: 7px 10px; background: rgba(239,68,68,0.1); border-radius: 7px; border: 1px solid rgba(239,68,68,0.25); }
+    #licenseModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:9999; align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(4px); }
+    #licenseModal.open { display:flex; }
+    .license-modal-box { background:var(--card); border:1px solid var(--border); border-radius:16px; width:100%; max-width:540px; max-height:82vh; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,0.5); }
+    .license-modal-head { padding:18px 22px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+    .license-modal-head h3 { margin:0; font-size:1rem; display:flex; align-items:center; gap:8px; }
+    .license-modal-close { background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:1.1rem; padding:4px 6px; border-radius:6px; transition:color .2s; }
+    .license-modal-close:hover { color:var(--text); }
+    .license-modal-body { overflow-y:auto; padding:18px 22px; flex:1; font-size:0.85rem; line-height:1.75; color:var(--text-muted); }
+    .license-modal-body h4 { color:var(--text); font-size:0.92rem; margin:20px 0 10px; border-left:3px solid var(--primary); padding-left:10px; }
+    .license-modal-body h4:first-child { margin-top:0; }
+    .license-modal-body p { margin:5px 0; }
+    .license-modal-foot { padding:14px 22px; border-top:1px solid var(--border); flex-shrink:0; display:flex; justify-content:flex-end; }
+    .reset-input { width:100%; padding:11px 13px; border-radius:8px; border:1px solid var(--border); background:var(--input-bg); color:var(--text); font-size:0.95rem; outline:none; box-sizing:border-box; transition:border-color 0.2s; }
+    .reset-input:focus { border-color:var(--primary,#667eea); }
+    .reset-label { display:block; font-size:0.83rem; font-weight:600; margin-bottom:6px; color:var(--text-muted); }
+    .reset-error { display:none; padding:10px 13px; border-radius:8px; font-size:0.85rem; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:#f87171; margin-bottom:14px; align-items:center; gap:8px; }
+    .new-pass-box { background:var(--input-bg); border:2px solid var(--primary,#667eea); border-radius:10px; padding:16px; font-size:1.6rem; font-weight:800; letter-spacing:4px; text-align:center; color:var(--text); font-family:monospace; word-break:break-all; margin-bottom:8px; }
   </style>
 </head>
 <body>
@@ -98,6 +138,20 @@
             </button>
           </div>
         </div>
+        <!-- Лицензионное соглашение -->
+        <div class="license-check-wrap">
+          <label class="license-check-label">
+            <input type="checkbox" id="licenseCheck" />
+            <div class="check-box"><i class="fas fa-check"></i></div>
+            <span class="check-text">Принимаю <a href="#" id="licenseOpenBtn" class="license-link">Лицензионное соглашение</a></span>
+          </label>
+          <label class="license-check-label">
+            <input type="checkbox" id="termsCheck" />
+            <div class="check-box"><i class="fas fa-check"></i></div>
+            <span class="check-text">Принимаю <a href="#" id="termsOpenBtn" class="license-link">Пользовательское соглашение</a></span>
+          </label>
+        </div>
+
         <button type="submit" class="btn btn-primary btn-full">
           <i class="fas fa-sign-in-alt"></i> Войти
         </button>
@@ -196,6 +250,130 @@
   </script>
   <script src="js/theme.js"></script>
   <script src="js/login.js"></script>
+
+  <!-- Модалка лицензионного соглашения -->
+  <div id="licenseModal">
+    <div class="license-modal-box">
+      <div class="license-modal-head">
+        <h3><i class="fas fa-file-contract" style="color:var(--primary)"></i> Лицензионное соглашение EFL League</h3>
+        <button class="license-modal-close" id="licenseModalClose"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="license-modal-body">
+        <h4>1. Общие положения</h4>
+        <p>1.1 Настоящее Лицензионное соглашение регулирует использование сайта EFL League и всех его сервисов.</p>
+        <p>1.2 Используя сайт EFL League, пользователь автоматически соглашается с условиями данного соглашения.</p>
+        <p>1.3 Если пользователь не согласен с условиями соглашения, он обязан прекратить использование сайта.</p>
+        <p>1.4 Администрация EFL League имеет право изменять настоящее соглашение без предварительного уведомления пользователей.</p>
+        <p>1.5 Продолжение использования сайта после внесения изменений означает согласие пользователя с новой редакцией соглашения.</p>
+        <h4>2. Регистрация и аккаунт</h4>
+        <p>2.1 Пользователь обязан предоставлять достоверную информацию при регистрации.</p>
+        <p>2.2 Пользователь несёт полную ответственность за сохранность данных своей учётной записи.</p>
+        <p>2.3 Передача аккаунта третьим лицам осуществляется на риск пользователя.</p>
+        <p>2.4 Администрация не несёт ответственности за потерю доступа к аккаунту по вине пользователя.</p>
+        <p>2.5 Администрация имеет право ограничить доступ к аккаунту при нарушении правил платформы.</p>
+        <h4>3. Права и обязанности пользователя</h4>
+        <p>3.1 Пользователь обязуется использовать сайт исключительно в законных целях.</p>
+        <p>3.2 Запрещается использовать сайт для распространения вредоносного программного обеспечения.</p>
+        <p>3.3 Запрещается предпринимать попытки взлома, обхода защиты или нарушения работы сайта.</p>
+        <p>3.4 Запрещается использовать автоматизированные средства для получения преимуществ или нарушения работы платформы.</p>
+        <p>3.5 Пользователь обязан соблюдать правила сайта и турниров EFL League.</p>
+        <h4>4. Интеллектуальная собственность</h4>
+        <p>4.1 Все материалы сайта принадлежат EFL League либо используются на законных основаниях.</p>
+        <p>4.2 Запрещается копирование, распространение или изменение материалов сайта без разрешения администрации.</p>
+        <p>4.3 Логотипы, дизайн, тексты и другие элементы сайта являются объектами интеллектуальной собственности.</p>
+        <h4>5. Ограничение ответственности</h4>
+        <p>5.1 Сайт предоставляется по принципу «как есть».</p>
+        <p>5.2 Администрация не гарантирует бесперебойную работу сайта.</p>
+        <p>5.3 Администрация не несёт ответственности за временные сбои, технические ошибки или потерю данных.</p>
+        <p>5.4 Администрация не несёт ответственности за действия пользователей сайта.</p>
+        <p>5.5 Пользователь использует сайт на свой страх и риск.</p>
+        <h4>6. Персональные данные</h4>
+        <p>6.1 Пользователь соглашается на обработку предоставленных данных для работы сервисов EFL League.</p>
+        <p>6.2 Администрация принимает разумные меры для защиты данных пользователей.</p>
+        <p>6.3 Администрация не передаёт персональные данные третьим лицам, за исключением случаев, предусмотренных законодательством.</p>
+        <h4>7. Блокировка и ограничение доступа</h4>
+        <p>7.1 Администрация вправе временно или навсегда ограничить доступ пользователя к сайту при нарушении правил.</p>
+        <p>7.2 Блокировка может быть произведена без предварительного уведомления.</p>
+        <p>7.3 Попытки обхода ограничений могут привести к дополнительным санкциям.</p>
+        <h4>8. Изменение и прекращение работы сервиса</h4>
+        <p>8.1 Администрация вправе изменять функционал сайта в любое время.</p>
+        <p>8.2 Администрация вправе временно приостанавливать работу сайта для технического обслуживания.</p>
+        <p>8.3 Администрация вправе прекратить работу отдельных сервисов без объяснения причин.</p>
+        <h4>9. Заключительные положения</h4>
+        <p>9.1 Настоящее соглашение вступает в силу с момента начала использования сайта пользователем.</p>
+        <p>9.2 Пользователь подтверждает, что ознакомился с условиями соглашения и принимает их полностью.</p>
+        <p>9.3 Все спорные ситуации решаются администрацией EFL League.</p>
+        <p>9.4 Решения администрации EFL League являются окончательными.</p>
+        <p>9.5 Главной целью данного соглашения является обеспечение безопасного, честного и комфортного использования платформы EFL League.</p>
+      </div>
+      <div class="license-modal-foot">
+        <button class="btn btn-primary btn-sm" id="licenseModalAccept"><i class="fas fa-check"></i> Понятно, закрыть</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    const _lModal = document.getElementById('licenseModal');
+    document.getElementById('licenseOpenBtn').addEventListener('click', e => { e.preventDefault(); _lModal.classList.add('open'); });
+    document.getElementById('licenseModalClose').addEventListener('click', () => _lModal.classList.remove('open'));
+    document.getElementById('licenseModalAccept').addEventListener('click', () => {
+      _lModal.classList.remove('open');
+      document.getElementById('licenseCheck').checked = true;
+    });
+    _lModal.addEventListener('click', e => { if (e.target === _lModal) _lModal.classList.remove('open'); });
+  </script>
+
+  <!-- Модалка пользовательского соглашения -->
+  <div id="termsModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9999;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)">
+    <div class="license-modal-box">
+      <div class="license-modal-head">
+        <h3><i class="fas fa-handshake" style="color:var(--primary)"></i> Пользовательское соглашение EFL League</h3>
+        <button class="license-modal-close" id="termsModalClose"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="license-modal-body">
+        <h4>1. Общие положения</h4>
+        <p>1.1 Настоящее Пользовательское соглашение регулирует отношения между EFL League и пользователями платформы.</p>
+        <p>1.2 Использование сайта означает полное принятие условий данного соглашения.</p>
+        <h4>2. Права пользователя</h4>
+        <p>2.1 Пользователь имеет право использовать функционал сайта в рамках его назначения.</p>
+        <p>2.2 Пользователь имеет право участвовать в турнирах и иных мероприятиях платформы.</p>
+        <p>2.3 Пользователь имеет право обращаться в поддержку платформы.</p>
+        <h4>3. Обязанности пользователя</h4>
+        <p>3.1 Соблюдать законодательство и правила платформы.</p>
+        <p>3.2 Не использовать сайт для мошенничества и противоправных действий.</p>
+        <p>3.3 Не предпринимать попыток нарушения работы сайта.</p>
+        <p>3.4 Не выдавать себя за других пользователей или представителей администрации.</p>
+        <h4>4. Права администрации</h4>
+        <p>4.1 Изменять функционал сайта.</p>
+        <p>4.2 Ограничивать доступ пользователей при нарушении правил.</p>
+        <p>4.3 Удалять материалы, нарушающие правила платформы.</p>
+        <p>4.4 Проводить технические работы без предварительного уведомления.</p>
+        <h4>5. Ответственность сторон</h4>
+        <p>5.1 Пользователь самостоятельно отвечает за действия, совершённые через его аккаунт.</p>
+        <p>5.2 Администрация не несёт ответственности за убытки, возникшие вследствие использования сайта.</p>
+        <p>5.3 Администрация не отвечает за действия третьих лиц.</p>
+        <h4>6. Блокировка аккаунта</h4>
+        <p>6.1 Аккаунт может быть временно или навсегда заблокирован за нарушение правил.</p>
+        <p>6.2 Решение администрации о блокировке может быть пересмотрено только в исключительных случаях.</p>
+        <h4>7. Заключительные положения</h4>
+        <p>7.1 Все споры решаются администрацией EFL League.</p>
+        <p>7.2 Использование сайта подтверждает согласие пользователя с данным соглашением.</p>
+        <p>7.3 Главной целью платформы является создание честной и комфортной соревновательной среды для игроков Counter-Strike 2.</p>
+      </div>
+      <div class="license-modal-foot">
+        <button class="btn btn-primary btn-sm" id="termsModalAccept"><i class="fas fa-check"></i> Понятно, закрыть</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    const _tModal = document.getElementById('termsModal');
+    document.getElementById('termsOpenBtn').addEventListener('click', e => { e.preventDefault(); _tModal.style.display = 'flex'; });
+    document.getElementById('termsModalClose').addEventListener('click', () => _tModal.style.display = 'none');
+    document.getElementById('termsModalAccept').addEventListener('click', () => {
+      _tModal.style.display = 'none';
+      document.getElementById('termsCheck').checked = true;
+    });
+    _tModal.addEventListener('click', e => { if (e.target === _tModal) _tModal.style.display = 'none'; });
+  </script>
   <script>
     // Глазик для пароля
     document.getElementById('togglePass').addEventListener('click', function() {

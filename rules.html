@@ -1,0 +1,392 @@
+﻿<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Правила лиги — EFL League</title>
+  <link rel="icon" type="image/svg+xml" href="efl-logo.svg" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .rules-wrap { max-width: 860px; margin: 0 auto; padding: 0 16px 60px; }
+    .rules-toc { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px 28px; margin-bottom: 36px; }
+    .rules-toc h3 { font-size: 1rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .08em; margin: 0 0 14px; }
+    .rules-toc ol { margin: 0; padding-left: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 24px; }
+    .rules-toc li a { color: var(--primary); text-decoration: none; font-size: 0.9rem; transition: color .2s; }
+    .rules-toc li a:hover { color: var(--accent); }
+    .rules-section { background: var(--card); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 18px; overflow: hidden; }
+    .rules-section-header { display: flex; align-items: center; gap: 14px; padding: 18px 24px; cursor: pointer; user-select: none; transition: background .2s; }
+    .rules-section-header:hover { background: var(--bg-secondary); }
+    .rules-section-num { width: 36px; height: 36px; border-radius: 8px; background: linear-gradient(135deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; color: #fff; flex-shrink: 0; }
+    .rules-section-title { font-size: 1.05rem; font-weight: 700; color: var(--text); flex: 1; }
+    .rules-section-arrow { color: var(--text-muted); font-size: 0.8rem; transition: transform .25s; }
+    .rules-section-header.open .rules-section-arrow { transform: rotate(180deg); }
+    .rules-section-body { padding: 0 24px; max-height: 0; overflow: hidden; transition: max-height .35s ease, padding .25s; }
+    .rules-section-body.open { max-height: 2000px; padding: 0 24px 20px; }
+    .rules-item { display: flex; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .rules-item:last-child { border-bottom: none; }
+    .rules-item-num { font-size: 0.78rem; font-weight: 700; color: var(--primary); min-width: 38px; padding-top: 2px; }
+    .rules-item-text { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+    .rules-note { background: rgba(108,99,255,.1); border-left: 3px solid var(--primary); border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 12px 0 4px; font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+    .rules-note strong { color: var(--primary); }
+    @media (max-width: 600px) { .rules-toc ol { grid-template-columns: 1fr; } .rules-section-header { padding: 14px 16px; } .rules-section-body.open { padding: 0 16px 16px; } }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><img class="logo-img" src="efl-logo.svg" alt="EFL"> EFL League</a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html"><i class="fas fa-home"></i> Главная</a></li>
+        <li><a href="teams.html"><i class="fas fa-shield-halved"></i> Команды</a></li>
+        <li><a href="players.html"><i class="fas fa-users"></i> Игроки</a></li>
+        <li><a href="news.html"><i class="fas fa-newspaper"></i> Новости</a></li>
+        <li><a href="tournaments.html"><i class="fas fa-trophy"></i> Турниры</a></li>
+        <li><a href="rules.html" class="active"><i class="fas fa-gavel"></i> Правила</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon" id="themeIcon"></i></button>
+        <div id="authButtons">
+          <a href="login.html" class="btn btn-outline">Войти</a>
+          <a href="register.html" class="btn btn-primary">Регистрация</a>
+        </div>
+        <div id="userMenu" style="display:none" class="user-menu">
+          <div class="user-avatar" id="userAvatarNav"><i class="fas fa-user"></i></div>
+          <div class="user-dropdown" id="userDropdown">
+            <a href="profile.html"><i class="fas fa-id-card"></i> Профиль</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+          </div>
+        </div>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1><i class="fas fa-gavel"></i> Регламент EFL League</h1>
+      <p>Официальные правила и положения лиги</p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="rules-wrap">
+
+      <!-- Оглавление -->
+      <div class="rules-toc">
+        <h3><i class="fas fa-list"></i> &nbsp;Содержание</h3>
+        <ol>
+          <li><a href="#s1">Общие положения</a></li>
+          <li><a href="#s2">Состав команд</a></li>
+          <li><a href="#s3">Формат матчей</a></li>
+          <li><a href="#s4">Карты и вето</a></li>
+          <li><a href="#s5">Дисконнекты и техн. проблемы</a></li>
+          <li><a href="#s6">Читы, скрипты и запрещённое ПО</a></li>
+          <li><a href="#s7">Баги и эксплоиты</a></li>
+          <li><a href="#s8">Стримснайп</a></li>
+          <li><a href="#s9">Поведение и общение</a></li>
+          <li><a href="#s10">Протесты и жалобы</a></li>
+          <li><a href="#s11">Наказания</a></li>
+          <li><a href="#s12">Матчи и результаты</a></li>
+          <li><a href="#s13">Заключительные положения</a></li>
+        </ol>
+      </div>
+
+      <!-- 1 -->
+      <div class="rules-section" id="s1">
+        <div class="rules-section-header open" onclick="toggleSection(this)">
+          <div class="rules-section-num">1</div>
+          <div class="rules-section-title">Общие положения</div>
+          <i class="fas fa-chevron-down rules-section-arrow"></i>
+        </div>
+        <div class="rules-section-body open">
+          <div class="rules-item"><span class="rules-item-num">1.1</span><span class="rules-item-text">EFL League — любительская соревновательная лига по Counter-Strike 2 в формате 5v5.</span></div>
+          <div class="rules-item"><span class="rules-item-num">1.2</span><span class="rules-item-text">Участие в лиге означает полное согласие команды и игроков с данным регламентом.</span></div>
+          <div class="rules-item"><span class="rules-item-num">1.3</span><span class="rules-item-text">Незнание правил не освобождает от ответственности.</span></div>
+          <div class="rules-item"><span class="rules-item-num">1.4</span><span class="rules-item-text">Администрация лиги имеет право изменять или дополнять регламент при необходимости.</span></div>
+          <div class="rules-item"><span class="rules-item-num">1.5</span><span class="rules-item-text">Все спорные ситуации решаются администрацией лиги.</span></div>
+          <div class="rules-item"><span class="rules-item-num">1.6</span><span class="rules-item-text">Решения администрации и Главного Судьи Лиги EFL являются окончательными и не подлежат обжалованию.</span></div>
+          <div class="rules-note"><strong>Примечание к пункту 1.6:</strong> В крайних случаях действия администрации могут быть обжалованы через Главного Судью Лиги EFL. Решение Главного Судьи Лиги EFL является окончательным и не подлежит дальнейшему обжалованию.</div>
+        </div>
+      </div>
+
+      <!-- 2 -->
+      <div class="rules-section" id="s2">
+        <div class="rules-section-header" onclick="toggleSection(this)">
+          <div class="rules-section-num">2</div>
+          <div class="rules-section-title">Состав команд</div>
+          <i class="fas fa-chevron-down rules-section-arrow"></i>
+        </div>
+        <div class="rules-section-body">
+          <div class="rules-item"><span class="rules-item-num">2.1</span><span class="rules-item-text">Команда должна состоять из 5 основных игроков.</span></div>
+          <div class="rules-item"><span class="rules-item-num">2.2</span><span class="rules-item-text">Команда может иметь до 2 запасных игроков.</span></div>
+          <div class="rules-item"><span class="rules-item-num">2.3</span><span class="rules-item-text">Один игрок может быть зарегистрирован только в одной команде.</span></div>
+          <div class="rules-item"><span class="rules-item-num">2.4</span><span class="rules-item-text">Использование незарегистрированного игрока запрещено.</span></div>
+          <div class="rules-item"><span class="rules-item-num">2.5</span><span class="rules-item-text">Использование незарегистрированного игрока на матче карается техническим поражением.</span></div>
+          <div class="rules-item"><span class="rules-item-num">2.6</span><span class="rules-item-text">Замены разрешены только между картами или с разрешения администрации.</span></div>
+          <div class="rules-item"><span class="rules-item-num">2.7</span><span class="rules-item-text">Никнеймы игроков должны совпадать с заявленными в составе команды.</span></div>
+          <div class="rules-item"><span class="rules-item-num">2.8</span><span class="rules-item-text">У каждой команды есть право на 1 экстренную замену за турнир.</span></div>
+          <div class="rules-item"><span class="rules-item-num">2.9</span><span class="rules-item-text">Экстренная замена позволяет команде один раз за турнир взять игрока вне заявки.</span></div>
+          <div class="rules-item"><span class="rules-item-num">2.10</span><span class="rules-item-text">Игрок, взятый как экстренная замена, должен соответствовать среднему уровню команды.</span></div>
+          <div class="rules-item"><span class="rules-item-num">2.11</span><span class="rules-item-text">Экстренная замена обязательно должна быть одобрена администрацией лиги.</span></div>
+          <div class="rules-item"><span class="rules-item-num">2.12</span><span class="rules-item-text">Использование экстренной замены без одобрения администрации запрещено.</span></div>
+        </div>
+      </div>
+
+      <!-- 3 -->
+      <div class="rules-section" id="s3">
+        <div class="rules-section-header" onclick="toggleSection(this)">
+          <div class="rules-section-num">3</div>
+          <div class="rules-section-title">Формат матчей</div>
+          <i class="fas fa-chevron-down rules-section-arrow"></i>
+        </div>
+        <div class="rules-section-body">
+          <div class="rules-item"><span class="rules-item-num">3.1</span><span class="rules-item-text">Матчи проводятся в формате 5v5.</span></div>
+          <div class="rules-item"><span class="rules-item-num">3.2</span><span class="rules-item-text">Формат матчей может быть BO1, BO3 или BO5 в зависимости от стадии турнира.</span></div>
+          <div class="rules-item"><span class="rules-item-num">3.3</span><span class="rules-item-text">Формат конкретного матча указывается администрацией перед его началом.</span></div>
+          <div class="rules-item"><span class="rules-item-num">3.4</span><span class="rules-item-text">Все матчи должны начинаться в назначенное время.</span></div>
+          <div class="rules-item"><span class="rules-item-num">3.5</span><span class="rules-item-text">Опоздание команды более чем на 15 минут считается неявкой.</span></div>
+          <div class="rules-item"><span class="rules-item-num">3.6</span><span class="rules-item-text">За неявку команда получает техническое поражение.</span></div>
+          <div class="rules-item"><span class="rules-item-num">3.7</span><span class="rules-item-text">Если команда не может сыграть в назначенное время, она обязана заранее предупредить администрацию не менее чем за 2 часа до начала матча.</span></div>
+          <div class="rules-item"><span class="rules-item-num">3.8</span><span class="rules-item-text">Перенос матча возможен только с одобрения администрации.</span></div>
+          <div class="rules-item"><span class="rules-item-num">3.9</span><span class="rules-item-text">Максимальное время переноса матча — 24 часа от изначально назначенного времени.</span></div>
+          <div class="rules-item"><span class="rules-item-num">3.10</span><span class="rules-item-text">Если перенос не был одобрен администрацией, команда обязана явиться на матч в назначенное время.</span></div>
+        </div>
+      </div>
+
+      <!-- 4 -->
+      <div class="rules-section" id="s4">
+        <div class="rules-section-header" onclick="toggleSection(this)">
+          <div class="rules-section-num">4</div>
+          <div class="rules-section-title">Карты и вето</div>
+          <i class="fas fa-chevron-down rules-section-arrow"></i>
+        </div>
+        <div class="rules-section-body">
+          <div class="rules-item"><span class="rules-item-num">4.1</span><span class="rules-item-text">Карты выбираются через систему veto.</span></div>
+          <div class="rules-item"><span class="rules-item-num">4.2</span><span class="rules-item-text">Порядок veto определяется администрацией или капитанами команд.</span></div>
+          <div class="rules-item"><span class="rules-item-num">4.3</span><span class="rules-item-text">Карта считается утверждённой после завершения veto.</span></div>
+          <div class="rules-item"><span class="rules-item-num">4.4</span><span class="rules-item-text">После завершения veto команды не имеют права требовать смену карты.</span></div>
+          <div class="rules-item"><span class="rules-item-num">4.5</span><span class="rules-item-text">Выбор стороны определяется в зависимости от формата матча.</span></div>
+        </div>
+      </div>
+
+      <!-- 5 -->
+      <div class="rules-section" id="s5">
+        <div class="rules-section-header" onclick="toggleSection(this)">
+          <div class="rules-section-num">5</div>
+          <div class="rules-section-title">Дисконнекты и технические проблемы</div>
+          <i class="fas fa-chevron-down rules-section-arrow"></i>
+        </div>
+        <div class="rules-section-body">
+          <div class="rules-item"><span class="rules-item-num">5.1</span><span class="rules-item-text">При дисконнекте игрока команда обязана сразу сообщить об этом.</span></div>
+          <div class="rules-item"><span class="rules-item-num">5.2</span><span class="rules-item-text">Пауза разрешается только при технических проблемах.</span></div>
+          <div class="rules-item"><span class="rules-item-num">5.3</span><span class="rules-item-text">Злоупотребление паузами запрещено.</span></div>
+          <div class="rules-item"><span class="rules-item-num">5.4</span><span class="rules-item-text">Если игрок не может вернуться в игру, команда может продолжить матч в меньшинстве. Если с момента начала матча прошло меньше половины матча, команда имеет право запросить перезапуск для проведения замены. Окончательное решение о перезапуске принимает администрация.</span></div>
+          <div class="rules-item"><span class="rules-item-num">5.5</span><span class="rules-item-text">Решение о переигровке раунда или продолжении матча принимает администрация.</span></div>
+          <div class="rules-item"><span class="rules-item-num">5.6</span><span class="rules-item-text">Намеренный выход с сервера может быть расценён как нарушение регламента.</span></div>
+        </div>
+      </div>
+
+      <!-- 6 -->
+      <div class="rules-section" id="s6">
+        <div class="rules-section-header" onclick="toggleSection(this)">
+          <div class="rules-section-num">6</div>
+          <div class="rules-section-title">Читы, скрипты и запрещённое ПО</div>
+          <i class="fas fa-chevron-down rules-section-arrow"></i>
+        </div>
+        <div class="rules-section-body">
+          <div class="rules-item"><span class="rules-item-num">6.1</span><span class="rules-item-text">Использование читов строго запрещено.</span></div>
+          <div class="rules-item"><span class="rules-item-num">6.2</span><span class="rules-item-text">Запрещено использование любого стороннего ПО, которое даёт игровое преимущество.</span></div>
+          <div class="rules-item"><span class="rules-item-num">6.3</span><span class="rules-item-text">Запрещены скрипты, макросы и любые автоматизированные действия, влияющие на игровой процесс.</span></div>
+          <div class="rules-item"><span class="rules-item-num">6.4</span><span class="rules-item-text">При подозрении на использование запрещённого ПО администрация имеет право запросить демо, запись экрана или другие доказательства.</span></div>
+          <div class="rules-item"><span class="rules-item-num">6.5</span><span class="rules-item-text">Отказ предоставить необходимые доказательства может быть расценён как нарушение.</span></div>
+          <div class="rules-item"><span class="rules-item-num">6.6</span><span class="rules-item-text">После вызова на проверку игрок обязан в течение 1 минуты зайти в любой голосовой канал Discord-сервера лиги и включить демонстрацию экрана.</span></div>
+          <div class="rules-item"><span class="rules-item-num">6.7</span><span class="rules-item-text">Выход из игры после запроса на проверку может расцениваться как уход от проверки.</span></div>
+          <div class="rules-item"><span class="rules-item-num">6.8</span><span class="rules-item-text">Уход от проверки может привести к техническому поражению, дисквалификации команды и бану игрока.</span></div>
+          <div class="rules-item"><span class="rules-item-num">6.9</span><span class="rules-item-text">Использование читов или запрещённого ПО карается дисквалификацией команды и баном игрока.</span></div>
+          <div class="rules-item"><span class="rules-item-num">6.10</span><span class="rules-item-text">Результаты команды могут быть аннулированы.</span></div>
+        </div>
+      </div>
+
+      <!-- 7 -->
+      <div class="rules-section" id="s7">
+        <div class="rules-section-header" onclick="toggleSection(this)">
+          <div class="rules-section-num">7</div>
+          <div class="rules-section-title">Баги и эксплоиты</div>
+          <i class="fas fa-chevron-down rules-section-arrow"></i>
+        </div>
+        <div class="rules-section-body">
+          <div class="rules-item"><span class="rules-item-num">7.1</span><span class="rules-item-text">Использование багов, глитчей и эксплойтов запрещено.</span></div>
+          <div class="rules-item"><span class="rules-item-num">7.2</span><span class="rules-item-text">Запрещено злоупотребление игровыми механиками, которые дают нечестное преимущество.</span></div>
+          <div class="rules-item"><span class="rules-item-num">7.3</span><span class="rules-item-text">Если команда случайно столкнулась с багом, она обязана сообщить об этом администрации.</span></div>
+          <div class="rules-item"><span class="rules-item-num">7.4</span><span class="rules-item-text">Намеренное использование багов карается предупреждением, техническим поражением или дисквалификацией.</span></div>
+        </div>
+      </div>
+
+      <!-- 8 -->
+      <div class="rules-section" id="s8">
+        <div class="rules-section-header" onclick="toggleSection(this)">
+          <div class="rules-section-num">8</div>
+          <div class="rules-section-title">Стримснайп</div>
+          <i class="fas fa-chevron-down rules-section-arrow"></i>
+        </div>
+        <div class="rules-section-body">
+          <div class="rules-item"><span class="rules-item-num">8.1</span><span class="rules-item-text">Стримснайп категорически запрещён.</span></div>
+          <div class="rules-item"><span class="rules-item-num">8.2</span><span class="rules-item-text">На официальной трансляции матча устанавливается задержка 70 секунд.</span></div>
+          <div class="rules-item"><span class="rules-item-num">8.3</span><span class="rules-item-text">Запрещено смотреть трансляцию матча во время своей игры.</span></div>
+          <div class="rules-item"><span class="rules-item-num">8.4</span><span class="rules-item-text">Запрещено передавать информацию с трансляции игрокам, которые участвуют в матче.</span></div>
+          <div class="rules-item"><span class="rules-item-num">8.5</span><span class="rules-item-text">При доказанном стримснайпе игрок получает пожизненную дисквалификацию из лиги.</span></div>
+          <div class="rules-item"><span class="rules-item-num">8.6</span><span class="rules-item-text">Команда игрока может получить техническое поражение или дисквалификацию.</span></div>
+        </div>
+      </div>
+
+      <!-- 9 -->
+      <div class="rules-section" id="s9">
+        <div class="rules-section-header" onclick="toggleSection(this)">
+          <div class="rules-section-num">9</div>
+          <div class="rules-section-title">Поведение и общение</div>
+          <i class="fas fa-chevron-down rules-section-arrow"></i>
+        </div>
+        <div class="rules-section-body">
+          <div class="rules-item"><span class="rules-item-num">9.1</span><span class="rules-item-text">Все участники обязаны уважительно относиться к соперникам, судьям, зрителям и администрации.</span></div>
+          <div class="rules-item"><span class="rules-item-num">9.2</span><span class="rules-item-text">Запрещены оскорбления, угрозы, провокации и токсичное поведение.</span></div>
+          <div class="rules-item"><span class="rules-item-num">9.3</span><span class="rules-item-text">Запрещены расизм, дискриминация, унижение игроков и любые формы травли.</span></div>
+          <div class="rules-item"><span class="rules-item-num">9.4</span><span class="rules-item-text">Запрещён флуд во время матчей.</span></div>
+          <div class="rules-item"><span class="rules-item-num">9.5</span><span class="rules-item-text">Запрещено намеренно срывать матч или мешать его проведению.</span></div>
+          <div class="rules-item"><span class="rules-item-num">9.6</span><span class="rules-item-text">Нарушение правил поведения карается предупреждением, техническим поражением или дисквалификацией.</span></div>
+          <div class="rules-item"><span class="rules-item-num">9.7</span><span class="rules-item-text">К лиге, её участникам, матчам, администрации и судьям необходимо относиться уважительно.</span></div>
+        </div>
+      </div>
+
+      <!-- 10 -->
+      <div class="rules-section" id="s10">
+        <div class="rules-section-header" onclick="toggleSection(this)">
+          <div class="rules-section-num">10</div>
+          <div class="rules-section-title">Протесты и жалобы</div>
+          <i class="fas fa-chevron-down rules-section-arrow"></i>
+        </div>
+        <div class="rules-section-body">
+          <div class="rules-item"><span class="rules-item-num">10.1</span><span class="rules-item-text">Команда имеет право подать протест после матча.</span></div>
+          <div class="rules-item"><span class="rules-item-num">10.2</span><span class="rules-item-text">Протест должен быть подан в течение 30 минут после окончания матча.</span></div>
+          <div class="rules-item"><span class="rules-item-num">10.3</span><span class="rules-item-text">Для рассмотрения протеста обязательны доказательства: демо, видео, скриншоты или записи трансляции.</span></div>
+          <div class="rules-item"><span class="rules-item-num">10.4</span><span class="rules-item-text">Жалобы без доказательств могут быть отклонены.</span></div>
+          <div class="rules-item"><span class="rules-item-num">10.5</span><span class="rules-item-text">Администрация рассматривает протест и выносит окончательное решение.</span></div>
+          <div class="rules-item"><span class="rules-item-num">10.6</span><span class="rules-item-text">Попытка обмана администрации может привести к наказанию команды.</span></div>
+        </div>
+      </div>
+
+      <!-- 11 -->
+      <div class="rules-section" id="s11">
+        <div class="rules-section-header" onclick="toggleSection(this)">
+          <div class="rules-section-num">11</div>
+          <div class="rules-section-title">Наказания</div>
+          <i class="fas fa-chevron-down rules-section-arrow"></i>
+        </div>
+        <div class="rules-section-body">
+          <div class="rules-item"><span class="rules-item-num">11.1</span><span class="rules-item-text">За нарушение регламента могут быть выданы следующие наказания: устное предупреждение; техническое поражение; снятие очков; дисквалификация игрока; дисквалификация команды; временный или пожизненный бан в лиге.</span></div>
+          <div class="rules-item"><span class="rules-item-num">11.2</span><span class="rules-item-text">Вид наказания зависит от тяжести нарушения.</span></div>
+          <div class="rules-item"><span class="rules-item-num">11.3</span><span class="rules-item-text">Повторные нарушения караются строже.</span></div>
+          <div class="rules-item"><span class="rules-item-num">11.4</span><span class="rules-item-text">Администрация имеет право выдать наказание, не указанное в регламенте, если ситуация требует отдельного решения.</span></div>
+          <div class="rules-item"><span class="rules-item-num">11.5</span><span class="rules-item-text">При выдаче наказания администрация обязана указать пункт регламента, на который она опиралась при принятии решения.</span></div>
+        </div>
+      </div>
+
+      <!-- 12 -->
+      <div class="rules-section" id="s12">
+        <div class="rules-section-header" onclick="toggleSection(this)">
+          <div class="rules-section-num">12</div>
+          <div class="rules-section-title">Матчи и результаты</div>
+          <i class="fas fa-chevron-down rules-section-arrow"></i>
+        </div>
+        <div class="rules-section-body">
+          <div class="rules-item"><span class="rules-item-num">12.1</span><span class="rules-item-text">Если матч проводится без присутствия администрации и с её разрешения, капитан победившей команды обязан сообщить результат администрации после завершения матча.</span></div>
+          <div class="rules-item"><span class="rules-item-num">12.2</span><span class="rules-item-text">Результат должен быть подтверждён скриншотом итогового счёта.</span></div>
+          <div class="rules-item"><span class="rules-item-num">12.3</span><span class="rules-item-text">Если результат не был отправлен, администрация имеет право запросить доказательства у обеих команд.</span></div>
+          <div class="rules-item"><span class="rules-item-num">12.4</span><span class="rules-item-text">Подделка результатов матча запрещена и карается дисквалификацией.</span></div>
+        </div>
+      </div>
+
+      <!-- 13 -->
+      <div class="rules-section" id="s13">
+        <div class="rules-section-header" onclick="toggleSection(this)">
+          <div class="rules-section-num">13</div>
+          <div class="rules-section-title">Заключительные положения</div>
+          <i class="fas fa-chevron-down rules-section-arrow"></i>
+        </div>
+        <div class="rules-section-body">
+          <div class="rules-item"><span class="rules-item-num">13.1</span><span class="rules-item-text">Все участники обязаны соблюдать данный регламент на протяжении всего времени участия в лиге.</span></div>
+          <div class="rules-item"><span class="rules-item-num">13.2</span><span class="rules-item-text">Участие в EFL League означает согласие с правилами, решениями администрации и возможными наказаниями.</span></div>
+          <div class="rules-item"><span class="rules-item-num">13.3</span><span class="rules-item-text">Администрация оставляет за собой право принимать решения в нестандартных ситуациях.</span></div>
+          <div class="rules-item"><span class="rules-item-num">13.4</span><span class="rules-item-text">Главная цель лиги — честная игра, соревновательная атмосфера и уважение между участниками.</span></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <a href="index.html" class="nav-logo"><img class="logo-img" src="efl-logo.svg" alt="EFL"> EFL League</a>
+          <p>Лучший портал о киберспорте. Следите за командами, игроками и новостями.</p>
+          <div class="footer-socials">
+            <a href="https://t.me/EFLcs2" target="_blank" rel="noopener" title="Telegram"><i class="fab fa-telegram"></i></a>
+            <a href="https://discord.gg/kCs9xAcq" target="_blank" rel="noopener" title="Discord"><i class="fab fa-discord"></i></a>
+            <a href="https://www.twitch.tv/eflcs" target="_blank" rel="noopener" title="Twitch"><i class="fab fa-twitch"></i></a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <h4>Навигация</h4>
+          <ul>
+            <li><a href="teams.html">Команды</a></li>
+            <li><a href="players.html">Игроки</a></li>
+            <li><a href="news.html">Новости</a></li>
+            <li><a href="tournaments.html">Турниры</a></li>
+            <li><a href="rules.html">Правила</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Аккаунт</h4>
+          <ul>
+            <li><a href="login.html">Войти</a></li>
+            <li><a href="register.html">Регистрация</a></li>
+            <li><a href="profile.html">Профиль</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom"><p>&copy; 2026 EFL League. Все права защищены.</p>
+        <p style="margin-top:8px"><a href="privacy.html" style="color:var(--text-muted);font-size:0.82rem;text-decoration:none" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-muted)'"><i class="fas fa-shield-alt"></i> Политика конфиденциальности</a></p></div>
+    </div>
+  </footer>
+
+  <script src="js/storage.js?v=6"></script>
+  <script src="js/auth.js?v=6"></script>
+  <script src="js/theme.js"></script>
+  <script>
+    function toggleSection(header) {
+      const body = header.nextElementSibling;
+      const isOpen = header.classList.contains('open');
+      header.classList.toggle('open', !isOpen);
+      body.classList.toggle('open', !isOpen);
+    }
+
+    // Плавный скролл к разделу по клику в оглавлении
+    document.querySelectorAll('.rules-toc a').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(a.getAttribute('href'));
+        if (!target) return;
+        // Открываем секцию если закрыта
+        const header = target.querySelector('.rules-section-header');
+        const body   = target.querySelector('.rules-section-body');
+        if (header && !header.classList.contains('open')) {
+          header.classList.add('open');
+          body.classList.add('open');
+        }
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -41,10 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const myTeam = DB.get('pl_teams').find(t => String(t.ownerId) === String(user.id));
 
     if (myTeam) {
-      // У IGL уже есть команда — показываем кнопку удаления
+      // У IGL есть команда — только кнопка удаления
       wrap.innerHTML = `
         <div class="igl-team-controls">
-          <span class="igl-myteam-label"><i class="fas fa-crown"></i> Ваша команда: <strong>${myTeam.name}</strong></span>
           <button class="btn btn-danger btn-sm" id="deleteMyTeamBtn"><i class="fas fa-trash"></i> Удалить команду</button>
         </div>`;
       document.getElementById('deleteMyTeamBtn').addEventListener('click', () => deleteMyTeam(user, myTeam));

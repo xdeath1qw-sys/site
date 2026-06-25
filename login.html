@@ -375,21 +375,6 @@
     _tModal.addEventListener('click', e => { if (e.target === _tModal) _tModal.style.display = 'none'; });
   </script>
   <script>
-    // Глазик для пароля
-    document.getElementById('togglePass').addEventListener('click', function() {
-      const inp = document.getElementById('loginPassword');
-      const icon = this.querySelector('i');
-      if (inp.type === 'password') {
-        inp.type = 'text';
-        icon.classList.replace('fa-eye', 'fa-eye-slash');
-      } else {
-        inp.type = 'password';
-        icon.classList.replace('fa-eye-slash', 'fa-eye');
-      }
-    });
-  </script>
-
-  <script>
     // -- Вход -----------------------------------------------------
     if (Auth && Auth.current()) window.location.href = 'index.html';
 

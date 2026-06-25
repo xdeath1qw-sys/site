@@ -276,3 +276,37 @@ function showToast(msg, type = 'success') {
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 3500);
 }
+
+// ── Динамический футер — блок "Аккаунт" ──
+(function () {
+  const user = Auth.current();
+
+  // Ищем блок "Аккаунт" в футере по заголовку h4
+  document.querySelectorAll('.footer-links').forEach(block => {
+    const h4 = block.querySelector('h4');
+    if (!h4 || h4.textContent.trim() !== 'Аккаунт') return;
+
+    const ul = block.querySelector('ul');
+    if (!ul) return;
+
+    if (user) {
+      // Залогинен — показываем Профиль и Выйти
+      ul.innerHTML = `
+        <li><a href="profile.html">Профиль</a></li>
+        <li><a href="#" id="footerLogoutBtn">Выйти</a></li>`;
+      const logoutBtn = ul.querySelector('#footerLogoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          Auth.logout();
+          window.location.href = 'index.html';
+        });
+      }
+    } else {
+      // Не залогинен — показываем Войти и Регистрация
+      ul.innerHTML = `
+        <li><a href="login.html">Войти</a></li>
+        <li><a href="register.html">Регистрация</a></li>`;
+    }
+  });
+})();

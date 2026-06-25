@@ -105,7 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <span class="lh-num">#</span>
             <span class="lh-name">Команда</span>
             <span class="lh-tier">Тир</span>
-            <span class="lh-country">Страна</span>
             <span class="lh-rating">Рейтинг</span>
           </div>
           ${items.map((t, i) => teamListRow(t, i + 1)).join('')}`;
@@ -192,7 +191,6 @@ function teamCard(t) {
         <div class="team-logo">${logo}</div>
         <div class="team-info">
           <div class="team-name">${t.name}</div>
-          <div class="team-country"><i class="fas fa-location-dot"></i> ${t.country || '—'}</div>
         </div>
       </div>
       <div class="team-meta">
@@ -212,7 +210,6 @@ function teamListRow(t, num) {
       <span class="lh-num lr-num">${num}</span>
       <span class="lh-name lr-name">${logo} <strong>${t.name}</strong></span>
       <span class="lh-tier"><span class="tier-badge tier-${t.tier}">T${t.tier}</span></span>
-      <span class="lh-country lr-muted"><i class="fas fa-location-dot"></i> ${t.country || '—'}</span>
       <span class="lh-rating lr-accent">${t.rating || 0}</span>
     </div>`;
 }

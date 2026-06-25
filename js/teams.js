@@ -104,7 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function openCreateModal() {
     document.getElementById('createTeamModal').style.display = 'flex';
     document.getElementById('ctName').value = '';
-    document.getElementById('ctCountry').value = '';
     document.getElementById('ctDescription').value = '';
     document.getElementById('ctAlert').style.display = 'none';
     ctLogoData = '';
@@ -169,7 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (myTeam) { showToast('У вас уже есть команда!', 'error'); return; }
 
     const name = document.getElementById('ctName').value.trim();
-    const country = document.getElementById('ctCountry').value.trim();
     const description = document.getElementById('ctDescription').value.trim();
     const alertEl = document.getElementById('ctAlert');
 
@@ -192,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const newTeam = {
       name,
       tier: 3,
-      country: country || '—',
+      country: '',
       rating: 0,
       description,
       logo: ctLogoData,
@@ -290,8 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
     teams = teams.slice().sort((a, b) => (b.rating || 0) - (a.rating || 0));
     if (currentTier !== 'all') teams = teams.filter(t => String(t.tier) === String(currentTier));
     if (searchQuery) teams = teams.filter(t =>
-      t.name.toLowerCase().includes(searchQuery) ||
-      (t.country || '').toLowerCase().includes(searchQuery)
+      t.name.toLowerCase().includes(searchQuery)
     );
 
     if (!teams.length) {
@@ -315,7 +312,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <span class="lh-num lr-num">${offset + i + 1}</span>
             <span class="lh-name lr-name">${logo} <strong>${t.name}</strong>${isOwn ? ' <span class="own-badge"><i class="fas fa-crown"></i></span>' : ''}</span>
             <span class="lh-tier"><span class="tier-badge tier-${t.tier}">T${t.tier}</span></span>
-            <span class="lh-country lr-muted"><i class="fas fa-location-dot"></i> ${t.country || '—'}</span>
             <span class="lh-rating lr-accent">${t.rating || 0}</span>
           </div>`;
       }).join('');
@@ -326,7 +322,6 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="lh-num">#</span>
           <span class="lh-name">Команда</span>
           <span class="lh-tier">Тир</span>
-          <span class="lh-country">Страна</span>
           <span class="lh-rating">Рейтинг</span>
         </div>
         <div id="teamsVisibleRows">${buildTeamRows(visible, 0)}</div>
@@ -382,7 +377,6 @@ document.addEventListener('DOMContentLoaded', () => {
                   ${t.name}
                   ${isOwn ? '<span class="own-badge"><i class="fas fa-crown"></i> Ваша</span>' : ''}
                 </div>
-                <div class="team-country"><i class="fas fa-location-dot"></i> ${t.country || '—'}</div>
               </div>
             </div>
             <div class="team-meta">
@@ -571,7 +565,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="tm2-name">${t.name}</div>
             <div class="tm2-meta">
               <span class="tier-badge tier-${t.tier}">Tier ${t.tier}</span>
-              <span><i class="fas fa-location-dot"></i> ${t.country || '—'}</span>
               ${captain ? `<span><i class="fas fa-crown" style="color:#FFB300"></i> ${captain.username}</span>` : ''}
             </div>
             ${t.description ? `<div class="tm2-desc">${t.description}</div>` : ''}

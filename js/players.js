@@ -1,7 +1,24 @@
 ﻿// ── Players Page ──
 document.addEventListener('DOMContentLoaded', () => {
   console.log('[PLAYERS] Страница загружена');
-  
+
+  // Режим: если в URL передан ?all=1 — показываем ВСЕХ игроков (включая без команды)
+  const urlParams = new URLSearchParams(window.location.search);
+  const showAllMode = urlParams.get('all') === '1';
+
+  // Обновляем заголовок страницы в зависимости от режима
+  if (showAllMode) {
+    const ph = document.querySelector('.page-header h1');
+    if (ph) ph.innerHTML = '<i class="fas fa-users"></i> Все игроки';
+    const ps = document.querySelector('.page-header p');
+    if (ps) ps.textContent = 'Полный рейтинг всех игроков по K/D';
+  } else {
+    const ph = document.querySelector('.page-header h1');
+    if (ph) ph.innerHTML = '<i class="fas fa-medal"></i> Топ игроков';
+    const ps = document.querySelector('.page-header p');
+    if (ps) ps.textContent = 'Лучшие игроки с командами — топ-10 по K/D';
+  }
+
   let searchQuery = '';
   let teamFilter = 'all';
   let currentView = 'list';
@@ -84,6 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function populateTeamFilter() {
     const tf = document.getElementById('teamFilter');
     if (!tf) return;
+    // Очищаем кроме первой опции
+    while (tf.options.length > 1) tf.remove(1);
     const teams = DB.get('pl_teams');
     teams.forEach(t => {
       const opt = document.createElement('option');
@@ -91,6 +110,13 @@ document.addEventListener('DOMContentLoaded', () => {
       opt.textContent = t.name;
       tf.appendChild(opt);
     });
+    // В режиме all — добавляем опцию "Без команды"
+    if (showAllMode) {
+      const opt = document.createElement('option');
+      opt.value = '__no_team__';
+      opt.textContent = 'Без команды';
+      tf.appendChild(opt);
+    }
   }
 
   function renderPlayers() {
@@ -106,9 +132,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let players = DB.get('pl_players');
     console.log('[PLAYERS] Всего игроков в базе:', players.length);
+
+    // В обычном режиме (топ) — только игроки С командой, макс 10
+    if (!showAllMode) {
+      players = players.filter(p => p.team && p.team.trim() !== '' && p.team !== '—');
+    }
     
     if (teamFilter !== 'all') {
-      players = players.filter(p => p.team === teamFilter);
+      if (teamFilter === '__no_team__') {
+        players = players.filter(p => !p.team || p.team.trim() === '' || p.team === '—');
+      } else {
+        players = players.filter(p => p.team === teamFilter);
+      }
       console.log('[PLAYERS] После фильтра по команде:', players.length);
     }
     if (searchQuery) {
@@ -134,13 +169,27 @@ document.addEventListener('DOMContentLoaded', () => {
       return kdB - kdA;
     });
 
-    console.log('[PLAYERS] Отображаем', players.length, 'игроков в режиме', currentView);
+    // В режиме топа — берём только первые 10
+    const topPlayers = !showAllMode ? players.slice(0, 10) : players;
+    const totalAll = !showAllMode ? players.length : 0;
+
+    console.log('[PLAYERS] Отображаем', topPlayers.length, 'игроков в режиме', currentView);
+
+    // Кнопка "Все игроки" — показывается только в режиме топа
+    const allPlayersBtn = !showAllMode
+      ? `<div style="text-align:center;padding:20px 0 4px">
+           <a href="players.html?all=1" class="btn btn-outline">
+             <i class="fas fa-users"></i> Все игроки${totalAll > 10 ? ` (${totalAll})` : ''}
+           </a>
+         </div>`
+      : `<div style="text-align:center;padding:20px 0 4px">
+           <a href="players.html" class="btn btn-outline">
+             <i class="fas fa-medal"></i> Топ-10 игроков
+           </a>
+         </div>`;
 
     if (currentView === 'list') {
       grid.className = 'players-table-wrap';
-      const LIMIT = 10;
-      const visible = players.slice(0, LIMIT);
-      const hidden  = players.slice(LIMIT);
 
       grid.innerHTML = `
         <table class="players-table">
@@ -150,25 +199,16 @@ document.addEventListener('DOMContentLoaded', () => {
               <th class="pt-player">Игрок</th>
               <th class="pt-stat">K/D</th>
               <th class="pt-team">Команда</th>
-              ${myTeam ? '<th class="pt-action"></th>' : ''}
             </tr>
           </thead>
-          <tbody id="playersVisibleBody">
-            ${buildPlayerRows(visible, 0, myTeam, currentUser)}
+          <tbody>
+            ${buildPlayerRows(topPlayers, 0, myTeam, currentUser)}
           </tbody>
-          ${hidden.length ? `<tbody id="playersHiddenBody" style="display:none">
-            ${buildPlayerRows(hidden, LIMIT, myTeam, currentUser)}
-          </tbody>` : ''}
         </table>
-        ${hidden.length ? `
-          <div style="text-align:center;padding:16px 0">
-            <button class="btn btn-outline btn-sm" id="showAllPlayersBtn" onclick="toggleAllPlayers(this, ${hidden.length})">
-              <i class="fas fa-users"></i> Все игроки (ещё ${hidden.length})
-            </button>
-          </div>` : ''}`;
+        ${allPlayersBtn}`;
     } else {
       grid.className = 'players-grid full-grid';
-      grid.innerHTML = players.map(p => {
+      grid.innerHTML = topPlayers.map(p => {
         const photo = p.photo ? `<img src="${p.photo}" alt="${p.nick}" />` : `<i class="fas fa-user"></i>`;
         const stars = renderStars(p.rating || 0);
         const s = p.stats || {};
@@ -195,7 +235,6 @@ document.addEventListener('DOMContentLoaded', () => {
               ${p.name ? `<div class="player-real-name">${p.name}</div>` : ''}
               <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
                 ${p.role ? `<div class="player-role">${p.role}</div>` : ''}
-                ${p.country ? `<span style="font-size:0.72rem;color:var(--text-dim)"><i class="fas fa-location-dot"></i> ${p.country}</span>` : ''}
               </div>
               <div class="stars">${stars}</div>
               <div class="player-stats-full">
@@ -211,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
               ${alreadyInvited ? `<div class="invite-sent-badge" style="margin-top:12px;width:100%;justify-content:center"><i class="fas fa-clock"></i> Приглашение отправлено</div>` : ''}
             </div>
           </div>`;
-      }).join('');
+      }).join('') + allPlayersBtn;
     }
 
     // Обработчики кнопок приглашения
@@ -285,13 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   window.toggleAllPlayers = function(btn, hiddenCount) {
-    const hiddenBody = document.getElementById('playersHiddenBody');
-    if (!hiddenBody) return;
-    const isHidden = hiddenBody.style.display === 'none';
-    hiddenBody.style.display = isHidden ? '' : 'none';
-    btn.innerHTML = isHidden
-      ? `<i class="fas fa-chevron-up"></i> Скрыть`
-      : `<i class="fas fa-users"></i> Все игроки (ещё ${hiddenCount})`;
+    // legacy — больше не используется
   };
   function hasPendingInvite(playerNick, teamName) {
     return DB.get('pl_invites').some(inv =>

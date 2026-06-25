@@ -90,7 +90,6 @@ function renderProfile(user, player, layout, readOnly) {
   const infoRows = [
     { label: 'Команда',  val: player?.team    || '—' },
     { label: 'Роль',     val: player?.role    || '—' },
-    { label: 'Страна',   val: player?.country || '—' },
     { label: 'Матчей',   val: s.matches || '—' },
     { label: 'Побед',    val: s.wins    || '—' },
     { label: 'Winrate',  val: s.matches && s.wins ? Math.round(s.wins/s.matches*100)+'%' : '—' },
@@ -243,7 +242,6 @@ function renderProfile(user, player, layout, readOnly) {
           <div class="pp-hero-badges">
             ${player?.team    ? `<span class="pp-badge"><i class="fas fa-shield-halved"></i> ${player.team}</span>` : ''}
             ${player?.role    ? `<span class="pp-badge"><i class="fas fa-crosshairs"></i> ${player.role}</span>` : ''}
-            ${player?.country ? `<span class="pp-badge"><i class="fas fa-location-dot"></i> ${player.country}</span>` : ''}
           </div>
           <div class="pp-info-table">${infoRows}</div>
         </div>
@@ -679,7 +677,6 @@ function renderIglTeamPanel(user) {
         <div class="igl-team-name">${myTeam.name}</div>
         <div class="igl-team-meta">
           <span><i class="fas fa-users"></i> ${allMembers.length} игроков</span>
-          <span><i class="fas fa-location-dot"></i> ${myTeam.country || '—'}</span>
         </div>
       </div>
     </div>

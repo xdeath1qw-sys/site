@@ -695,9 +695,44 @@ function renderIglTeamPanel(user) {
       ${captainRow}
       ${teamPlayersNoCaptain.length
         ? playerRows
-        : `<div style="color:var(--bone-ghost);font-size:0.82rem;padding:16px 0">В команде пока нет других игроков</div>`
+        : `<div style="color:var(--text-muted);font-size:0.82rem;padding:16px 0">В команде пока нет других игроков</div>`
       }
+    </div>
+
+    <!-- Опасная зона -->
+    <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end">
+      <button class="btn btn-danger btn-sm" id="iglDeleteTeamBtn">
+        <i class="fas fa-trash"></i> Удалить команду
+      </button>
     </div>`;
+
+  // Обработчик удаления команды
+  document.getElementById('iglDeleteTeamBtn').addEventListener('click', async () => {
+    if (!confirm(`Удалить команду «${myTeam.name}»? Это действие нельзя отменить. КД на создание новой — 7 дней.`)) return;
+
+    // Убираем команду у всех игроков
+    const players = DB.get('pl_players').map(p => p.team === myTeam.name ? { ...p, team: '' } : p);
+    DB.set('pl_players', players);
+
+    // Удаляем команду
+    await DB.remove('pl_teams', myTeam.id);
+
+    // Ставим КД пользователю
+    const users = DB.get('pl_users');
+    const idx = users.findIndex(u => String(u.id) === String(user.id));
+    if (idx !== -1) {
+      users[idx].teamDeletedAt = new Date().toISOString();
+      users[idx].teamId = null;
+      users[idx].team = '';
+      lsSet('pl_users', users);
+      await DB.update('pl_users', String(user.id), { teamId: null, team: '', team_deleted_at: new Date().toISOString() });
+      const { password: _, ...safe } = users[idx];
+      Auth.login(safe);
+    }
+
+    if (typeof showToast === 'function') showToast('Команда удалена. КД 7 дней.', 'error');
+    setTimeout(() => location.reload(), 1000);
+  });
 }
 
 window.iglSetRole = function(select) {

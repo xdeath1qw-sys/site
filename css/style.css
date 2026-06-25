@@ -6,36 +6,60 @@
 :root {
   /* Dark theme (default) */
   --primary: #F47721;
+  --primary-dark: #D96610;
   --primary-hover: #FF8833;
+  --accent: #1C5BA0;
   --bg: #1A1A1A;
+  --bg-secondary: #202020;
   --bg-card: #242424;
+  --bg-card-hover: #2E2E2E;
   --bg-hover: #2A2A2A;
   --border: #3A3A3A;
+  --border-light: #333333;
+  --border-active: #F47721;
   --text: #E0E0E0;
+  --text-secondary: #C0C0C0;
   --text-muted: #A0A0A0;
   --text-dim: #707070;
+  --navbar-bg: #1F1F1F;
   --success: #5CB85C;
   --danger: #D9534F;
   --warning: #F0AD4E;
   --shadow: rgba(0, 0, 0, 0.3);
   --shadow-strong: rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-card: 0 2px 8px rgba(0,0,0,0.4);
+  --primary-glow: rgba(244,119,33,0.15);
+  --warning-dim: rgba(240,173,78,0.1);
 }
 
 [data-theme="light"] {
   --primary: #F47721;
+  --primary-dark: #D96610;
   --primary-hover: #D96610;
+  --accent: #1C5BA0;
   --bg: #FFFFFF;
+  --bg-secondary: #F7F7F7;
   --bg-card: #F5F5F5;
+  --bg-card-hover: #EFEFEF;
   --bg-hover: #EFEFEF;
   --border: #DDDDDD;
+  --border-light: #E8E8E8;
+  --border-active: #F47721;
   --text: #202020;
+  --text-secondary: #424242;
   --text-muted: #606060;
   --text-dim: #909090;
+  --navbar-bg: #FFFFFF;
   --success: #4CAF50;
   --danger: #E53935;
   --warning: #FB8C00;
   --shadow: rgba(0, 0, 0, 0.1);
   --shadow-strong: rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-card: 0 2px 8px rgba(0,0,0,0.1);
+  --primary-glow: rgba(244,119,33,0.08);
+  --warning-dim: rgba(240,173,78,0.1);
 }
 
 /* ===== Base Styles ===== */
@@ -161,11 +185,18 @@ img {
 
 /* ===== Navbar ===== */
 .navbar {
-  background: var(--bg-card);
+  background: var(--navbar-bg);
   border-bottom: 1px solid var(--border);
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
+  box-shadow: var(--shadow-sm);
+}
+
+body {
+  padding-top: 56px;
 }
 
 .nav-container {
@@ -449,7 +480,7 @@ img {
   margin: 40px 0 32px;
 }
 
-.hero-stats > div {
+.hero-stat {
   text-align: center;
 }
 
@@ -457,12 +488,15 @@ img {
   font-size: 32px;
   font-weight: 700;
   color: var(--primary);
+  display: block;
 }
 .stat-label {
   font-size: 12px;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  display: block;
+  margin-top: 4px;
 }
 
 .hero-buttons {

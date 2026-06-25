@@ -39,21 +39,9 @@ async function sendDiscordNotification(embed) {
   }
 }
 
-// ── Уведомление: Новая команда ────────────────────────────────
+// ── Уведомление: Новая команда — ОТКЛЮЧЕНО ───────────────────
 window.notifyNewTeam = async function(team) {
-  const embed = {
-    title: '\u{1F6E1}\uFE0F \u041D\u043E\u0432\u0430\u044F \u043A\u043E\u043C\u0430\u043D\u0434\u0430!',
-    color: 0x667eea,
-    fields: [
-      { name: '\u{1F4DB} \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435', value: team.name || '\u2014', inline: true },
-      { name: '\u{1F30D} \u0421\u0442\u0440\u0430\u043D\u0430', value: team.country || '\u2014', inline: true },
-      { name: '\u2B50 \u0422\u0438\u0440', value: `Tier ${team.tier || 3}`, inline: true },
-      { name: '\u{1F4DD} \u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435', value: team.description || '\u2014', inline: false }
-    ],
-    footer: { text: 'EFL League \u2022 ' + new Date().toLocaleString('ru-RU') },
-    thumbnail: team.logo ? { url: team.logo } : undefined
-  };
-  await sendDiscordNotification(embed);
+  // Уведомления о командах отключены
 };
 
 // ── Уведомление: Новый пользователь ───────────────────────────

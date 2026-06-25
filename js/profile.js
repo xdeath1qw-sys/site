@@ -270,7 +270,6 @@ function renderProfile(user, player, layout, readOnly) {
     <div class="pp-tabs">
       <button class="pp-tab active" data-tab="info"><i class="fas fa-chart-bar"></i> Статистика</button>
       ${!readOnly && user.role === 'igl' ? `<button class="pp-tab" data-tab="team"><i class="fas fa-shield-halved"></i> Команда</button>` : ''}
-      ${!readOnly ? `<button class="pp-tab" data-tab="invites" id="invitesTab"><i class="fas fa-bell"></i> Уведомления<span id="invitesBadge" style="display:none" class="pp-invite-badge"></span></button>` : ''}
       ${!readOnly ? `<button class="pp-tab" data-tab="edit"><i class="fas fa-edit"></i> Редактировать</button>` : ''}
     </div>
 
@@ -304,17 +303,6 @@ function renderProfile(user, player, layout, readOnly) {
     ${!readOnly && user.role === 'igl' ? `
     <div class="pp-tab-content" id="tab-team" style="display:none">
       <div class="igl-team-panel" id="iglTeamPanel"></div>
-    </div>` : ''}
-
-    <!-- ═══ TAB: INVITES ═══ -->
-    ${!readOnly ? `
-    <div class="pp-tab-content" id="tab-invites" style="display:none">
-      <div class="pp-invites-wrap">
-        <h3 style="margin-bottom:20px;display:flex;align-items:center;gap:10px">
-          <i class="fas fa-bell" style="color:var(--primary)"></i> Приглашения в команду
-        </h3>
-        <div id="invitesList"></div>
-      </div>
     </div>` : ''}
 
     <!-- ═══ TAB: EDIT ═══ -->
@@ -501,10 +489,6 @@ function renderProfile(user, player, layout, readOnly) {
 
     const saveBtn = document.getElementById('saveProfileBtn');
     if (saveBtn) saveBtn.addEventListener('click', () => saveProfile(user, newAvatar));
-
-    // ── Invites ──
-    renderInvites(user);
-    setInterval(() => renderInvites(user), 5000);
   }
 }
 
@@ -600,100 +584,6 @@ function showProfileAlert(msg, type, el) {
   el.className = `alert alert-${type}`;
   el.innerHTML = `<i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'}"></i> ${msg}`;
   el.style.display = 'flex';
-}
-
-// ── Render invites tab ──
-function renderInvites(user) {
-  const badge = document.getElementById('invitesBadge');
-  const list  = document.getElementById('invitesList');
-  if (!list) return;
-
-  // Приглашения ищем по userId ИЛИ по нику пользователя
-  const invites = DB.get('pl_invites').filter(inv =>
-    inv.status === 'pending' && (
-      inv.targetUserId === user.id ||
-      inv.playerNick.toLowerCase() === user.username.toLowerCase()
-    )
-  );
-
-  // Бейдж
-  if (badge) {
-    badge.textContent = invites.length;
-    badge.style.display = invites.length > 0 ? 'inline-flex' : 'none';
-  }
-
-  if (!invites.length) {
-    list.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>Нет новых приглашений</p></div>`;
-    return;
-  }
-
-  list.innerHTML = invites.map(inv => {
-    const d = new Date(inv.createdAt).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-    return `
-      <div class="invite-card" id="inv-${inv.id}">
-        <div class="invite-card-left">
-          <div class="invite-team-icon"><i class="fas fa-shield-halved"></i></div>
-          <div>
-            <div class="invite-title">Приглашение в команду <strong>${inv.teamName}</strong></div>
-            <div class="invite-meta">
-              <span><i class="fas fa-crown"></i> Капитан: ${inv.captainNick}</span>
-              <span><i class="fas fa-clock"></i> ${d}</span>
-            </div>
-          </div>
-        </div>
-        <div class="invite-btns">
-          <button class="btn btn-success btn-sm accept-inv" data-id="${inv.id}" data-team="${inv.teamName}" data-teamid="${inv.teamId || ''}">
-            <i class="fas fa-check"></i> Принять
-          </button>
-          <button class="btn btn-danger btn-sm decline-inv" data-id="${inv.id}">
-            <i class="fas fa-times"></i> Отклонить
-          </button>
-        </div>
-      </div>`;
-  }).join('');
-
-  // Принять
-  document.querySelectorAll('.accept-inv').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const invId = parseInt(btn.dataset.id);
-      const teamName = btn.dataset.team;
-
-      // Помечаем приглашение принятым
-      const all = DB.get('pl_invites');
-      const idx = all.findIndex(i => i.id === invId);
-      if (idx !== -1) { all[idx].status = 'accepted'; DB.set('pl_invites', all); }
-
-      // Обновляем игрока в базе если он там есть (по нику)
-      const players = DB.get('pl_players');
-      const pi = players.findIndex(p => p.nick.toLowerCase() === user.username.toLowerCase());
-      if (pi !== -1) { players[pi].team = teamName; DB.set('pl_players', players); }
-
-      // Сохраняем команду прямо в данных пользователя
-      const users = DB.get('pl_users');
-      const ui = users.findIndex(u => u.id === user.id);
-      if (ui !== -1) {
-        users[ui].team = teamName;
-        DB.set('pl_users', users);
-        const { password: _, ...safe } = users[ui];
-        Auth.login(safe);
-      }
-
-      showToast(`Вы вступили в команду ${teamName}!`, 'success');
-      setTimeout(() => location.reload(), 900);
-    });
-  });
-
-  // Отклонить
-  document.querySelectorAll('.decline-inv').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const invId = parseInt(btn.dataset.id);
-      const all = DB.get('pl_invites');
-      const idx = all.findIndex(i => i.id === invId);
-      if (idx !== -1) { all[idx].status = 'declined'; DB.set('pl_invites', all); }
-      showToast('Приглашение отклонено');
-      renderInvites(user);
-    });
-  });
 }
 
 // ── IGL Team Panel ──

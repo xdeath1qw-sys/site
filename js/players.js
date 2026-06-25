@@ -131,6 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const myTeam = null; // всегда null — кнопки приглашения убраны
 
     let players = DB.get('pl_players');
+    const totalAllPlayers = players.length; // общее кол-во всех игроков до любых фильтров
     console.log('[PLAYERS] Всего игроков в базе:', players.length);
 
     // В обычном режиме (топ) — только игроки С командой, макс 10
@@ -171,15 +172,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // В режиме топа — берём только первые 10
     const topPlayers = !showAllMode ? players.slice(0, 10) : players;
-    const totalAll = !showAllMode ? players.length : 0;
-
-    console.log('[PLAYERS] Отображаем', topPlayers.length, 'игроков в режиме', currentView);
 
     // Кнопка "Все игроки" — показывается только в режиме топа
     const allPlayersBtn = !showAllMode
       ? `<div style="text-align:center;padding:20px 0 4px">
            <a href="players.html?all=1" class="btn btn-outline">
-             <i class="fas fa-users"></i> Все игроки${totalAll > 10 ? ` (${totalAll})` : ''}
+             <i class="fas fa-users"></i> Все игроки${totalAllPlayers > 0 ? ` (${totalAllPlayers})` : ''}
            </a>
          </div>`
       : `<div style="text-align:center;padding:20px 0 4px">

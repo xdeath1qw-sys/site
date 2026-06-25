@@ -223,7 +223,20 @@
             <div class="form-grid">
               <div class="form-group form-full"><label>Заголовок *</label><input type="text" id="apNewsTitle" placeholder="Заголовок" /></div>
               <div class="form-group form-full"><label>Краткое описание</label><input type="text" id="apNewsExcerpt" placeholder="Краткое описание" /></div>
-              <div class="form-group form-full"><label>Текст *</label><textarea id="apNewsContent" rows="6" placeholder="Текст новости..."></textarea></div>
+              <div class="form-group form-full">
+                <label>
+                  Текст новости * 
+                  <small style="color:var(--text-muted);font-weight:400;margin-left:8px">
+                    <i class="fas fa-info-circle"></i> Поддерживается форматирование
+                  </small>
+                </label>
+                <textarea id="apNewsContent" rows="14" placeholder="Полный текст новости... 
+
+Можно использовать:
+• Абзацы (разделяйте пустой строкой)
+• Списки (начинайте со знака •)
+• Ссылки"></textarea>
+              </div>
               <div class="form-group"><label>Категория</label>
                 <select id="apNewsCategory">
                   <option value="general">Общее</option><option value="tournament">Турниры</option>

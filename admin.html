@@ -214,8 +214,19 @@
               <input type="text" id="newsExcerpt" placeholder="Краткое описание для превью" />
             </div>
             <div class="form-group form-full">
-              <label>Текст новости *</label>
-              <textarea id="newsContent" rows="8" placeholder="Полный текст новости..."></textarea>
+              <label>
+                Текст новости * 
+                <small style="color:var(--text-muted);font-weight:400;margin-left:8px">
+                  <i class="fas fa-info-circle"></i> Поддерживается форматирование: абзацы, списки, ссылки
+                </small>
+              </label>
+              <textarea id="newsContent" rows="16" placeholder="Полный текст новости... 
+
+Можно использовать:
+• Абзацы (разделяйте пустой строкой)
+• Списки (начинайте со знака •)
+• Ссылки
+• Жирный текст, курсив"></textarea>
             </div>
             <div class="form-group form-full">
               <label>Фото новости</label>

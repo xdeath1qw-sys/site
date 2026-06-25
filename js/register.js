@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Сохраняем пользователя в MongoDB
-    let newUser = { username, email, password, role: 'user', joinedAt: new Date().toISOString() };
+    let newUser = { username, email, password, role: 'user' };
     try {
       const res = await fetch('/api/data?col=users', {
         method: 'POST',

@@ -232,10 +232,6 @@ function renderProfile(user, player, layout, readOnly) {
     `<option value="${p.id}" ${player && player.id === p.id ? 'selected' : ''}>${p.nick}${p.team ? ' — ' + p.team : ''}</option>`
   ).join('');
 
-  const joinDate = user.joinedAt
-    ? new Date(user.joinedAt).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
-    : '—';
-
   layout.innerHTML = `
     <!-- ═══ TOP HERO CARD ═══ -->
     <div class="pp-hero">
@@ -254,7 +250,6 @@ function renderProfile(user, player, layout, readOnly) {
       </div>
       <div class="pp-hero-right">
         <div class="pp-role-badge role-${user.role}">${user.role === 'admin' ? '⚡ Администратор' : user.role === 'igl' ? '👑 Капитан (IGL)' : '👤 Пользователь'}</div>
-        <div style="font-size:0.78rem;color:var(--text-dim);margin-top:6px"><i class="fas fa-calendar"></i> ${joinDate}</div>
         <div class="pp-social-links">
           ${user.faceitUrl ? `<a href="${user.faceitUrl}" target="_blank" rel="noopener" class="pp-social-btn pp-faceit-btn"><span class="pp-social-icon faceit-icon">F</span> Faceit</a>` : ''}
           ${user.steamUrl  ? `<a href="${user.steamUrl}"  target="_blank" rel="noopener" class="pp-social-btn pp-steam-btn"><i class="fab fa-steam"></i> Steam</a>` : ''}

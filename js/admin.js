@@ -358,7 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    if (!players.length) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-dim);padding:30px">${_usersSearchQuery ? 'Ничего не найдено' : 'Нет игроков'}</td></tr>`; return; }
+    if (!players.length) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-dim);padding:30px">${_usersSearchQuery ? 'Ничего не найдено' : 'Нет игроков'}</td></tr>`; return; }
     tbody.innerHTML = players.map((p, i) => {
       const user = users.find(u => String(u.id) === String(p.userId) || (u.username || '').toLowerCase() === (p.nick || '').toLowerCase());
       const isIgl = user?.role === 'igl';
@@ -367,7 +367,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const kdColor = kd !== null ? (parseFloat(kd) >= 1 ? 'var(--success)' : 'var(--danger)') : 'var(--text-dim)';
       const photo = p.photo || user?.avatar || '';
       const email = user?.email || '—';
-      const joinedAt = user?.joinedAt ? new Date(user.joinedAt).toLocaleDateString('ru-RU') : '—';
       const teamName = p.team || '—';
       const uid = user?.id ?? null;
       return `
@@ -383,7 +382,6 @@ document.addEventListener('DOMContentLoaded', () => {
         <td style="white-space:nowrap">
           <span style="font-weight:700;color:${kdColor}">${kd !== null ? parseFloat(kd).toFixed(2) : '—'}</span>
         </td>
-        <td>${joinedAt}</td>
         <td>
           <div class="action-btns">
             ${!isAdmin && uid ? `

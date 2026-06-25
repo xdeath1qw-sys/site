@@ -220,6 +220,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('saveNewsBtn');
     btn.disabled = true;
 
+    // Берём дату из поля, или текущую если не указана
+    const dateInput = document.getElementById('newsDate').value;
+    const newsDate = dateInput ? new Date(dateInput).toISOString() : new Date().toISOString();
+
     if (editingNewsId !== null) {
       const newsList = DB.get('pl_news');
       const existing = newsList.find(n => n.id === editingNewsId);
@@ -228,7 +232,8 @@ document.addEventListener('DOMContentLoaded', () => {
         excerpt: document.getElementById('newsExcerpt').value.trim(),
         content,
         image: newsImageData || (existing ? existing.image : ''),
-        category: document.getElementById('newsCategory').value
+        category: document.getElementById('newsCategory').value,
+        createdAt: newsDate
       };
       await DB.update('pl_news', editingNewsId, changes);
       showToast('Новость обновлена');
@@ -239,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
         content,
         image: newsImageData,
         category: document.getElementById('newsCategory').value,
-        createdAt: new Date().toISOString()
+        createdAt: newsDate
       };
       await DB.insert('pl_news', news);
       showToast('Новость опубликована');
@@ -254,6 +259,10 @@ document.addEventListener('DOMContentLoaded', () => {
   function clearNewsForm() {
     ['newsTitle','newsExcerpt','newsContent'].forEach(id => { document.getElementById(id).value = ''; });
     document.getElementById('newsCategory').value = 'general';
+    // Ставим текущую дату/время по умолчанию
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    document.getElementById('newsDate').value = now.toISOString().slice(0, 16);
     newsImageData = '';
     document.getElementById('newsImagePreview').style.display = 'none';
   }
@@ -291,6 +300,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('newsExcerpt').value = n.excerpt || '';
     document.getElementById('newsContent').value = n.content || '';
     document.getElementById('newsCategory').value = n.category || 'general';
+    // Подставляем дату
+    const d = new Date(n.createdAt || n.date);
+    if (!isNaN(d)) {
+      d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+      document.getElementById('newsDate').value = d.toISOString().slice(0, 16);
+    }
     newsImageData = n.image || '';
     if (n.image) {
       document.getElementById('newsImageImg').src = n.image;

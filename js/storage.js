@@ -213,7 +213,8 @@ function teamToMG(t) {
 function newsToMG(n) {
   return {
     title: n.title, excerpt: n.excerpt || null, content: n.content,
-    category: n.category || 'general', image: n.image || null
+    category: n.category || 'general', image: n.image || null,
+    created_at: n.createdAt || new Date().toISOString()
   };
 }
 

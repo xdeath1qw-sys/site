@@ -4122,3 +4122,101 @@ option { background: var(--bg-card); color: var(--text); }
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+
+/* ============================================
+   MOBILE FIXES
+============================================ */
+@media (max-width: 480px) {
+  /* Навбар */
+  .nav-container { padding: 0 16px; }
+  .nav-logo { font-size: 1.2rem; }
+  .nav-logo .logo-img { width: 28px; height: 28px; }
+  .nav-actions #authButtons .btn { padding: 6px 12px; font-size: 0.75rem; }
+  .theme-toggle { width: 32px; height: 32px; font-size: 0.9rem; }
+  
+  /* Модальное окно */
+  .modal { padding: 24px 16px; border-radius: 16px; max-width: 95%; }
+  .modal-news-img { height: 200px; }
+  .modal-news-title { font-size: 1.3rem; }
+  .modal-news-body { font-size: 0.9rem; }
+  
+  /* Hero */
+  .hero { padding: 100px 16px 60px; }
+  .hero h1 { font-size: 1.8rem; }
+  .hero p { font-size: 0.95rem; }
+  .hero-buttons { flex-direction: column; width: 100%; }
+  .hero-buttons .btn { width: 100%; }
+  .hero-stats { gap: 32px; }
+  .stat-num { font-size: 1.8rem; }
+  
+  /* Карточки новостей */
+  .news-grid, .news-grid.full-grid { 
+    grid-template-columns: 1fr; 
+    gap: 16px; 
+  }
+  .news-card-img { height: 160px; }
+  
+  /* Карточки игроков */
+  .players-grid, .players-grid.full-grid { 
+    grid-template-columns: 1fr; 
+    gap: 16px; 
+  }
+  
+  /* Карточки команд */
+  .teams-grid { 
+    grid-template-columns: 1fr; 
+    gap: 16px; 
+  }
+  
+  /* Page header */
+  .page-header { padding: 100px 16px 40px; }
+  .page-header h1 { font-size: 1.6rem; }
+  
+  /* Section */
+  .section { padding: 60px 0; }
+  .section-header { flex-direction: column; gap: 16px; align-items: flex-start; }
+  .section-header h2 { font-size: 1.3rem; }
+  
+  /* Filter bar */
+  .filter-bar { flex-direction: column; align-items: stretch; }
+  .search-box { max-width: 100%; min-width: 0; }
+  
+  /* Auth pages */
+  .auth-page { padding: 80px 16px 40px; }
+  .auth-card { padding: 28px 20px; }
+  .auth-logo { font-size: 1.2rem; }
+  .auth-card h2 { font-size: 1.3rem; }
+  
+  /* Admin layout */
+  .admin-layout { flex-direction: column; margin-top: 64px; }
+  .admin-sidebar { 
+    width: 100%; 
+    position: static; 
+    height: auto; 
+    border-right: none; 
+    border-bottom: 1px solid var(--border);
+    padding: 16px;
+  }
+  .admin-main { padding: 20px 16px; }
+  .admin-stats-grid { grid-template-columns: 1fr; gap: 12px; }
+  .admin-form-card { padding: 20px 16px; }
+  .form-grid { grid-template-columns: 1fr; }
+  
+  /* Profile layout */
+  .profile-layout { 
+    grid-template-columns: 1fr; 
+    gap: 20px; 
+  }
+  
+  /* Container */
+  .container { padding: 0 16px; }
+  
+  /* Buttons */
+  .btn { padding: 8px 16px; font-size: 0.85rem; }
+  .btn-sm { padding: 5px 12px; font-size: 0.75rem; }
+  
+  /* Form actions */
+  .form-actions { flex-direction: column; }
+  .form-actions .btn { width: 100%; }
+}

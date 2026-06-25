@@ -1353,7 +1353,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  window.addUserToTeamRoster = function() {
+  window.addUserToTeamRoster = async function() {
     const userId = document.getElementById('rosterUserSelect').value;
     if (!userId) {
       showToast('Выберите пользователя', 'error');
@@ -1370,7 +1370,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const players = DB.get('pl_players');
     
     // Проверяем, есть ли уже игрок с таким ником
-    let player = players.find(p => p.nick === user.username);
+    let player = players.find(p => (p.nick || '').toLowerCase() === (user.username || '').toLowerCase());
     
     if (player) {
       // Игрок существует - обновляем его команду
@@ -1379,11 +1379,11 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
       }
-      player.team = currentRosterTeamName;
+      // Используем DB.update вместо DB.set
+      await DB.update('pl_players', player.id, { team: currentRosterTeamName });
     } else {
-      // Создаем нового игрока
-      player = {
-        id: Date.now(),
+      // Создаем нового игрока через DB.insert
+      const newPlayer = {
         nick: user.username,
         name: user.username,
         team: currentRosterTeamName,
@@ -1391,26 +1391,40 @@ document.addEventListener('DOMContentLoaded', () => {
         role: user.role === 'igl' ? 'IGL' : '',
         country: '',
         rating: 0,
+        userId: user.id,
         stats: { kd: 0, hs: 0, adr: 0, matches: 0, wins: 0 }
       };
-      players.push(player);
+      player = await DB.insert('pl_players', newPlayer);
     }
     
-    DB.set('pl_players', players);
+    // ОБЯЗАТЕЛЬНО синхронизируем pl_users
+    await DB.update('pl_users', userId, { 
+      team: currentRosterTeamName, 
+      teamId: currentRosterTeamId 
+    });
+    
     showToast(`${user.username} добавлен в команду`);
     renderRosterList();
     populateRosterUserSelect();
   };
 
-  window.removePlayerFromRoster = function(playerNick) {
+  window.removePlayerFromRoster = async function(playerNick) {
     if (!confirm(`Удалить ${playerNick} из команды?`)) return;
     
     const players = DB.get('pl_players');
-    const player = players.find(p => p.nick === playerNick && p.team === currentRosterTeamName);
+    const player = players.find(p => (p.nick || '').toLowerCase() === (playerNick || '').toLowerCase() && p.team === currentRosterTeamName);
     
     if (player) {
-      player.team = '';
-      DB.set('pl_players', players);
+      // Очищаем команду у игрока через DB.update
+      await DB.update('pl_players', player.id, { team: '' });
+      
+      // Синхронизируем pl_users — ищем пользователя по нику
+      const users = DB.get('pl_users');
+      const user = users.find(u => (u.username || '').toLowerCase() === (playerNick || '').toLowerCase());
+      if (user) {
+        await DB.update('pl_users', user.id, { team: '', teamId: null });
+      }
+      
       showToast(`${playerNick} удалён из команды`);
       renderRosterList();
       populateRosterUserSelect();

@@ -276,9 +276,20 @@ function renderProfile(user, player, layout, readOnly) {
             <span class="pp-stats-sub">${s.matches ? `${s.matches} карт` : 'нет данных'}</span>
           </div>
           <div class="pp-stat-line">
-            <span>Rating 3.0</span>
-            <i class="fas fa-signal pp-rating-icon"></i>
-            <span class="pp-stat-accent">${kd ? kd.toFixed(2) : '—'}</span>
+            <span>K/D/A</span>
+            <span class="pp-stat-accent">${kd ? kd.toFixed(2) : '—'} / ${hs ? hs : '—'} / ${adr ? adr : '—'}</span>
+          </div>
+          <div class="pp-stat-line">
+            <span>Headshot %</span>
+            <span class="pp-stat-accent">${hs ? hs + '%' : '—'}</span>
+          </div>
+          <div class="pp-stat-line">
+            <span>ADR</span>
+            <span class="pp-stat-accent">${adr || '—'}</span>
+          </div>
+          <div class="pp-stat-line">
+            <span>Winrate</span>
+            <span class="pp-stat-accent">${winrate ? winrate + '%' : '—'}</span>
           </div>
         </div>
 

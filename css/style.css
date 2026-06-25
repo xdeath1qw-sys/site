@@ -1438,21 +1438,13 @@ img { max-width: 100%; height: auto; display: block; }
 .pp-steam-btn:hover { color: #c6d4df; }
 .pp-steam-btn i { font-size: 15px; }
 
-/* Faceit "F" icon badge */
-.pp-social-icon.faceit-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+/* Faceit SVG icon */
+.pp-faceit-svg {
   width: 16px;
   height: 16px;
-  background: #fff;
-  color: #FF5500;
-  font-size: 11px;
-  font-weight: 900;
-  border-radius: 3px;
-  line-height: 1;
-  font-style: normal;
   flex-shrink: 0;
+  vertical-align: middle;
+  margin-right: 2px;
 }
 
 /* Tabs */

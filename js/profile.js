@@ -249,7 +249,7 @@ function renderProfile(user, player, layout, readOnly) {
       <div class="pp-hero-right">
         <div class="pp-role-badge role-${user.role}">${user.role === 'admin' ? '⚡ Администратор' : user.role === 'igl' ? '👑 Капитан (IGL)' : '👤 Пользователь'}</div>
         <div class="pp-social-links">
-          ${user.faceitUrl ? `<a href="${user.faceitUrl}" target="_blank" rel="noopener" class="pp-social-btn pp-faceit-btn"><span class="pp-social-icon faceit-icon">F</span> Faceit</a>` : ''}
+          ${user.faceitUrl ? `<a href="${user.faceitUrl}" target="_blank" rel="noopener" class="pp-social-btn pp-faceit-btn"><svg class="pp-faceit-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.189 2L4 9.196l2.513 2.513 5.163-5.163 2.497 2.497-2.677 2.675 2.497 2.498 2.677-2.677 2.496 2.496-5.145 5.145L16.535 22 22 16.534 11.189 2z" fill="#fff"/></svg> Faceit</a>` : ''}
           ${user.steamUrl  ? `<a href="${user.steamUrl}"  target="_blank" rel="noopener" class="pp-social-btn pp-steam-btn"><i class="fab fa-steam"></i> Steam</a>` : ''}
         </div>
         ${user.role === 'admin' ? `<a href="admin.html" class="btn btn-primary btn-sm" style="margin-top:12px"><i class="fas fa-cog"></i> Панель управления</a>` : ''}
@@ -324,7 +324,7 @@ function renderProfile(user, player, layout, readOnly) {
         </div>
         <div class="form-group">
           <label>
-            <span class="pp-social-icon faceit-icon">F</span>
+            <svg class="pp-faceit-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:16px;height:16px;vertical-align:middle;margin-right:6px"><path d="M11.189 2L4 9.196l2.513 2.513 5.163-5.163 2.497 2.497-2.677 2.675 2.497 2.498 2.677-2.677 2.496 2.496-5.145 5.145L16.535 22 22 16.534 11.189 2z" fill="#FF5500"/></svg>
             Ссылка на Faceit профиль
           </label>
           <input type="url" id="pFaceit" placeholder="https://www.faceit.com/ru/players/ВашНик" value="${user.faceitUrl || ''}" />

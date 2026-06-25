@@ -213,33 +213,6 @@
               <label>Краткое описание</label>
               <input type="text" id="newsExcerpt" placeholder="Краткое описание для превью" />
             </div>
-            <div class="form-group form-full">
-              <label>
-                Текст новости * 
-                <small style="color:var(--text-muted);font-weight:400;margin-left:8px">
-                  <i class="fas fa-info-circle"></i> Поддерживается форматирование: абзацы, списки, ссылки
-                </small>
-              </label>
-              <textarea id="newsContent" rows="16" placeholder="Полный текст новости... 
-
-Можно использовать:
-• Абзацы (разделяйте пустой строкой)
-• Списки (начинайте со знака •)
-• Ссылки
-• Жирный текст, курсив"></textarea>
-            </div>
-            <div class="form-group form-full">
-              <label>Фото новости</label>
-              <div class="file-upload-area" id="newsImageArea">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <p>Перетащите изображение или нажмите для выбора</p>
-                <input type="file" id="newsImage" accept="image/*" style="display:none" />
-              </div>
-              <div class="logo-preview" id="newsImagePreview" style="display:none">
-                <img id="newsImageImg" src="" alt="Фото новости" />
-                <button type="button" class="btn btn-sm btn-danger" id="removeNewsImage"><i class="fas fa-trash"></i></button>
-              </div>
-            </div>
             <div class="form-group">
               <label>Категория</label>
               <select id="newsCategory">
@@ -252,6 +225,27 @@
             <div class="form-group">
               <label><i class="fas fa-calendar"></i> Дата публикации</label>
               <input type="datetime-local" id="newsDate" />
+            </div>
+            <div class="form-group form-full">
+              <label>
+                Текст новости * 
+                <small style="color:var(--text-muted);font-weight:400;margin-left:8px">
+                  <i class="fas fa-info-circle"></i> Поддерживается форматирование: абзацы, списки, ссылки
+                </small>
+              </label>
+              <textarea id="newsContent" rows="16" placeholder="Полный текст новости..."></textarea>
+            </div>
+            <div class="form-group form-full">
+              <label>Фото новости</label>
+              <div class="file-upload-area" id="newsImageArea">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Перетащите изображение или нажмите для выбора</p>
+                <input type="file" id="newsImage" accept="image/*" style="display:none" />
+              </div>
+              <div class="logo-preview" id="newsImagePreview" style="display:none">
+                <img id="newsImageImg" src="" alt="Фото новости" />
+                <button type="button" class="btn btn-sm btn-danger" id="removeNewsImage"><i class="fas fa-trash"></i></button>
+              </div>
             </div>
           </div>
           <input type="hidden" id="newsEditId" />

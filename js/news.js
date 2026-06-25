@@ -3,12 +3,13 @@
 // Глобальная функция открытия новости (доступна сразу)
 window.openNews = function(id) {
   const newsList = DB.get('pl_news');
-  const n = newsList.find(x => x.id === id);
+  // Строковое сравнение id
+  const n = newsList.find(x => String(x.id) === String(id));
   if (!n) return;
   
   const catLabels = { general: 'Общее', tournament: 'Турниры', teams: 'Команды', players: 'Игроки' };
   const d = new Date(n.createdAt || n.date);
-  const dateStr = d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  const dateStr = isNaN(d) ? '' : d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
   
   const modal = document.getElementById('newsModal');
   const content = document.getElementById('newsModalContent');
@@ -19,9 +20,9 @@ window.openNews = function(id) {
     <div style="display:inline-block;margin-bottom:12px" class="news-cat cat-${n.category}">${catLabels[n.category] || n.category}</div>
     <h2 class="modal-news-title">${n.title}</h2>
     <div class="modal-news-meta">
-      <span><i class="fas fa-calendar"></i> ${dateStr}</span>
+      ${dateStr ? `<span><i class="fas fa-calendar"></i> ${dateStr}</span>` : ''}
     </div>
-    <div class="modal-news-body">${n.content || ''}</div>`;
+    <div class="modal-news-body">${n.content || n.excerpt || 'Текст новости не указан'}</div>`;
   modal.classList.add('active');
 };
 
@@ -70,15 +71,16 @@ document.addEventListener('DOMContentLoaded', () => {
         ? `<img src="${n.image}" alt="${n.title}" />`
         : `<i class="fas fa-newspaper news-no-img"></i>`;
       const d = new Date(n.createdAt || n.date);
-      const dateStr = d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+      const dateStr = isNaN(d) ? '' : d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+      const safeId = String(n.id).replace(/'/g, "\\'");
       return `
-        <div class="news-card" data-id="${n.id}" onclick="openNews(${n.id})">
+        <div class="news-card" data-id="${n.id}" onclick="openNews('${safeId}')">
           <div class="news-card-img">
             ${img}
             <span class="news-cat cat-${n.category}">${catLabels[n.category] || n.category}</span>
           </div>
           <div class="news-card-body">
-            <div class="news-date"><i class="fas fa-calendar"></i> ${dateStr}</div>
+            ${dateStr ? `<div class="news-date"><i class="fas fa-calendar"></i> ${dateStr}</div>` : ''}
             <div class="news-title">${n.title}</div>
             <div class="news-excerpt">${n.excerpt || ''}</div>
             <span class="news-read-more">Читать далее <i class="fas fa-arrow-right"></i></span>

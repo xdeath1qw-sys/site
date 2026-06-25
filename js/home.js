@@ -270,18 +270,21 @@ function newsCard(n) {
     ? `<img src="${n.image}" alt="${n.title}" />`
     : `<i class="fas fa-newspaper news-no-img"></i>`;
   const d = new Date(n.date || n.createdAt);
-  const dateStr = d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+  const dateStr = isNaN(d) ? '' : d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+  const safeId = String(n.id).replace(/'/g, "\\'");
   return `
-    <div class="news-card" onclick="openNewsModal(${n.id})">
+    <div class="news-card" style="cursor:pointer" onclick="openNewsModal('${safeId}')">
       <div class="news-card-img">
         ${img}
         <span class="news-cat cat-${n.category}">${catLabels[n.category] || n.category}</span>
       </div>
       <div class="news-card-body">
-        <div class="news-date"><i class="fas fa-calendar"></i> ${dateStr}</div>
+        ${dateStr ? `<div class="news-date"><i class="fas fa-calendar"></i> ${dateStr}</div>` : ''}
         <div class="news-title">${n.title}</div>
         <div class="news-excerpt">${n.excerpt || ''}</div>
-        <span class="news-read-more">Читать далее <i class="fas fa-arrow-right"></i></span>
+        <span class="news-read-more" onclick="event.stopPropagation(); openNewsModal('${safeId}')">
+          Читать далее <i class="fas fa-arrow-right"></i>
+        </span>
       </div>
     </div>`;
 }
@@ -289,12 +292,13 @@ function newsCard(n) {
 // Открытие модального окна с новостью
 function openNewsModal(id) {
   const newsList = DB.get('pl_news');
-  const n = newsList.find(x => x.id === id);
+  // Ищем по строковому сравнению — MongoDB id это строки
+  const n = newsList.find(x => String(x.id) === String(id));
   if (!n) return;
   
   const catLabels = { general: 'Общее', tournament: 'Турниры', teams: 'Команды', players: 'Игроки' };
   const d = new Date(n.createdAt || n.date);
-  const dateStr = d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  const dateStr = isNaN(d) ? '' : d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
   
   // Создаём модалку если её нет
   let modal = document.getElementById('homeNewsModal');
@@ -308,14 +312,8 @@ function openNewsModal(id) {
         <div id="homeNewsModalContent"></div>
       </div>`;
     document.body.appendChild(modal);
-    
-    // Закрытие
-    document.getElementById('homeNewsModalClose').addEventListener('click', () => {
-      modal.classList.remove('active');
-    });
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) modal.classList.remove('active');
-    });
+    document.getElementById('homeNewsModalClose').addEventListener('click', () => modal.classList.remove('active'));
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
   }
   
   const content = document.getElementById('homeNewsModalContent');
@@ -324,9 +322,9 @@ function openNewsModal(id) {
     <div style="display:inline-block;margin-bottom:12px" class="news-cat cat-${n.category}">${catLabels[n.category] || n.category}</div>
     <h2 class="modal-news-title">${n.title}</h2>
     <div class="modal-news-meta">
-      <span><i class="fas fa-calendar"></i> ${dateStr}</span>
+      ${dateStr ? `<span><i class="fas fa-calendar"></i> ${dateStr}</span>` : ''}
     </div>
-    <div class="modal-news-body">${n.content || ''}</div>`;
+    <div class="modal-news-body">${n.content || n.excerpt || 'Текст новости не указан'}</div>`;
   modal.classList.add('active');
 }
 

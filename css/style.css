@@ -1410,3 +1410,28 @@ textarea { resize: vertical; min-height: 90px; }
   background: rgba(255,255,255,0.06) !important;
   color: var(--primary) !important;
 }
+
+/* ── User dropdown hover with bridge ── */
+.user-menu { position: relative !important; }
+.user-dropdown {
+  display: none !important;
+  position: absolute !important;
+  top: calc(100% + 4px) !important;
+  right: 0 !important;
+  padding-top: 8px !important;
+}
+/* Невидимый мост — заполняет зазор между аватаркой и меню */
+.user-dropdown::before {
+  content: '' !important;
+  position: absolute !important;
+  top: -8px !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 8px !important;
+}
+.user-menu:hover .user-dropdown {
+  display: flex !important;
+}
+.user-dropdown.open {
+  display: flex !important;
+}

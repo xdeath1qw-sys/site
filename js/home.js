@@ -304,8 +304,8 @@ function openNewsModal(id) {
     modal.id = 'homeNewsModal';
     modal.className = 'modal-overlay';
     modal.innerHTML = `
-      <div class="modal" onclick="event.stopPropagation()">
-        <button class="modal-close" id="homeNewsModalClose"><i class="fas fa-times"></i></button>
+      <div class="modal" style="padding:0;overflow:hidden;border-radius:18px" onclick="event.stopPropagation()">
+        <button class="modal-close" id="homeNewsModalClose" style="position:absolute;top:12px;right:12px;z-index:10;background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.12);color:#fff;width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.9rem"><i class="fas fa-times"></i></button>
         <div id="homeNewsModalContent"></div>
       </div>`;
     document.body.appendChild(modal);
@@ -315,18 +315,16 @@ function openNewsModal(id) {
   
   const content = document.getElementById('homeNewsModalContent');
   content.innerHTML = `
-    <div style="position:relative">
-      ${n.image ? `<img src="${n.image}" alt="${n.title}" class="modal-news-img" />` : `<div style="height:160px;background:var(--bg-secondary);display:flex;align-items:center;justify-content:center"><i class="fas fa-newspaper" style="font-size:3rem;color:var(--text-dim)"></i></div>`}
+    <div style="position:relative;overflow:hidden;border-radius:16px 16px 0 0">
+      ${n.image
+        ? `<img src="${n.image}" alt="${n.title}" style="width:100%;height:260px;object-fit:cover;display:block" />`
+        : `<div style="height:180px;background:linear-gradient(135deg,var(--bg-secondary),var(--bg-card));display:flex;align-items:center;justify-content:center"><i class="fas fa-newspaper" style="font-size:3rem;color:var(--text-dim)"></i></div>`}
+      <span class="news-cat cat-${n.category}" style="position:absolute;bottom:14px;left:16px">${catLabels[n.category] || n.category}</span>
     </div>
-    <div style="padding:24px 28px 28px">
-      <div style="margin-bottom:12px">
-        <span class="news-cat cat-${n.category}">${catLabels[n.category] || n.category}</span>
-      </div>
-      <h2 class="modal-news-title">${n.title}</h2>
-      <div class="modal-news-meta">
-        ${dateStr ? `<i class="fas fa-calendar-alt"></i> <span>${dateStr}</span>` : ''}
-      </div>
-      <div class="modal-news-body">${n.content || n.excerpt || 'Текст новости не указан'}</div>
+    <div style="padding:20px 22px 24px">
+      <h2 style="font-size:1.25rem;font-weight:800;line-height:1.35;margin-bottom:10px;color:var(--text)">${n.title}</h2>
+      ${dateStr ? `<div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px"><i class="fas fa-calendar-alt" style="color:var(--text-dim)"></i>${dateStr}</div>` : ''}
+      <div style="font-size:0.9rem;line-height:1.75;color:var(--text-muted)">${n.content || n.excerpt || 'Текст новости не указан'}</div>
     </div>`;
   modal.classList.add('active');
 }

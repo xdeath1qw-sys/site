@@ -1,10 +1,10 @@
-﻿// ══════════════════════════════════════════════════════════════
-//  EFL League — MongoDB Storage
-// ══════════════════════════════════════════════════════════════
+// ==============================================================
+//  EFL League � MongoDB Storage
+// ==============================================================
 
 const API_BASE = '/api/data';
 
-// ── localStorage helpers ───────────────────────────────────────
+// -- localStorage helpers ---------------------------------------
 function lsGet(key) {
   try { return JSON.parse(localStorage.getItem(key)); } catch { return null; }
 }
@@ -13,8 +13,8 @@ function lsSet(key, val) {
   try {
     localStorage.setItem(key, JSON.stringify(val));
   } catch(e) {
-    // localStorage переполнен — чистим и пробуем снова
-    console.warn('[DB] ⚠️ localStorage full, clearing...');
+    // localStorage ���������� � ������ � ������� �����
+    console.warn('[DB] ?? localStorage full, clearing...');
     try {
       ['pl_highlights','pl_awards','pl_notifications','pl_invites'].forEach(k => localStorage.removeItem(k));
       localStorage.setItem(key, JSON.stringify(val));
@@ -27,15 +27,15 @@ function lsSet(key, val) {
   }
 }
 
-// ── Проверка что значение это URL, а не base64 (legacy) ──────
+// -- �������� ��� �������� ��� URL, � �� base64 (legacy) ------
 function stripBase64(val) {
   if (!val) return '';
-  // Если осталась старая base64 строка — отбрасываем, работаем только с URL
+  // ���� �������� ������ base64 ������ � �����������, �������� ������ � URL
   if (val.startsWith('data:')) return '';
   return val;
 }
 
-// ── API запрос к MongoDB ───────────────────────────────────────
+// -- API ������ � MongoDB ---------------------------------------
 async function apiFetch(col, options = {}) {
   const { method = 'GET', id = null, body = null } = options;
   let url = `${API_BASE}?col=${col}`;
@@ -55,7 +55,7 @@ async function apiFetch(col, options = {}) {
   return text ? JSON.parse(text) : [];
 }
 
-// ── Конвертеры: MongoDB → localStorage ───────────────────────
+// -- ����������: MongoDB > localStorage -----------------------
 
 function userFromMG(u) {
   return {
@@ -180,7 +180,7 @@ function vetoFromMG(v) {
   };
 }
 
-// ── Конвертеры: localStorage → MongoDB ───────────────────────
+// -- ����������: localStorage > MongoDB -----------------------
 
 function userToMG(u) {
   return {
@@ -247,7 +247,7 @@ function vetoToMG(v) {
   };
 }
 
-// ── Awards конвертеры ─────────────────────────────────────────
+// -- Awards ���������� -----------------------------------------
 function awardFromMG(a) {
   return {
     id:        a.id || a._id?.toString(),
@@ -273,7 +273,7 @@ function awardToMG(a) {
   };
 }
 
-// ── Карта коллекций ────────────────────────────────────────────
+// -- ����� ��������� --------------------------------------------
 const colMap = {
   pl_users:       { col: 'users',       fromMG: userFromMG,   toMG: userToMG   },
   pl_players:     { col: 'players',     fromMG: playerFromMG, toMG: playerToMG },
@@ -285,13 +285,13 @@ const colMap = {
   pl_awards:      { col: 'awards',      fromMG: awardFromMG,  toMG: awardToMG  }
 };
 
-// ── DB Ready ───────────────────────────────────────────────────
+// -- DB Ready ---------------------------------------------------
 let _dbReady = false;
 window._dbReady = false;
 
-// ── Загрузка данных из MongoDB ─────────────────────────────────
+// -- �������� ������ �� MongoDB ---------------------------------
 window._syncFromJSONBin = async function() {
-  console.log('[DB] 🔄 Загрузка из MongoDB...');
+  console.log('[DB] ?? �������� �� MongoDB...');
 
   try {
     const [users, players, teams] = await Promise.all([
@@ -307,12 +307,12 @@ window._syncFromJSONBin = async function() {
     _dbReady = true;
     window._dbReady = true;
 
-    console.log(`[DB] ✅ Загружено: ${users.length} users, ${players.length} players`);
+    console.log(`[DB] ? ���������: ${users.length} users, ${players.length} players`);
 
     if (window._afterSync) { window._afterSync(); window._afterSync = null; }
     window.dispatchEvent(new CustomEvent('db-updated'));
 
-    // Медленный синк в фоне
+    // ��������� ���� � ����
     Promise.all([
       apiFetch('news'),
       apiFetch('tournaments'),
@@ -330,10 +330,10 @@ window._syncFromJSONBin = async function() {
       if (!lsGet('pl_highlights'))    lsSet('pl_highlights', []);
       if (!lsGet('pl_tourn_regs'))    lsSet('pl_tourn_regs', {});
       window.dispatchEvent(new CustomEvent('db-updated'));
-    }).catch(e => console.warn('[DB] ⚠️ Медленный синк:', e.message));
+    }).catch(e => console.warn('[DB] ?? ��������� ����:', e.message));
 
   } catch(e) {
-    console.error('[DB] ❌ Ошибка MongoDB:', e.message);
+    console.error('[DB] ? ������ MongoDB:', e.message);
     _dbReady = true;
     window._dbReady = true;
     if (window._afterSync) { window._afterSync(); window._afterSync = null; }
@@ -342,7 +342,7 @@ window._syncFromJSONBin = async function() {
 
 window._syncFromJSONBin();
 
-// ── whenDbReady ────────────────────────────────────────────────
+// -- whenDbReady ------------------------------------------------
 window.whenDbReady = function(fn) {
   if (window._dbReady) { fn(); return; }
   const check = setInterval(() => {
@@ -350,7 +350,7 @@ window.whenDbReady = function(fn) {
   }, 100);
 };
 
-// ── DB объект ─────────────────────────────────────────────────
+// -- DB ������ -------------------------------------------------
 const DB = {
   get(key) {
     const v = lsGet(key);
@@ -383,10 +383,10 @@ const DB = {
       const arr = lsGet(lsKey) || [];
       arr.push(converted);
       lsSet(lsKey, arr);
-      console.log(`[DB] ✅ ${cfg.col}: вставлено id=${converted.id}`);
+      console.log(`[DB] ? ${cfg.col}: ��������� id=${converted.id}`);
       return converted;
     } catch(e) {
-      console.warn(`[DB] ⚠️ insert ${lsKey}:`, e.message);
+      console.warn(`[DB] ?? insert ${lsKey}:`, e.message);
       const arr = lsGet(lsKey) || [];
       arr.push(item);
       lsSet(lsKey, arr);
@@ -397,7 +397,7 @@ const DB = {
   async update(lsKey, id, changes) {
     const cfg = colMap[lsKey];
     const arr = lsGet(lsKey) || [];
-    // Сравниваем id как строки — MongoDB возвращает строки, localStorage может хранить числа
+    // ���������� id ��� ������ � MongoDB ���������� ������, localStorage ����� ������� �����
     const idx = arr.findIndex(x => String(x.id) === String(id));
     if (idx !== -1) {
       arr[idx] = { ...arr[idx], ...changes };
@@ -405,13 +405,13 @@ const DB = {
     }
     if (!cfg || !id) return;
     try {
-      // Берём полный объект если нашли, иначе только changes
+      // ���� ������ ������ ���� �����, ����� ������ changes
       const item = idx !== -1 ? arr[idx] : changes;
       const data = cfg.toMG(item);
       await apiFetch(cfg.col, { method: 'PUT', id: String(id), body: data });
-      console.log(`[DB] ✅ ${cfg.col}: обновлено id=${id}`);
+      console.log(`[DB] ? ${cfg.col}: ��������� id=${id}`);
     } catch(e) {
-      console.warn(`[DB] ⚠️ update ${lsKey}:`, e.message);
+      console.warn(`[DB] ?? update ${lsKey}:`, e.message);
     }
   },
 
@@ -422,14 +422,14 @@ const DB = {
     if (!cfg || !id) return;
     try {
       await apiFetch(cfg.col, { method: 'DELETE', id: String(id) });
-      console.log(`[DB] 🗑️ ${cfg.col}: удалено id=${id}`);
+      console.log(`[DB] ??? ${cfg.col}: ������� id=${id}`);
     } catch(e) {
-      console.warn(`[DB] ⚠️ remove ${lsKey}:`, e.message);
+      console.warn(`[DB] ?? remove ${lsKey}:`, e.message);
     }
   }
 };
 
-// ── Синк в MongoDB при изменениях через DB.set ────────────────
+// -- ���� � MongoDB ��� ���������� ����� DB.set ----------------
 async function _pushToMongo(key, val) {
   const cfg = colMap[key];
   if (!cfg || !Array.isArray(val)) return;
@@ -440,14 +440,14 @@ async function _pushToMongo(key, val) {
       const data = cfg.toMG(item);
       await apiFetch(cfg.col, { method: 'PUT', id: String(item.id), body: data });
     } catch(e) {
-      // тихая ошибка — не блокируем UI
+      // ����� ������ � �� ��������� UI
     }
   }
 }
 
-// ── _afterSync ─────────────────────────────────────────────────
+// -- _afterSync -------------------------------------------------
 window._afterSync = function() {
-  console.log('[DB] ✅ БД готова');
+  console.log('[DB] ? �� ������');
 
   const currentSession = Auth.current();
   if (currentSession) {
@@ -462,7 +462,7 @@ window._afterSync = function() {
     }
   }
 
-  // Синк каждые 3 минуты
+  // ���� ������ 3 ������
   setInterval(async () => {
     try {
       const [users, players, teams] = await Promise.all([
@@ -474,16 +474,16 @@ window._afterSync = function() {
       lsSet('pl_players', players.map(playerFromMG));
       lsSet('pl_teams',   teams.map(teamFromMG));
       window.dispatchEvent(new CustomEvent('db-updated'));
-    } catch(e) { /* тихая ошибка */ }
+    } catch(e) { /* ����� ������ */ }
   }, 180000);
 };
 
-// Заглушки
+// ��������
 window.showSyncIndicator = function() {};
 window.hideSyncIndicator = function() {};
 window.startAutoSync = function() {};
 
-// ── seedData ───────────────────────────────────────────────────
+// -- seedData ---------------------------------------------------
 function seedData() {
   if (!lsGet('pl_invites'))       lsSet('pl_invites', []);
   if (!lsGet('pl_notifications')) lsSet('pl_notifications', []);

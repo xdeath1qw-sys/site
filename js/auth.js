@@ -1,8 +1,8 @@
-п»ї// в”Ђв”Ђ Auth helpers в”Ђв”Ђ
+// -- Auth helpers --
 const Auth = {
   current() {
     try {
-      // РџСЂРѕРІРµСЂСЏРµРј localStorage (СЂР°Р±РѕС‚Р°РµС‚ РјРµР¶РґСѓ РІРєР»Р°РґРєР°РјРё)
+      // Проверяем localStorage (работает между вкладками)
       const data = localStorage.getItem('pl_current');
       return data ? JSON.parse(data) : null;
     }
@@ -32,23 +32,23 @@ const Auth = {
     if (userMenu) {
       userMenu.style.display = 'flex';
 
-      // в”Ђв”Ђ РљРѕР»РѕРєРѕР»СЊС‡РёРє вЂ” РІСЃС‚Р°РІР»СЏРµРј РџР•Р Р•Р” userMenu, РЅРµ РІРЅСѓС‚СЂРё в”Ђв”Ђ
+      // -- Колокольчик — вставляем ПЕРЕД userMenu, не внутри --
       const bell = document.createElement('div');
       bell.id = 'navBell';
       bell.className = 'nav-bell';
       bell.innerHTML = `<i class="fas fa-bell"></i><span class="nav-bell-badge" id="navBellBadge" style="display:none"></span>`;
-      bell.title = 'РЈРІРµРґРѕРјР»РµРЅРёСЏ';
+      bell.title = 'Уведомления';
 
       const dropdown = document.createElement('div');
       dropdown.className = 'nav-bell-dropdown';
       dropdown.id = 'navBellDropdown';
-      dropdown.innerHTML = `<div class="nav-bell-title"><i class="fas fa-bell"></i> РџСЂРёРіР»Р°С€РµРЅРёСЏ</div><div id="navBellList"></div>`;
+      dropdown.innerHTML = `<div class="nav-bell-title"><i class="fas fa-bell"></i> Приглашения</div><div id="navBellList"></div>`;
       bell.appendChild(dropdown);
 
-      // Р’СЃС‚Р°РІР»СЏРµРј РєРѕР»РѕРєРѕР»СЊС‡РёРє РїРµСЂРµРґ userMenu (СЃРЅР°СЂСѓР¶Рё РѕС‚ РЅРµРіРѕ)
+      // Вставляем колокольчик перед userMenu (снаружи от него)
       userMenu.parentNode.insertBefore(bell, userMenu);
 
-      // РћС‚РєСЂС‹С‚РёРµ/Р·Р°РєСЂС‹С‚РёРµ вЂ” С‚РѕР»СЊРєРѕ РєР»РёРє РЅР° РєРѕР»РѕРєРѕР»СЊС‡РёРє
+      // Открытие/закрытие — только клик на колокольчик
       bell.addEventListener('click', (e) => {
         e.stopPropagation();
         const isOpen = dropdown.classList.contains('open');
@@ -110,7 +110,7 @@ const Auth = {
   }
 })();
 
-// в”Ђв”Ђ РџРѕРґСЃС‡С‘С‚ Рё РїРѕРєР°Р· Р±РµР№РґР¶Р° РЅР° РєРѕР»РѕРєРѕР»СЊС‡РёРєРµ в”Ђв”Ђ
+// -- Подсчёт и показ бейджа на колокольчике --
 function updateBellBadge(user) {
   const badge = document.getElementById('navBellBadge');
   if (!badge) return;
@@ -127,7 +127,7 @@ function getPendingInvitesCount(user) {
     )
   ).length;
 
-  // Р”РѕР±Р°РІР»СЏРµРј РЅРµРїСЂРѕС‡РёС‚Р°РЅРЅС‹Рµ СѓРІРµРґРѕРјР»РµРЅРёСЏ Рѕ РјР°С‚С‡Р°С…
+  // Добавляем непрочитанные уведомления о матчах
   const notifications = (DB.get('pl_notifications') || []).filter(n =>
     n.userId === user.id && !n.read
   ).length;
@@ -135,7 +135,7 @@ function getPendingInvitesCount(user) {
   return invites + notifications;
 }
 
-// в”Ђв”Ђ Р РµРЅРґРµСЂ РїСЂРёРіР»Р°С€РµРЅРёР№ РІ РґСЂРѕРїРґР°СѓРЅРµ РєРѕР»РѕРєРѕР»СЊС‡РёРєР° в”Ђв”Ђ
+// -- Рендер приглашений в дропдауне колокольчика --
 function renderBellInvites(user, dropdown) {
   const list = document.getElementById('navBellList');
   if (!list) return;
@@ -147,7 +147,7 @@ function renderBellInvites(user, dropdown) {
     )
   );
 
-  // РџРѕР»СѓС‡Р°РµРј СѓРІРµРґРѕРјР»РµРЅРёСЏ Рѕ РјР°С‚С‡Р°С…
+  // Получаем уведомления о матчах
   const matchNotifications = (DB.get('pl_notifications') || []).filter(n =>
     n.userId === user.id && !n.read
   ).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -155,16 +155,16 @@ function renderBellInvites(user, dropdown) {
   const hasItems = invites.length > 0 || matchNotifications.length > 0;
 
   if (!hasItems) {
-    list.innerHTML = `<div class="nav-bell-empty"><i class="fas fa-inbox"></i> РќРµС‚ СѓРІРµРґРѕРјР»РµРЅРёР№</div>`;
+    list.innerHTML = `<div class="nav-bell-empty"><i class="fas fa-inbox"></i> Нет уведомлений</div>`;
     return;
   }
 
   let html = '';
 
-  // РЈРІРµРґРѕРјР»РµРЅРёСЏ Рѕ РјР°С‚С‡Р°С…
+  // Уведомления о матчах
   if (matchNotifications.length > 0) {
     html += matchNotifications.map(notif => {
-      const icon = notif.type === 'match_urgent' ? 'рџљЁ' : notif.type === 'password_reset' ? 'рџ”‘' : 'вљ пёЏ';
+      const icon = notif.type === 'match_urgent' ? '??' : notif.type === 'password_reset' ? '??' : '??';
       const timeAgo = getTimeAgo(new Date(notif.createdAt));
       return `
         <div class="nav-bell-item ${notif.type === 'match_urgent' ? 'nav-bell-urgent' : notif.type === 'password_reset' ? 'nav-bell-password' : ''}">
@@ -175,23 +175,23 @@ function renderBellInvites(user, dropdown) {
             <div class="nav-bell-item-meta" style="font-size:0.65rem;opacity:0.7">${timeAgo}</div>
           </div>
           <div class="nav-bell-item-btns">
-            <button class="nav-bell-dismiss" data-id="${notif.id}" title="РћС‚РјРµС‚РёС‚СЊ РєР°Рє РїСЂРѕС‡РёС‚Р°РЅРЅРѕРµ"><i class="fas fa-check"></i></button>
+            <button class="nav-bell-dismiss" data-id="${notif.id}" title="Отметить как прочитанное"><i class="fas fa-check"></i></button>
           </div>
         </div>
       `;
     }).join('');
   }
 
-  // РџСЂРёРіР»Р°С€РµРЅРёСЏ РІ РєРѕРјР°РЅРґСѓ
+  // Приглашения в команду
   if (invites.length > 0) {
     if (matchNotifications.length > 0) {
-      html += `<div class="nav-bell-divider">РџСЂРёРіР»Р°С€РµРЅРёСЏ РІ РєРѕРјР°РЅРґСѓ</div>`;
+      html += `<div class="nav-bell-divider">Приглашения в команду</div>`;
     }
     html += invites.map(inv => `
       <div class="nav-bell-item">
         <div class="nav-bell-item-info">
           <div class="nav-bell-item-team"><i class="fas fa-shield-halved"></i> <strong>${inv.teamName}</strong></div>
-          <div class="nav-bell-item-meta">РѕС‚ ${inv.captainNick}</div>
+          <div class="nav-bell-item-meta">от ${inv.captainNick}</div>
         </div>
         <div class="nav-bell-item-btns">
           <button class="nav-bell-accept" data-id="${inv.id}" data-team="${inv.teamName}"><i class="fas fa-check"></i></button>
@@ -203,7 +203,7 @@ function renderBellInvites(user, dropdown) {
 
   list.innerHTML = html;
 
-  // РћС‚РјРµС‚РёС‚СЊ СѓРІРµРґРѕРјР»РµРЅРёРµ Рѕ РјР°С‚С‡Рµ РєР°Рє РїСЂРѕС‡РёС‚Р°РЅРЅРѕРµ
+  // Отметить уведомление о матче как прочитанное
   list.querySelectorAll('.nav-bell-dismiss').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -219,7 +219,7 @@ function renderBellInvites(user, dropdown) {
     });
   });
 
-  // РџСЂРёРЅСЏС‚СЊ РїСЂРёРіР»Р°С€РµРЅРёРµ
+  // Принять приглашение
   list.querySelectorAll('.nav-bell-accept').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -230,12 +230,12 @@ function renderBellInvites(user, dropdown) {
       const idx = all.findIndex(i => i.id === invId);
       if (idx !== -1) { all[idx].status = 'accepted'; DB.set('pl_invites', all); }
 
-      // РћР±РЅРѕРІР»СЏРµРј РёРіСЂРѕРєР° РІ Р±Р°Р·Рµ РїРѕ РЅРёРєСѓ
+      // Обновляем игрока в базе по нику
       const players = DB.get('pl_players');
       const pi = players.findIndex(p => p.nick.toLowerCase() === user.username.toLowerCase());
       if (pi !== -1) { players[pi].team = teamName; DB.set('pl_players', players); }
 
-      // РЎРѕС…СЂР°РЅСЏРµРј РєРѕРјР°РЅРґСѓ РІ РґР°РЅРЅС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+      // Сохраняем команду в данных пользователя
       const users = DB.get('pl_users');
       const ui = users.findIndex(u => u.id === user.id);
       if (ui !== -1) {
@@ -245,13 +245,13 @@ function renderBellInvites(user, dropdown) {
         Auth.login(safe);
       }
 
-      showToast(`Р’С‹ РІСЃС‚СѓРїРёР»Рё РІ РєРѕРјР°РЅРґСѓ ${teamName}!`, 'success');
+      showToast(`Вы вступили в команду ${teamName}!`, 'success');
       updateBellBadge(user);
       renderBellInvites(user, dropdown);
     });
   });
 
-  // РћС‚РєР»РѕРЅРёС‚СЊ РїСЂРёРіР»Р°С€РµРЅРёРµ
+  // Отклонить приглашение
   list.querySelectorAll('.nav-bell-decline').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -259,23 +259,23 @@ function renderBellInvites(user, dropdown) {
       const all = DB.get('pl_invites');
       const idx = all.findIndex(i => i.id === invId);
       if (idx !== -1) { all[idx].status = 'declined'; DB.set('pl_invites', all); }
-      showToast('РџСЂРёРіР»Р°С€РµРЅРёРµ РѕС‚РєР»РѕРЅРµРЅРѕ');
+      showToast('Приглашение отклонено');
       updateBellBadge(user);
       renderBellInvites(user, dropdown);
     });
   });
 }
 
-// Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅР°СЏ С„СѓРЅРєС†РёСЏ РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РІСЂРµРјРµРЅРё
+// Вспомогательная функция для отображения времени
 function getTimeAgo(date) {
   const seconds = Math.floor((new Date() - date) / 1000);
-  if (seconds < 60) return 'С‚РѕР»СЊРєРѕ С‡С‚Рѕ';
+  if (seconds < 60) return 'только что';
   const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes} РјРёРЅ РЅР°Р·Р°Рґ`;
+  if (minutes < 60) return `${minutes} мин назад`;
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours} С‡ РЅР°Р·Р°Рґ`;
+  if (hours < 24) return `${hours} ч назад`;
   const days = Math.floor(hours / 24);
-  return `${days} Рґ РЅР°Р·Р°Рґ`;
+  return `${days} д назад`;
 }
 
 // Toast notification
@@ -290,23 +290,23 @@ function showToast(msg, type = 'success') {
   setTimeout(() => toast.remove(), 3500);
 }
 
-// в”Ђв”Ђ Р”РёРЅР°РјРёС‡РµСЃРєРёР№ С„СѓС‚РµСЂ вЂ” Р±Р»РѕРє "РђРєРєР°СѓРЅС‚" в”Ђв”Ђ
+// -- Динамический футер — блок "Аккаунт" --
 (function () {
   const user = Auth.current();
 
-  // РС‰РµРј Р±Р»РѕРє "РђРєРєР°СѓРЅС‚" РІ С„СѓС‚РµСЂРµ РїРѕ Р·Р°РіРѕР»РѕРІРєСѓ h4
+  // Ищем блок "Аккаунт" в футере по заголовку h4
   document.querySelectorAll('.footer-links').forEach(block => {
     const h4 = block.querySelector('h4');
-    if (!h4 || h4.textContent.trim() !== 'РђРєРєР°СѓРЅС‚') return;
+    if (!h4 || h4.textContent.trim() !== 'Аккаунт') return;
 
     const ul = block.querySelector('ul');
     if (!ul) return;
 
     if (user) {
-      // Р—Р°Р»РѕРіРёРЅРµРЅ вЂ” РїРѕРєР°Р·С‹РІР°РµРј РџСЂРѕС„РёР»СЊ Рё Р’С‹Р№С‚Рё
+      // Залогинен — показываем Профиль и Выйти
       ul.innerHTML = `
-        <li><a href="profile.html">РџСЂРѕС„РёР»СЊ</a></li>
-        <li><a href="#" id="footerLogoutBtn">Р’С‹Р№С‚Рё</a></li>`;
+        <li><a href="profile.html">Профиль</a></li>
+        <li><a href="#" id="footerLogoutBtn">Выйти</a></li>`;
       const logoutBtn = ul.querySelector('#footerLogoutBtn');
       if (logoutBtn) {
         logoutBtn.addEventListener('click', (e) => {
@@ -316,10 +316,10 @@ function showToast(msg, type = 'success') {
         });
       }
     } else {
-      // РќРµ Р·Р°Р»РѕРіРёРЅРµРЅ вЂ” РїРѕРєР°Р·С‹РІР°РµРј Р’РѕР№С‚Рё Рё Р РµРіРёСЃС‚СЂР°С†РёСЏ
+      // Не залогинен — показываем Войти и Регистрация
       ul.innerHTML = `
-        <li><a href="login.html">Р’РѕР№С‚Рё</a></li>
-        <li><a href="register.html">Р РµРіРёСЃС‚СЂР°С†РёСЏ</a></li>`;
+        <li><a href="login.html">Войти</a></li>
+        <li><a href="register.html">Регистрация</a></li>`;
     }
   });
 })();

@@ -1,4 +1,4 @@
-п»ї// в”Ђв”Ђ Admin Panel в”Ђв”Ђ
+// -- Admin Panel --
 document.addEventListener('DOMContentLoaded', () => {
   // Access control
   const user = Auth.current();
@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.innerHTML = `
       <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);flex-direction:column;gap:20px;padding:20px;text-align:center">
         <i class="fas fa-lock" style="font-size:4rem;color:var(--danger)"></i>
-        <h2 style="color:var(--text)">Р”РѕСЃС‚СѓРї Р·Р°РїСЂРµС‰С‘РЅ</h2>
-        <p style="color:var(--text-muted)">Р­С‚Р° СЃС‚СЂР°РЅРёС†Р° С‚РѕР»СЊРєРѕ РґР»СЏ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂРѕРІ</p>
-        <a href="login.html" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Р’РѕР№С‚Рё</a>
+        <h2 style="color:var(--text)">Доступ запрещён</h2>
+        <p style="color:var(--text-muted)">Эта страница только для администраторов</p>
+        <a href="login.html" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Войти</a>
       </div>`;
     return;
   }
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // в”Ђв”Ђ РџРµСЂРµРјРµРЅРЅС‹Рµ СЃРѕСЃС‚РѕСЏРЅРёСЏ (РѕР±СЉСЏРІР»СЏРµРј РґРѕ Р»СЋР±С‹С… СЂРµРЅРґРµСЂРѕРІ) в”Ђв”Ђ
+  // -- Переменные состояния (объявляем до любых рендеров) --
   let _usersSearchQuery = '';
 
   whenDbReady(() => {
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderTournamentsTable();
   });
 
-  // РџРµСЂРµСЂРµРЅРґРµСЂРёРј РєРѕРіРґР° Supabase РІРµСЂРЅСѓР» СЃРІРµР¶РёРµ РґР°РЅРЅС‹Рµ
+  // Перерендерим когда Supabase вернул свежие данные
   window.addEventListener('db-updated', () => {
     updateDashboard();
     renderTeamsTable();
@@ -46,33 +46,33 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('deleteAllUsersBtn').addEventListener('click', async () => {
-    if (!confirm('РЈРґР°Р»РёС‚СЊ Р’РЎР•РҐ РёРіСЂРѕРєРѕРІ (РєСЂРѕРјРµ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂРѕРІ)?\n\nР­С‚Рѕ РґРµР№СЃС‚РІРёРµ РЅРµР»СЊР·СЏ РѕС‚РјРµРЅРёС‚СЊ!')) return;
+    if (!confirm('Удалить ВСЕХ игроков (кроме администраторов)?\n\nЭто действие нельзя отменить!')) return;
 
     const btn = document.getElementById('deleteAllUsersBtn');
     btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> РЈРґР°Р»РµРЅРёРµ...';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Удаление...';
 
     const users = DB.get('pl_users');
     const toDelete = users.filter(u => u.role !== 'admin');
 
-    // РЈРґР°Р»СЏРµРј РёР· MongoDB С‡РµСЂРµР· API
+    // Удаляем из MongoDB через API
     for (const u of toDelete) {
       if (!u.id) continue;
       try {
         await apiFetch('players', { method: 'DELETE', id: u.id });
-      } catch(e) { console.warn('[ADMIN] вљ пёЏ РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ РёРіСЂРѕРєР°:', e.message); }
+      } catch(e) { console.warn('[ADMIN] ?? Ошибка удаления игрока:', e.message); }
       try {
         await apiFetch('users', { method: 'DELETE', id: u.id });
-      } catch(e) { console.warn('[ADMIN] вљ пёЏ РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ:', e.message); }
+      } catch(e) { console.warn('[ADMIN] ?? Ошибка удаления пользователя:', e.message); }
     }
 
-    // РћСЃС‚Р°РІР»СЏРµРј С‚РѕР»СЊРєРѕ Р°РґРјРёРЅРѕРІ РІ localStorage
+    // Оставляем только админов в localStorage
     const admins = users.filter(u => u.role === 'admin');
     lsSet('pl_users', admins);
     lsSet('pl_players', []);
 
-    // РЎР±СЂР°СЃС‹РІР°РµРј РљР” Сѓ РєРѕРјР°РЅРґ (СѓРґР°Р»СЏРµРј РІСЃРµ РєРѕРјР°РЅРґС‹ С‚РѕР¶Рµ вЂ” РѕРЅРё Р±РµР· РёРіСЂРѕРєРѕРІ)
-    // РЎРЅРёРјР°РµРј teamDeletedAt Сѓ РІСЃРµС… РѕСЃС‚Р°РІС€РёС…СЃСЏ
+    // Сбрасываем КД у команд (удаляем все команды тоже — они без игроков)
+    // Снимаем teamDeletedAt у всех оставшихся
     const cleanAdmins = admins.map(u => ({ ...u, teamDeletedAt: null, teamId: null, team: '' }));
     lsSet('pl_users', cleanAdmins);
 
@@ -80,19 +80,19 @@ document.addEventListener('DOMContentLoaded', () => {
     updateDashboard();
 
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-trash-alt"></i> РЈРґР°Р»РёС‚СЊ РІСЃРµС…';
-    showToast('Р’СЃРµ РёРіСЂРѕРєРё СѓРґР°Р»РµРЅС‹', 'error');
+    btn.innerHTML = '<i class="fas fa-trash-alt"></i> Удалить всех';
+    showToast('Все игроки удалены', 'error');
   });
 
-  // в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ----------------------------------
   // TEAMS
-  // в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ----------------------------------
   let teamLogoData = '';
   let editingTeamId = null;
 
   document.getElementById('addTeamBtn').addEventListener('click', () => {
     editingTeamId = null;
-    document.getElementById('teamFormTitle').textContent = 'Р”РѕР±Р°РІРёС‚СЊ РєРѕРјР°РЅРґСѓ';
+    document.getElementById('teamFormTitle').textContent = 'Добавить команду';
     clearTeamForm();
     toggleForm('teamForm', true);
   });
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const wins        = parseInt(document.getElementById('teamWins').value) || 0;
     const losses      = parseInt(document.getElementById('teamLosses').value) || 0;
 
-    if (!name) { showToast('Р’РІРµРґРёС‚Рµ РЅР°Р·РІР°РЅРёРµ РєРѕРјР°РЅРґС‹', 'error'); return; }
+    if (!name) { showToast('Введите название команды', 'error'); return; }
 
     const btn = document.getElementById('saveTeamBtn');
     btn.disabled = true;
@@ -119,11 +119,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const changes = { name, tier, country, rating, description, matches, wins, losses };
       if (teamLogoData) changes.logo = teamLogoData;
       await DB.update('pl_teams', editingTeamId, changes);
-      showToast('РљРѕРјР°РЅРґР° РѕР±РЅРѕРІР»РµРЅР°');
+      showToast('Команда обновлена');
     } else {
       const newTeam = { name, tier, country, rating, description, logo: teamLogoData, matches, wins, losses, createdAt: new Date().toISOString() };
       await DB.insert('pl_teams', newTeam);
-      showToast('РљРѕРјР°РЅРґР° РґРѕР±Р°РІР»РµРЅР°');
+      showToast('Команда добавлена');
     }
 
     btn.disabled = false;
@@ -145,13 +145,13 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderTeamsTable() {
     const tbody = document.getElementById('teamsTableBody');
     const teams = DB.get('pl_teams');
-    if (!teams.length) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-dim);padding:30px">РќРµС‚ РєРѕРјР°РЅРґ</td></tr>`; return; }
+    if (!teams.length) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-dim);padding:30px">Нет команд</td></tr>`; return; }
     tbody.innerHTML = teams.map(t => `
       <tr>
         <td>${t.logo ? `<img src="${t.logo}" class="admin-table-logo" alt="" />` : `<div class="admin-table-logo-placeholder">${t.name.substring(0,2).toUpperCase()}</div>`}</td>
         <td><strong>${t.name}</strong></td>
         <td><span class="tier-badge tier-${t.tier}">Tier ${t.tier}</span></td>
-        <td>${t.country || 'вЂ”'}</td>
+        <td>${t.country || '—'}</td>
         <td>${t.rating || 0}</td>
         <td>
           <div class="action-btns">
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const t = teams.find(x => String(x.id) === String(id));
     if (!t) return;
     editingTeamId = id;
-    document.getElementById('teamFormTitle').textContent = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РєРѕРјР°РЅРґСѓ';
+    document.getElementById('teamFormTitle').textContent = 'Редактировать команду';
     document.getElementById('teamName').value        = t.name;
     document.getElementById('teamTier').value        = t.tier;
     document.getElementById('teamCountry').value     = t.country || '';
@@ -189,22 +189,22 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.deleteTeam = async (id) => {
-    if (!confirm('РЈРґР°Р»РёС‚СЊ РєРѕРјР°РЅРґСѓ?')) return;
+    if (!confirm('Удалить команду?')) return;
     await DB.remove('pl_teams', id);
     renderTeamsTable();
     updateDashboard();
-    showToast('РљРѕРјР°РЅРґР° СѓРґР°Р»РµРЅР°', 'error');
+    showToast('Команда удалена', 'error');
   };
 
-  // в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ----------------------------------
   // NEWS
-  // в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ----------------------------------
   let newsImageData = '';
   let editingNewsId = null;
 
   document.getElementById('addNewsBtn').addEventListener('click', () => {
     editingNewsId = null;
-    document.getElementById('newsFormTitle').textContent = 'Р”РѕР±Р°РІРёС‚СЊ РЅРѕРІРѕСЃС‚СЊ';
+    document.getElementById('newsFormTitle').textContent = 'Добавить новость';
     clearNewsForm();
     toggleForm('newsForm', true);
   });
@@ -215,12 +215,12 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('saveNewsBtn').addEventListener('click', async () => {
     const title = document.getElementById('newsTitle').value.trim();
     const content = document.getElementById('newsContent').value.trim();
-    if (!title || !content) { showToast('Р—Р°РїРѕР»РЅРёС‚Рµ Р·Р°РіРѕР»РѕРІРѕРє Рё С‚РµРєСЃС‚', 'error'); return; }
+    if (!title || !content) { showToast('Заполните заголовок и текст', 'error'); return; }
 
     const btn = document.getElementById('saveNewsBtn');
     btn.disabled = true;
 
-    // Р‘РµСЂС‘Рј РґР°С‚Сѓ РёР· РїРѕР»СЏ, РёР»Рё С‚РµРєСѓС‰СѓСЋ РµСЃР»Рё РЅРµ СѓРєР°Р·Р°РЅР°
+    // Берём дату из поля, или текущую если не указана
     const dateInput = document.getElementById('newsDate').value;
     const newsDate = dateInput ? new Date(dateInput).toISOString() : new Date().toISOString();
 
@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
         createdAt: newsDate
       };
       await DB.update('pl_news', editingNewsId, changes);
-      showToast('РќРѕРІРѕСЃС‚СЊ РѕР±РЅРѕРІР»РµРЅР°');
+      showToast('Новость обновлена');
     } else {
       const news = {
         title,
@@ -247,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
         createdAt: newsDate
       };
       await DB.insert('pl_news', news);
-      showToast('РќРѕРІРѕСЃС‚СЊ РѕРїСѓР±Р»РёРєРѕРІР°РЅР°');
+      showToast('Новость опубликована');
     }
 
     btn.disabled = false;
@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function clearNewsForm() {
     ['newsTitle','newsExcerpt','newsContent'].forEach(id => { document.getElementById(id).value = ''; });
     document.getElementById('newsCategory').value = 'general';
-    // РЎС‚Р°РІРёРј С‚РµРєСѓС‰СѓСЋ РґР°С‚Сѓ/РІСЂРµРјСЏ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
+    // Ставим текущую дату/время по умолчанию
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
     document.getElementById('newsDate').value = now.toISOString().slice(0, 16);
@@ -269,9 +269,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderNewsTable() {
     const tbody = document.getElementById('newsTableBody');
-    const catLabels = { general: 'РћР±С‰РµРµ', tournament: 'РўСѓСЂРЅРёСЂС‹', teams: 'РљРѕРјР°РЅРґС‹', players: 'РРіСЂРѕРєРё' };
+    const catLabels = { general: 'Общее', tournament: 'Турниры', teams: 'Команды', players: 'Игроки' };
     const newsList = DB.get('pl_news').slice().reverse();
-    if (!newsList.length) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text-dim);padding:30px">РќРµС‚ РЅРѕРІРѕСЃС‚РµР№</td></tr>`; return; }
+    if (!newsList.length) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text-dim);padding:30px">Нет новостей</td></tr>`; return; }
     tbody.innerHTML = newsList.map(n => {
       const d = new Date(n.createdAt || n.date).toLocaleDateString('ru-RU');
       return `
@@ -295,12 +295,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const n = newsList.find(x => String(x.id) === String(id));
     if (!n) return;
     editingNewsId = id;
-    document.getElementById('newsFormTitle').textContent = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РЅРѕРІРѕСЃС‚СЊ';
+    document.getElementById('newsFormTitle').textContent = 'Редактировать новость';
     document.getElementById('newsTitle').value = n.title;
     document.getElementById('newsExcerpt').value = n.excerpt || '';
     document.getElementById('newsContent').value = n.content || '';
     document.getElementById('newsCategory').value = n.category || 'general';
-    // РџРѕРґСЃС‚Р°РІР»СЏРµРј РґР°С‚Сѓ
+    // Подставляем дату
     const d = new Date(n.createdAt || n.date);
     if (!isNaN(d)) {
       d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
@@ -323,18 +323,18 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.deleteNews = async (id) => {
-    if (!confirm('РЈРґР°Р»РёС‚СЊ РЅРѕРІРѕСЃС‚СЊ?')) return;
+    if (!confirm('Удалить новость?')) return;
     await DB.remove('pl_news', id);
     renderNewsTable();
     updateDashboard();
-    showToast('РќРѕРІРѕСЃС‚СЊ СѓРґР°Р»РµРЅР°', 'error');
+    showToast('Новость удалена', 'error');
   };
 
-  // в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ----------------------------------
   // USERS
-  // в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ----------------------------------
 
-  // РџРѕРёСЃРє
+  // Поиск
   const usersSearchInput = document.getElementById('usersSearch');
   if (usersSearchInput) {
     usersSearchInput.addEventListener('input', () => {
@@ -348,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let players = DB.get('pl_players');
     const users = DB.get('pl_users');
 
-    // Р¤РёР»СЊС‚СЂР°С†РёСЏ РїРѕ РїРѕРёСЃРєСѓ
+    // Фильтрация по поиску
     if (_usersSearchQuery) {
       players = players.filter(p => {
         const user = users.find(u => String(u.id) === String(p.userId) || (u.username || '').toLowerCase() === (p.nick || '').toLowerCase());
@@ -358,7 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    if (!players.length) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-dim);padding:30px">${_usersSearchQuery ? 'РќРёС‡РµРіРѕ РЅРµ РЅР°Р№РґРµРЅРѕ' : 'РќРµС‚ РёРіСЂРѕРєРѕРІ'}</td></tr>`; return; }
+    if (!players.length) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-dim);padding:30px">${_usersSearchQuery ? 'Ничего не найдено' : 'Нет игроков'}</td></tr>`; return; }
     tbody.innerHTML = players.map((p, i) => {
       const user = users.find(u => String(u.id) === String(p.userId) || (u.username || '').toLowerCase() === (p.nick || '').toLowerCase());
       const isIgl = user?.role === 'igl';
@@ -366,8 +366,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const kd = p.stats?.kd ?? p.kd ?? null;
       const kdColor = kd !== null ? (parseFloat(kd) >= 1 ? 'var(--success)' : 'var(--danger)') : 'var(--text-dim)';
       const photo = p.photo || user?.avatar || '';
-      const email = user?.email || 'вЂ”';
-      const teamName = p.team || 'вЂ”';
+      const email = user?.email || '—';
+      const teamName = p.team || '—';
       const uid = user?.id ?? null;
       return `
       <tr>
@@ -375,30 +375,30 @@ document.addEventListener('DOMContentLoaded', () => {
         <td>
           ${photo ? `<img src="${photo}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:8px" />` : `<i class="fas fa-user-circle" style="color:var(--text-dim);margin-right:8px;font-size:1.1rem;vertical-align:middle"></i>`}
           <strong>${p.nick}</strong>
-          ${isIgl ? `<span style="font-size:0.72rem;color:var(--warning);margin-left:6px;font-weight:600">рџ‘‘ IGL</span>` : ''}
+          ${isIgl ? `<span style="font-size:0.72rem;color:var(--warning);margin-left:6px;font-weight:600">?? IGL</span>` : ''}
         </td>
         <td style="font-size:0.82rem">${email}</td>
-        <td>${teamName !== 'вЂ”' ? `<span style="color:var(--primary);font-weight:600">${teamName}</span>` : '<span style="color:var(--text-dim)">вЂ”</span>'}</td>
+        <td>${teamName !== '—' ? `<span style="color:var(--primary);font-weight:600">${teamName}</span>` : '<span style="color:var(--text-dim)">—</span>'}</td>
         <td style="white-space:nowrap">
-          <span style="font-weight:700;color:${kdColor}">${kd !== null ? parseFloat(kd).toFixed(2) : 'вЂ”'}</span>
+          <span style="font-weight:700;color:${kdColor}">${kd !== null ? parseFloat(kd).toFixed(2) : '—'}</span>
         </td>
         <td>
           <div class="action-btns">
             ${!isAdmin && uid ? `
-              <button class="btn btn-sm btn-outline" onclick="openStatsEditor('${uid}')" title="Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ K/D" style="color:var(--accent);border-color:var(--accent)"><i class="fas fa-chart-bar"></i></button>
+              <button class="btn btn-sm btn-outline" onclick="openStatsEditor('${uid}')" title="Редактировать K/D" style="color:var(--accent);border-color:var(--accent)"><i class="fas fa-chart-bar"></i></button>
               ${isIgl
-                ? `<button class="btn btn-sm btn-outline" onclick="setUserRole('${uid}', 'user')" title="РЎРЅСЏС‚СЊ IGL" style="color:var(--warning);border-color:var(--warning)"><i class="fas fa-crown"></i></button>`
-                : `<button class="btn btn-sm btn-outline" onclick="setUserRole('${uid}', 'igl')" title="РќР°Р·РЅР°С‡РёС‚СЊ IGL"><i class="fas fa-crown"></i></button>`
+                ? `<button class="btn btn-sm btn-outline" onclick="setUserRole('${uid}', 'user')" title="Снять IGL" style="color:var(--warning);border-color:var(--warning)"><i class="fas fa-crown"></i></button>`
+                : `<button class="btn btn-sm btn-outline" onclick="setUserRole('${uid}', 'igl')" title="Назначить IGL"><i class="fas fa-crown"></i></button>`
               }
               <button class="btn btn-sm btn-danger" onclick="deleteUser('${uid}')"><i class="fas fa-trash"></i></button>
-            ` : isAdmin ? '<span style="color:var(--text-dim);font-size:0.8rem">РђРґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ</span>' : '<span style="color:var(--text-dim);font-size:0.8rem">вЂ”</span>'}
+            ` : isAdmin ? '<span style="color:var(--text-dim);font-size:0.8rem">Администратор</span>' : '<span style="color:var(--text-dim);font-size:0.8rem">—</span>'}
           </div>
         </td>
       </tr>`;
     }).join('');
   }
 
-  // в”Ђв”Ђ Р РµРґР°РєС‚РѕСЂ СЃС‚Р°С‚РёСЃС‚РёРєРё РёРіСЂРѕРєР° в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // -- Редактор статистики игрока ------------------------------
   window.openStatsEditor = (userId) => {
     const users   = DB.get('pl_users');
     const players = DB.get('pl_players');
@@ -417,21 +417,21 @@ document.addEventListener('DOMContentLoaded', () => {
       <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;width:90%;max-width:320px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px">
           <h3 style="margin:0;font-size:1.05rem">
-            <i class="fas fa-chart-bar" style="color:var(--accent);margin-right:8px"></i>K/D вЂ” <span style="color:var(--primary)">${user.username}</span>
+            <i class="fas fa-chart-bar" style="color:var(--accent);margin-right:8px"></i>K/D — <span style="color:var(--primary)">${user.username}</span>
           </h3>
           <button onclick="document.getElementById('statsModal').remove()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.1rem;padding:4px"><i class="fas fa-times"></i></button>
         </div>
         <div>
-          <label style="font-size:0.82rem;color:var(--text-muted);margin-bottom:8px;display:block">K/D РєРѕСЌС„С„РёС†РёРµРЅС‚</label>
+          <label style="font-size:0.82rem;color:var(--text-muted);margin-bottom:8px;display:block">K/D коэффициент</label>
           <input id="se_kd" type="number" step="0.01" min="0" max="99" value="${kd}"
             style="width:100%;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:1.1rem;box-sizing:border-box;font-weight:700" />
         </div>
         <div style="display:flex;gap:10px;margin-top:20px">
           <button id="se_saveBtn" class="btn btn-primary" style="flex:1" onclick="savePlayerStats('${userId}')">
-            <i class="fas fa-save"></i> РЎРѕС…СЂР°РЅРёС‚СЊ
+            <i class="fas fa-save"></i> Сохранить
           </button>
           <button class="btn btn-outline" style="flex:1" onclick="document.getElementById('statsModal').remove()">
-            <i class="fas fa-times"></i> РћС‚РјРµРЅР°
+            <i class="fas fa-times"></i> Отмена
           </button>
         </div>
       </div>`;
@@ -446,7 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const btn = document.getElementById('se_saveBtn');
     btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> РЎРѕС…СЂР°РЅСЏРµРј...';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Сохраняем...';
 
     const users   = DB.get('pl_users');
     const user    = users.find(u => String(u.id) === String(userId));
@@ -465,19 +465,19 @@ document.addEventListener('DOMContentLoaded', () => {
       if (pid) {
         try {
           await DB.update('pl_players', pid, { kd, stats: players[pi].stats });
-        } catch(e) { console.warn('[STATS] вљ пёЏ', e.message); }
+        } catch(e) { console.warn('[STATS] ??', e.message); }
       }
     } else {
-      showToast('РРіСЂРѕРє РЅРµ РЅР°Р№РґРµРЅ', 'error');
+      showToast('Игрок не найден', 'error');
     }
 
     document.getElementById('statsModal')?.remove();
     renderUsersTable();
-    showToast(`K/D ${user?.username} СЃРѕС…СЂР°РЅС‘РЅ`);
+    showToast(`K/D ${user?.username} сохранён`);
   };
 
   window.setUserRole = async (id, role) => {
-    const label = role === 'igl' ? 'РЅР°Р·РЅР°С‡РёС‚СЊ РєР°РїРёС‚Р°РЅРѕРј (IGL)' : 'СЃРЅСЏС‚СЊ СЂРѕР»СЊ IGL';
+    const label = role === 'igl' ? 'назначить капитаном (IGL)' : 'снять роль IGL';
     if (!confirm(`${label}?`)) return;
     const users = DB.get('pl_users');
     const idx = users.findIndex(u => String(u.id) === String(id));
@@ -500,11 +500,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cur && String(cur.id) === String(id)) { const { password: _, ...safe } = users[idx]; Auth.login(safe); }
 
     renderUsersTable();
-    showToast(role === 'igl' ? 'рџ‘‘ Р РѕР»СЊ IGL РЅР°Р·РЅР°С‡РµРЅР°' : 'Р РѕР»СЊ IGL СЃРЅСЏС‚Р°');
+    showToast(role === 'igl' ? '?? Роль IGL назначена' : 'Роль IGL снята');
   };
 
   window.deleteUser = async (id) => {
-    if (!confirm('РЈРґР°Р»РёС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ?')) return;
+    if (!confirm('Удалить пользователя?')) return;
 
     const users = DB.get('pl_users');
     const user = users.find(u => String(u.id) === String(id));
@@ -523,25 +523,25 @@ document.addEventListener('DOMContentLoaded', () => {
       ));
 
       if (playerToDelete?.id) {
-        await DB.remove('pl_players', String(playerToDelete.id)).catch(e => console.warn('[DB] вљ пёЏ', e.message));
+        await DB.remove('pl_players', String(playerToDelete.id)).catch(e => console.warn('[DB] ??', e.message));
       }
     }
 
     renderUsersTable();
     updateDashboard();
-    showToast('РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ СѓРґР°Р»С‘РЅ', 'error');
+    showToast('Пользователь удалён', 'error');
 
-    await DB.remove('pl_users', String(id)).catch(e => console.warn('[DB] вљ пёЏ', e.message));
+    await DB.remove('pl_users', String(id)).catch(e => console.warn('[DB] ??', e.message));
   };
 
-  // в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ----------------------------------
   // MATCHES
-  // в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ----------------------------------
   let editingMatchId = null;
 
   document.getElementById('addMatchBtn').addEventListener('click', () => {
     editingMatchId = null;
-    document.getElementById('matchFormTitle').textContent = 'Р”РѕР±Р°РІРёС‚СЊ РјР°С‚С‡';
+    document.getElementById('matchFormTitle').textContent = 'Добавить матч';
     clearMatchForm();
     populateMatchTeams();
     toggleForm('matchForm', true);
@@ -558,8 +558,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const status     = document.getElementById('matchStatus').value;
     const url        = document.getElementById('matchUrl').value.trim();
 
-    if (!team1 || !team2 || team1 === team2) { showToast('Р’С‹Р±РµСЂРёС‚Рµ СЂР°Р·РЅС‹Рµ РєРѕРјР°РЅРґС‹', 'error'); return; }
-    if (!tournament) { showToast('Р’РІРµРґРёС‚Рµ РЅР°Р·РІР°РЅРёРµ С‚СѓСЂРЅРёСЂР°', 'error'); return; }
+    if (!team1 || !team2 || team1 === team2) { showToast('Выберите разные команды', 'error'); return; }
+    if (!tournament) { showToast('Введите название турнира', 'error'); return; }
 
     const btn = document.getElementById('saveMatchBtn');
     btn.disabled = true;
@@ -567,10 +567,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const match = { team1, team2, score1, score2, tournament, date: date ? new Date(date).toISOString() : new Date().toISOString(), status, url };
     if (editingMatchId !== null) {
       await DB.update('pl_matches', editingMatchId, match);
-      showToast('РњР°С‚С‡ РѕР±РЅРѕРІР»С‘РЅ');
+      showToast('Матч обновлён');
     } else {
       await DB.insert('pl_matches', match);
-      showToast('РњР°С‚С‡ РґРѕР±Р°РІР»РµРЅ');
+      showToast('Матч добавлен');
     }
     btn.disabled = false;
     toggleForm('matchForm', false);
@@ -587,12 +587,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('matchEditId').value = '';
   }
 
-  // РљРЅРѕРїРєР° РєРѕРїРёСЂРѕРІР°РЅРёСЏ СЃСЃС‹Р»РєРё
+  // Кнопка копирования ссылки
   document.getElementById('copyMatchUrlBtn').addEventListener('click', () => {
     const url = document.getElementById('matchUrl').value.trim();
-    if (!url) { showToast('Р’РІРµРґРёС‚Рµ СЃСЃС‹Р»РєСѓ', 'error'); return; }
+    if (!url) { showToast('Введите ссылку', 'error'); return; }
     navigator.clipboard.writeText(url).then(() => {
-      showToast('РЎСЃС‹Р»РєР° СЃРєРѕРїРёСЂРѕРІР°РЅР°');
+      showToast('Ссылка скопирована');
       const btn = document.getElementById('copyMatchUrlBtn');
       btn.innerHTML = '<i class="fas fa-check"></i>';
       setTimeout(() => btn.innerHTML = '<i class="fas fa-copy"></i>', 2000);
@@ -603,7 +603,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const teams = DB.get('pl_teams');
     ['matchTeam1','matchTeam2'].forEach(id => {
       const sel = document.getElementById(id);
-      sel.innerHTML = '<option value="">вЂ” Р’С‹Р±РµСЂРёС‚Рµ РєРѕРјР°РЅРґСѓ вЂ”</option>';
+      sel.innerHTML = '<option value="">— Выберите команду —</option>';
       teams.forEach(t => {
         const opt = document.createElement('option');
         opt.value = t.name;
@@ -617,24 +617,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const tbody = document.getElementById('matchesTableBody');
     const matches = DB.get('pl_matches').slice().sort((a,b) => new Date(b.date) - new Date(a.date));
     if (!matches.length) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-dim);padding:30px">РњР°С‚С‡РµР№ РЅРµС‚</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-dim);padding:30px">Матчей нет</td></tr>`;
       return;
     }
-    const statusLabels = { upcoming: 'РџСЂРµРґСЃС‚РѕСЏС‰РёР№', finished: 'Р—Р°РІРµСЂС€С‘РЅ' };
+    const statusLabels = { upcoming: 'Предстоящий', finished: 'Завершён' };
     const statusColors = { upcoming: 'var(--accent)', finished: 'var(--success)' };
     tbody.innerHTML = matches.map(m => {
       const d = new Date(m.date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
       return `
         <tr>
           <td><strong>${m.team1}</strong></td>
-          <td style="text-align:center;font-weight:700;font-size:1rem">${m.status === 'upcoming' ? 'вЂ”' : `${m.score1} : ${m.score2}`}</td>
+          <td style="text-align:center;font-weight:700;font-size:1rem">${m.status === 'upcoming' ? '—' : `${m.score1} : ${m.score2}`}</td>
           <td><strong>${m.team2}</strong></td>
           <td style="max-width:180px;font-size:0.82rem">${m.tournament}</td>
           <td style="font-size:0.82rem">${d}</td>
           <td><span style="color:${statusColors[m.status]};font-size:0.8rem;font-weight:600">${statusLabels[m.status] || m.status}</span></td>
           <td>
             <div class="action-btns">
-              ${m.url ? `<a href="${m.url}" target="_blank" class="btn btn-sm btn-outline" title="РћС‚РєСЂС‹С‚СЊ РЅР° xplay"><i class="fas fa-external-link-alt"></i></a>` : ''}
+              ${m.url ? `<a href="${m.url}" target="_blank" class="btn btn-sm btn-outline" title="Открыть на xplay"><i class="fas fa-external-link-alt"></i></a>` : ''}
               <button class="btn btn-sm btn-outline" onclick="editMatch('${m.id}')"><i class="fas fa-edit"></i></button>
               <button class="btn btn-sm btn-danger" onclick="deleteMatch('${m.id}')"><i class="fas fa-trash"></i></button>
             </div>
@@ -648,7 +648,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const m = matches.find(x => String(x.id) === String(id));
     if (!m) return;
     editingMatchId = id;
-    document.getElementById('matchFormTitle').textContent = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РјР°С‚С‡';
+    document.getElementById('matchFormTitle').textContent = 'Редактировать матч';
     clearMatchForm();
     populateMatchTeams();
     document.getElementById('matchTeam1').value    = m.team1;
@@ -673,24 +673,24 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.deleteMatch = async (id) => {
-    if (!confirm('РЈРґР°Р»РёС‚СЊ РјР°С‚С‡?')) return;
+    if (!confirm('Удалить матч?')) return;
     await DB.remove('pl_matches', id);
     renderMatchesTable();
-    showToast('РњР°С‚С‡ СѓРґР°Р»С‘РЅ', 'error');
+    showToast('Матч удалён', 'error');
   };
 
-  // в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ----------------------------------
   // TOURNAMENTS
-  // в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ----------------------------------
   let tournamentImageData = '';
   let editingTournamentId = null;
 
-  // РўСѓСЂРЅРёСЂС‹ С‚РµРїРµСЂСЊ С‡РµСЂРµР· DB (Supabase), СѓР±РёСЂР°РµРј localStorage-С…РµР»РїРµСЂС‹
+  // Турниры теперь через DB (Supabase), убираем localStorage-хелперы
   function getStoredTournaments() { return DB.get('pl_tournaments'); }
 
   document.getElementById('addTournamentBtn').addEventListener('click', () => {
     editingTournamentId = null;
-    document.getElementById('tournamentFormTitle').textContent = 'Р”РѕР±Р°РІРёС‚СЊ С‚СѓСЂРЅРёСЂ';
+    document.getElementById('tournamentFormTitle').textContent = 'Добавить турнир';
     clearTournamentForm();
     toggleForm('tournamentForm', true);
     document.getElementById('tournamentForm').scrollIntoView({ behavior: 'smooth' });
@@ -701,7 +701,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('saveTournamentBtn').addEventListener('click', async () => {
     const name = document.getElementById('tournamentName').value.trim();
-    if (!name) { showToast('Р’РІРµРґРёС‚Рµ РЅР°Р·РІР°РЅРёРµ С‚СѓСЂРЅРёСЂР°', 'error'); return; }
+    if (!name) { showToast('Введите название турнира', 'error'); return; }
 
     const btn = document.getElementById('saveTournamentBtn');
     btn.disabled = true;
@@ -710,8 +710,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const entry = {
       name,
       status:      document.getElementById('tournamentStatus').value,
-      prize:       document.getElementById('tournamentPrize').value.trim() || 'вЂ”',
-      format:      document.getElementById('tournamentFormat').value.trim() || 'вЂ”',
+      prize:       document.getElementById('tournamentPrize').value.trim() || '—',
+      format:      document.getElementById('tournamentFormat').value.trim() || '—',
       teams:       parseInt(document.getElementById('tournamentTeams').value) || 0,
       location:    document.getElementById('tournamentLocation').value.trim() || 'Online',
       dateStart:   document.getElementById('tournamentDateStart').value || '',
@@ -722,11 +722,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (editingTournamentId !== null) {
       await DB.update('pl_tournaments', editingTournamentId, entry);
-      showToast('РўСѓСЂРЅРёСЂ РѕР±РЅРѕРІР»С‘РЅ');
+      showToast('Турнир обновлён');
     } else {
       entry.createdAt = new Date().toISOString();
       await DB.insert('pl_tournaments', entry);
-      showToast('РўСѓСЂРЅРёСЂ РґРѕР±Р°РІР»РµРЅ');
+      showToast('Турнир добавлен');
     }
 
     btn.disabled = false;
@@ -753,21 +753,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const list = DB.get('pl_tournaments');
 
     if (!list.length) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-dim);padding:30px">РќРµС‚ С‚СѓСЂРЅРёСЂРѕРІ</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-dim);padding:30px">Нет турниров</td></tr>`;
       return;
     }
 
-    const statusLabels = { upcoming: 'РџСЂРµРґСЃС‚РѕСЏС‰РёР№', ongoing: 'РРґС‘С‚ СЃРµР№С‡Р°СЃ', finished: 'Р—Р°РІРµСЂС€С‘РЅ' };
+    const statusLabels = { upcoming: 'Предстоящий', ongoing: 'Идёт сейчас', finished: 'Завершён' };
     const statusColors = { upcoming: '#FFB300', ongoing: 'var(--success)', finished: 'var(--text-muted)' };
 
-    const fmtDate = str => str ? new Date(str).toLocaleDateString('ru-RU', { day:'numeric', month:'short', year:'numeric' }) : 'вЂ”';
+    const fmtDate = str => str ? new Date(str).toLocaleDateString('ru-RU', { day:'numeric', month:'short', year:'numeric' }) : '—';
 
     tbody.innerHTML = list.map(t => `
       <tr>
         <td><strong>${t.name}</strong></td>
         <td><span style="color:${statusColors[t.status]||'var(--text-muted)'};font-weight:600;font-size:0.82rem">${statusLabels[t.status] || t.status}</span></td>
-        <td style="color:#FFB300;font-weight:600">${t.prize || 'вЂ”'}</td>
-        <td style="font-size:0.82rem">${t.format || 'вЂ”'}</td>
+        <td style="color:#FFB300;font-weight:600">${t.prize || '—'}</td>
+        <td style="font-size:0.82rem">${t.format || '—'}</td>
         <td style="font-size:0.82rem">${fmtDate(t.dateStart)}</td>
         <td style="font-size:0.82rem">${fmtDate(t.dateEnd)}</td>
         <td>
@@ -784,7 +784,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const t = list.find(x => String(x.id) === String(id));
     if (!t) return;
     editingTournamentId = id;
-    document.getElementById('tournamentFormTitle').textContent = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ С‚СѓСЂРЅРёСЂ';
+    document.getElementById('tournamentFormTitle').textContent = 'Редактировать турнир';
     document.getElementById('tournamentName').value      = t.name;
     document.getElementById('tournamentStatus').value    = t.status;
     document.getElementById('tournamentPrize').value     = t.prize || '';
@@ -811,16 +811,16 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.deleteTournament = async (id) => {
-    if (!confirm('РЈРґР°Р»РёС‚СЊ С‚СѓСЂРЅРёСЂ?')) return;
+    if (!confirm('Удалить турнир?')) return;
     await DB.remove('pl_tournaments', id);
     renderTournamentsTable();
     updateDashboard();
-    showToast('РўСѓСЂРЅРёСЂ СѓРґР°Р»С‘РЅ', 'error');
+    showToast('Турнир удалён', 'error');
   };
 
-  // в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ----------------------------------
   // HIGHLIGHTS
-  // в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ----------------------------------
   let hlThumbData  = '';
   let hlAvatarData = '';
   let editingHlId  = null;
@@ -838,7 +838,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('addHighlightBtn').addEventListener('click', () => {
     editingHlId = null;
-    document.getElementById('highlightFormTitle').textContent = 'Р”РѕР±Р°РІРёС‚СЊ С…Р°Р№Р»Р°Р№С‚';
+    document.getElementById('highlightFormTitle').textContent = 'Добавить хайлайт';
     clearHlForm();
     toggleForm('highlightForm', true);
     document.getElementById('highlightForm').scrollIntoView({ behavior: 'smooth' });
@@ -852,7 +852,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const nick  = document.getElementById('hlNick').value.trim();
     const kd    = document.getElementById('hlKd').value.trim();
     const video = document.getElementById('hlVideo').value.trim();
-    if (!nick || !kd || !video) { showToast('Р—Р°РїРѕР»РЅРёС‚Рµ РЅРёРє, K/D Рё РїСѓС‚СЊ Рє РІРёРґРµРѕ', 'error'); return; }
+    if (!nick || !kd || !video) { showToast('Заполните ник, K/D и путь к видео', 'error'); return; }
 
     const list     = getHL();
     const existing = editingHlId ? list.find(h => h.id === editingHlId) : null;
@@ -860,7 +860,7 @@ document.addEventListener('DOMContentLoaded', () => {
       id:     editingHlId || ('h' + Date.now()),
       nick,
       kd,
-      label:  document.getElementById('hlLabel').value.trim() || 'РўРѕРї С…Р°Р№Р»Р°Р№С‚',
+      label:  document.getElementById('hlLabel').value.trim() || 'Топ хайлайт',
       video,
       thumb:  hlThumbData  || (existing ? existing.thumb  : ''),
       avatar: hlAvatarData || (existing ? existing.avatar : '')
@@ -875,7 +875,7 @@ document.addEventListener('DOMContentLoaded', () => {
     saveHL(list);
     toggleForm('highlightForm', false);
     renderHighlightsTable();
-    showToast(editingHlId ? 'РҐР°Р№Р»Р°Р№С‚ РѕР±РЅРѕРІР»С‘РЅ' : 'РҐР°Р№Р»Р°Р№С‚ РґРѕР±Р°РІР»РµРЅ');
+    showToast(editingHlId ? 'Хайлайт обновлён' : 'Хайлайт добавлен');
   });
 
   function clearHlForm() {
@@ -894,7 +894,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!tbody) return;
     const list = getHL();
     if (!list.length) {
-      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-dim);padding:30px">РќРµС‚ С…Р°Р№Р»Р°Р№С‚РѕРІ</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-dim);padding:30px">Нет хайлайтов</td></tr>`;
       return;
     }
     tbody.innerHTML = list.map(h => `
@@ -913,7 +913,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </td>
         <td><strong>${h.nick}</strong></td>
         <td><span style="color:var(--accent);font-weight:700">${h.kd}</span></td>
-        <td style="color:var(--text-muted);font-size:0.82rem">${h.label || 'вЂ”'}</td>
+        <td style="color:var(--text-muted);font-size:0.82rem">${h.label || '—'}</td>
         <td style="font-size:0.78rem;color:var(--text-dim);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${h.video}</td>
         <td>
           <div class="action-btns">
@@ -929,7 +929,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const h = list.find(x => String(x.id) === String(id));
     if (!h) return;
     editingHlId = id;
-    document.getElementById('highlightFormTitle').textContent = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ С…Р°Р№Р»Р°Р№С‚';
+    document.getElementById('highlightFormTitle').textContent = 'Редактировать хайлайт';
     document.getElementById('hlNick').value  = h.nick;
     document.getElementById('hlKd').value    = h.kd;
     document.getElementById('hlLabel').value = h.label || '';
@@ -955,15 +955,15 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.deleteHighlight = (id) => {
-    if (!confirm('РЈРґР°Р»РёС‚СЊ С…Р°Р№Р»Р°Р№С‚?')) return;
+    if (!confirm('Удалить хайлайт?')) return;
     saveHL(getHL().filter(h => String(h.id) !== String(id)));
     renderHighlightsTable();
-    showToast('РҐР°Р№Р»Р°Р№С‚ СѓРґР°Р»С‘РЅ', 'error');
+    showToast('Хайлайт удалён', 'error');
   };
 
-  // в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ----------------------------------
   // HELPERS
-  // в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ----------------------------------
   function updateDashboard() {
     document.getElementById('statTeams').textContent = DB.get('pl_teams').length;
     document.getElementById('statPlayers').textContent = DB.get('pl_players').length;
@@ -1008,7 +1008,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function processFile(file) {
-      // РџРѕРєР°Р·С‹РІР°РµРј РїСЂРµРІСЊСЋ СЃСЂР°Р·Сѓ Р»РѕРєР°Р»СЊРЅРѕ
+      // Показываем превью сразу локально
       const reader = new FileReader();
       reader.onload = (e) => {
         img.src = e.target.result;
@@ -1016,25 +1016,25 @@ document.addEventListener('DOMContentLoaded', () => {
       };
       reader.readAsDataURL(file);
 
-      // Р—Р°РіСЂСѓР¶Р°РµРј РЅР° ImgBB
+      // Загружаем на ImgBB
       img.style.opacity = '0.5';
       uploadFileToImgBB(file).then(url => {
         img.src = url;
         img.style.opacity = '1';
         onLoad(url);
-        console.log('[IMGBB] вњ… Р—Р°РіСЂСѓР¶РµРЅРѕ:', url);
+        console.log('[IMGBB] ? Загружено:', url);
       }).catch(e => {
         img.style.opacity = '1';
-        console.error('[IMGBB] вќЊ', e.message);
-        showToast('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ', 'error');
+        console.error('[IMGBB] ?', e.message);
+        showToast('Ошибка загрузки изображения', 'error');
         onLoad('');
       });
     }
   }
 
-  // в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ----------------------------------
   // AWARDS
-  // в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ----------------------------------
   function getAwards() {
     try { return JSON.parse(localStorage.getItem('pl_awards')) || []; } catch(_) { return []; }
   }
@@ -1045,7 +1045,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderAwardsTable();
 
-  // Р—Р°РіСЂСѓР·РєР° С„РѕС‚Рѕ РЅР°РіСЂР°РґС‹
+  // Загрузка фото награды
   const awardImageArea  = document.getElementById('awardImageArea');
   const awardImageInput = document.getElementById('awardImageInput');
   const awardImagePreview = document.getElementById('awardImagePreview');
@@ -1055,22 +1055,22 @@ document.addEventListener('DOMContentLoaded', () => {
   awardImageInput.addEventListener('change', async () => {
     const file = awardImageInput.files[0];
     if (!file) return;
-    // РџСЂРµРІСЊСЋ СЃСЂР°Р·Сѓ
+    // Превью сразу
     const reader = new FileReader();
     reader.onload = e => {
       awardImageImg.src = e.target.result;
       awardImagePreview.style.display = 'flex';
     };
     reader.readAsDataURL(file);
-    // Р—Р°РіСЂСѓР·РєР° РЅР° ImgBB
+    // Загрузка на ImgBB
     awardImageImg.style.opacity = '0.5';
     try {
       awardImageData = await uploadFileToImgBB(file);
       awardImageImg.src = awardImageData;
-      console.log('[IMGBB] вњ… РќР°РіСЂР°РґР° Р·Р°РіСЂСѓР¶РµРЅР°:', awardImageData);
+      console.log('[IMGBB] ? Награда загружена:', awardImageData);
     } catch(e) {
-      console.error('[IMGBB] вќЊ', e.message);
-      showToast('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ', 'error');
+      console.error('[IMGBB] ?', e.message);
+      showToast('Ошибка загрузки изображения', 'error');
       awardImageData = '';
     } finally {
       awardImageImg.style.opacity = '1';
@@ -1082,7 +1082,7 @@ document.addEventListener('DOMContentLoaded', () => {
     awardImageInput.value = '';
   });
 
-  // Р—Р°РїРѕР»РЅСЏРµРј СЃРїРёСЃРѕРє РїРѕР»СѓС‡Р°С‚РµР»РµР№ РїСЂРё СЃРјРµРЅРµ С‚РёРїР°
+  // Заполняем список получателей при смене типа
   function populateAwardRecipients() {
     const type = document.getElementById('awardTarget').value;
     const sel = document.getElementById('awardRecipient');
@@ -1091,7 +1091,7 @@ document.addEventListener('DOMContentLoaded', () => {
       DB.get('pl_players').forEach(p => {
         const opt = document.createElement('option');
         opt.value = p.nick || p.name;
-        opt.textContent = `${p.nick || p.name}${p.team ? ' вЂ” ' + p.team : ''}`;
+        opt.textContent = `${p.nick || p.name}${p.team ? ' — ' + p.team : ''}`;
         sel.appendChild(opt);
       });
     } else {
@@ -1109,7 +1109,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('addAwardBtn').addEventListener('click', () => {
     editingAwardId = null;
     awardImageData = '';
-    document.getElementById('awardFormTitle').textContent = 'Р”РѕР±Р°РІРёС‚СЊ РЅР°РіСЂР°РґСѓ';
+    document.getElementById('awardFormTitle').textContent = 'Добавить награду';
     document.getElementById('awardName').value = '';
     document.getElementById('awardColor').value = 'gold';
     document.getElementById('awardTarget').value = 'player';
@@ -1140,14 +1140,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const date      = document.getElementById('awardDate').value;
     const count     = parseInt(document.getElementById('awardCount').value) || 1;
 
-    if (!name || !recipient) { showToast('Р—Р°РїРѕР»РЅРёС‚Рµ РЅР°Р·РІР°РЅРёРµ Рё РїРѕР»СѓС‡Р°С‚РµР»СЏ', 'error'); return; }
-    if (!awardImageData && editingAwardId === null) { showToast('Р”РѕР±Р°РІСЊС‚Рµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ РЅР°РіСЂР°РґС‹', 'error'); return; }
+    if (!name || !recipient) { showToast('Заполните название и получателя', 'error'); return; }
+    if (!awardImageData && editingAwardId === null) { showToast('Добавьте изображение награды', 'error'); return; }
 
     const list = getAwards();
     const existing = editingAwardId ? list.find(a => a.id === editingAwardId) : null;
 
     if (editingAwardId !== null) {
-      // Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ РѕРґРЅРѕР№ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РµР№ РЅР°РіСЂР°РґС‹
+      // Редактирование одной существующей награды
       const entry = {
         id: editingAwardId,
         name,
@@ -1158,9 +1158,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (idx !== -1) list[idx] = entry;
       saveAwards(list);
       DB.update('pl_awards', String(editingAwardId), entry).catch(e => console.warn('[AWARDS] update:', e.message));
-      showToast('РќР°РіСЂР°РґР° РѕР±РЅРѕРІР»РµРЅР°');
+      showToast('Награда обновлена');
     } else {
-      // РЎРѕР·РґР°РЅРёРµ N РєРѕРїРёР№ РЅР°РіСЂР°РґС‹
+      // Создание N копий награды
       const imageToUse = awardImageData;
       const newEntries = [];
       for (let i = 0; i < count; i++) {
@@ -1168,44 +1168,44 @@ document.addEventListener('DOMContentLoaded', () => {
           name, image: imageToUse, color, target, recipient, desc, date
         });
       }
-      // РЎРѕС…СЂР°РЅСЏРµРј С‡РµСЂРµР· DB.insert вЂ” РѕРЅ СЃР°Рј РѕР±РЅРѕРІРёС‚ localStorage СЃ РїСЂР°РІРёР»СЊРЅС‹РјРё MongoDB id
+      // Сохраняем через DB.insert — он сам обновит localStorage с правильными MongoDB id
       Promise.all(newEntries.map(entry => DB.insert('pl_awards', entry)))
         .then(() => {
           renderAwardsTable();
-          showToast(count > 1 ? `Р’С‹РґР°РЅРѕ ${count} РЅР°РіСЂР°Рґ!` : 'РќР°РіСЂР°РґР° РІС‹РґР°РЅР°!');
+          showToast(count > 1 ? `Выдано ${count} наград!` : 'Награда выдана!');
         })
         .catch(e => {
           console.warn('[AWARDS] insert error:', e.message);
-          showToast('РћС€РёР±РєР° СЃРѕС…СЂР°РЅРµРЅРёСЏ', 'error');
+          showToast('Ошибка сохранения', 'error');
         });
     }
     document.getElementById('awardCountGroup').style.display = '';
     document.getElementById('awardCount').disabled = false;
     toggleForm('awardForm', false);
     renderAwardsTable();
-    showToast(editingAwardId !== null ? 'РќР°РіСЂР°РґР° РѕР±РЅРѕРІР»РµРЅР°' : 'РќР°РіСЂР°РґР° РІС‹РґР°РЅР°!');
+    showToast(editingAwardId !== null ? 'Награда обновлена' : 'Награда выдана!');
   });
 
   function renderAwardsTable() {
     const tbody = document.getElementById('awardsTableBody');
     if (!tbody) return;
     const list = getAwards();
-    const colorLabels = { gold: 'рџҐ‡ Р—РѕР»РѕС‚Рѕ', silver: 'рџҐ€ РЎРµСЂРµР±СЂРѕ', bronze: 'рџҐ‰ Р‘СЂРѕРЅР·Р°', primary: 'рџ’њ', accent: 'рџ’™' };
+    const colorLabels = { gold: '?? Золото', silver: '?? Серебро', bronze: '?? Бронза', primary: '??', accent: '??' };
     if (!list.length) {
-      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-dim);padding:30px">РќР°РіСЂР°Рґ РїРѕРєР° РЅРµС‚</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-dim);padding:30px">Наград пока нет</td></tr>`;
       return;
     }
     tbody.innerHTML = list.slice().reverse().map(a => {
       const iconHTML = a.image
         ? `<img src="${a.image}" style="width:40px;height:40px;object-fit:cover;border-radius:8px">`
         : `<i class="fas fa-medal" style="font-size:1.3rem;color:#FFB300"></i>`;
-      const d = a.date ? new Date(a.date).toLocaleDateString('ru-RU') : 'вЂ”';
+      const d = a.date ? new Date(a.date).toLocaleDateString('ru-RU') : '—';
       return `
         <tr>
           <td>${iconHTML}</td>
           <td><strong>${a.name}</strong>${a.desc ? `<br><span style="font-size:0.75rem;color:var(--text-muted)">${a.desc}</span>` : ''}</td>
           <td><strong>${a.recipient}</strong></td>
-          <td><span style="font-size:0.78rem;color:var(--text-muted)">${a.target === 'player' ? 'рџ‘¤ РРіСЂРѕРє' : 'рџ›ЎпёЏ РљРѕРјР°РЅРґР°'}</span></td>
+          <td><span style="font-size:0.78rem;color:var(--text-muted)">${a.target === 'player' ? '?? Игрок' : '??? Команда'}</span></td>
           <td style="font-size:0.82rem">${d}</td>
           <td>
             <div class="action-btns">
@@ -1222,7 +1222,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!a) return;
     editingAwardId = id;
     awardImageData = a.image || '';
-    document.getElementById('awardFormTitle').textContent = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РЅР°РіСЂР°РґСѓ';
+    document.getElementById('awardFormTitle').textContent = 'Редактировать награду';
     document.getElementById('awardName').value    = a.name;
     document.getElementById('awardColor').value   = a.color;
     document.getElementById('awardTarget').value  = a.target;
@@ -1231,7 +1231,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('awardEditId').value  = a.id;
     document.getElementById('awardCount').value   = '1';
     document.getElementById('awardCount').disabled = true;
-    document.getElementById('awardCountGroup').style.display = 'none'; // СЃРєСЂС‹РІР°РµРј РїСЂРё СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРё
+    document.getElementById('awardCountGroup').style.display = 'none'; // скрываем при редактировании
     if (a.image) {
       awardImageImg.src = a.image;
       awardImagePreview.style.display = 'flex';
@@ -1249,23 +1249,23 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.deleteAward = (id) => {
-    if (!confirm('РЈРґР°Р»РёС‚СЊ РЅР°РіСЂР°РґСѓ?')) return;
+    if (!confirm('Удалить награду?')) return;
     saveAwards(getAwards().filter(a => String(a.id) !== String(id)));
     DB.remove('pl_awards', String(id)).catch(e => console.warn('[AWARDS] remove:', e.message));
     renderAwardsTable();
-    showToast('РќР°РіСЂР°РґР° СѓРґР°Р»РµРЅР°', 'error');
+    showToast('Награда удалена', 'error');
   };
 
-  // в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ----------------------------------
   // TEAM ROSTER MANAGEMENT
-  // в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ----------------------------------
   let currentRosterTeamId = null;
   let currentRosterTeamName = '';
 
   window.manageTeamRoster = function(teamId, teamName) {
     currentRosterTeamId = teamId;
     currentRosterTeamName = teamName;
-    document.getElementById('rosterModalTitle').innerHTML = `<i class="fas fa-users"></i> РЈРїСЂР°РІР»РµРЅРёРµ СЃРѕСЃС‚Р°РІРѕРј: ${teamName}`;
+    document.getElementById('rosterModalTitle').innerHTML = `<i class="fas fa-users"></i> Управление составом: ${teamName}`;
     renderRosterList();
     populateRosterUserSelect();
     document.getElementById('rosterModal').style.display = 'flex';
@@ -1284,27 +1284,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const teams = DB.get('pl_teams');
     const team = teams.find(t => t.id === currentRosterTeamId);
     
-    // РќР°С…РѕРґРёРј РєР°РїРёС‚Р°РЅР° (IGL) РєРѕРјР°РЅРґС‹
+    // Находим капитана (IGL) команды
     const captain = team && team.ownerId ? users.find(u => u.id === team.ownerId) : null;
     const captainNick = captain ? captain.username : null;
     
     const items = [];
     
-    // Р”РѕР±Р°РІР»СЏРµРј РєР°РїРёС‚Р°РЅР° РїРµСЂРІС‹Рј (РѕС‚РґРµР»СЊРЅР°СЏ РєР°СЂС‚РѕС‡РєР° СЃ РєРѕСЂРѕРЅРѕР№, Р±РµР· РєРЅРѕРїРєРё СѓРґР°Р»РµРЅРёСЏ)
+    // Добавляем капитана первым (отдельная карточка с короной, без кнопки удаления)
     if (captain) {
       items.push(`
         <div class="roster-item" style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.35);border-radius:8px">
           ${captain.avatar ? `<img src="${captain.avatar}" style="width:40px;height:40px;object-fit:cover;border-radius:50%;border:2px solid var(--warning)">` : `<div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#d97706);display:flex;align-items:center;justify-content:center;color:white;font-weight:bold">${captain.username.charAt(0).toUpperCase()}</div>`}
           <div style="flex:1">
             <div style="font-weight:700">${captain.username}</div>
-            <div style="font-size:0.75rem;color:#f59e0b"><i class="fas fa-crown"></i> IGL вЂ” РљР°РїРёС‚Р°РЅ РєРѕРјР°РЅРґС‹</div>
+            <div style="font-size:0.75rem;color:#f59e0b"><i class="fas fa-crown"></i> IGL — Капитан команды</div>
           </div>
         </div>`);
     }
     
-    // Р”РѕР±Р°РІР»СЏРµРј РѕСЃС‚Р°Р»СЊРЅС‹С… РёРіСЂРѕРєРѕРІ (РїСЂРѕРїСѓСЃРєР°РµРј РєР°РїРёС‚Р°РЅР° С‡С‚РѕР±С‹ РЅРµ РґСѓР±Р»РёСЂРѕРІР°С‚СЊ)
+    // Добавляем остальных игроков (пропускаем капитана чтобы не дублировать)
     players.forEach(p => {
-      if (captainNick && p.nick === captainNick) return; // РїСЂРѕРїСѓСЃРєР°РµРј IGL
+      if (captainNick && p.nick === captainNick) return; // пропускаем IGL
       items.push(`
         <div class="roster-item" style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px">
           ${p.photo ? `<img src="${p.photo}" style="width:40px;height:40px;object-fit:cover;border-radius:50%">` : `<div style="width:40px;height:40px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;color:white;font-weight:bold">${p.nick.charAt(0).toUpperCase()}</div>`}
@@ -1317,7 +1317,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     if (items.length === 0) {
-      list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted)">РќРµС‚ РёРіСЂРѕРєРѕРІ РІ РєРѕРјР°РЅРґРµ</div>';
+      list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted)">Нет игроков в команде</div>';
     } else {
       list.innerHTML = items.join('');
     }
@@ -1330,16 +1330,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const teams = DB.get('pl_teams');
     const currentTeam = teams.find(t => String(t.id) === String(currentRosterTeamId));
 
-    select.innerHTML = '<option value="">вЂ” Р’С‹Р±РµСЂРёС‚Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ вЂ”</option>';
+    select.innerHTML = '<option value="">— Выберите пользователя —</option>';
 
     users.forEach(u => {
-      // РџСЂРѕРїСѓСЃРєР°РµРј С‚РѕР»СЊРєРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂРѕРІ
+      // Пропускаем только администраторов
       if (u.role === 'admin') return;
 
-      // РџСЂРѕРїСѓСЃРєР°РµРј РєР°РїРёС‚Р°РЅР° С‚РµРєСѓС‰РµР№ РєРѕРјР°РЅРґС‹ (РѕРЅ СѓР¶Рµ РІ СЃРѕСЃС‚Р°РІРµ)
+      // Пропускаем капитана текущей команды (он уже в составе)
       if (currentTeam && String(currentTeam.ownerId) === String(u.id)) return;
 
-      // РџСЂРѕРїСѓСЃРєР°РµРј С‚РµС…, РєС‚Рѕ СѓР¶Рµ РІ СЌС‚РѕР№ РєРѕРјР°РЅРґРµ
+      // Пропускаем тех, кто уже в этой команде
       const alreadyInTeam = players.find(p =>
         (p.nick || '').toLowerCase() === (u.username || '').toLowerCase() &&
         p.team === currentRosterTeamName
@@ -1348,7 +1348,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const opt = document.createElement('option');
       opt.value = u.id;
-      opt.textContent = `${u.username} (${u.email})${u.role === 'igl' ? ' рџ‘‘ IGL' : ''}`;
+      opt.textContent = `${u.username} (${u.email})${u.role === 'igl' ? ' ?? IGL' : ''}`;
       select.appendChild(opt);
     });
   }
@@ -1356,33 +1356,33 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addUserToTeamRoster = async function() {
     const userId = document.getElementById('rosterUserSelect').value;
     if (!userId) {
-      showToast('Р’С‹Р±РµСЂРёС‚Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ', 'error');
+      showToast('Выберите пользователя', 'error');
       return;
     }
     
     const users = DB.get('pl_users');
     const user = users.find(u => String(u.id) === String(userId));
     if (!user) {
-      showToast('РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ', 'error');
+      showToast('Пользователь не найден', 'error');
       return;
     }
     
     const players = DB.get('pl_players');
     
-    // РџСЂРѕРІРµСЂСЏРµРј, РµСЃС‚СЊ Р»Рё СѓР¶Рµ РёРіСЂРѕРє СЃ С‚Р°РєРёРј РЅРёРєРѕРј
+    // Проверяем, есть ли уже игрок с таким ником
     let player = players.find(p => (p.nick || '').toLowerCase() === (user.username || '').toLowerCase());
     
     if (player) {
-      // РРіСЂРѕРє СЃСѓС‰РµСЃС‚РІСѓРµС‚ - РѕР±РЅРѕРІР»СЏРµРј РµРіРѕ РєРѕРјР°РЅРґСѓ
+      // Игрок существует - обновляем его команду
       if (player.team && player.team !== currentRosterTeamName) {
-        if (!confirm(`${player.nick} СѓР¶Рµ РІ РєРѕРјР°РЅРґРµ "${player.team}". РџРµСЂРµРІРµСЃС‚Рё РІ "${currentRosterTeamName}"?`)) {
+        if (!confirm(`${player.nick} уже в команде "${player.team}". Перевести в "${currentRosterTeamName}"?`)) {
           return;
         }
       }
-      // РСЃРїРѕР»СЊР·СѓРµРј DB.update РІРјРµСЃС‚Рѕ DB.set
+      // Используем DB.update вместо DB.set
       await DB.update('pl_players', player.id, { team: currentRosterTeamName });
     } else {
-      // РЎРѕР·РґР°РµРј РЅРѕРІРѕРіРѕ РёРіСЂРѕРєР° С‡РµСЂРµР· DB.insert
+      // Создаем нового игрока через DB.insert
       const newPlayer = {
         nick: user.username,
         name: user.username,
@@ -1397,45 +1397,45 @@ document.addEventListener('DOMContentLoaded', () => {
       player = await DB.insert('pl_players', newPlayer);
     }
     
-    // РћР‘РЇР—РђРўР•Р›Р¬РќРћ СЃРёРЅС…СЂРѕРЅРёР·РёСЂСѓРµРј pl_users
+    // ОБЯЗАТЕЛЬНО синхронизируем pl_users
     await DB.update('pl_users', userId, { 
       team: currentRosterTeamName, 
       teamId: currentRosterTeamId 
     });
     
-    showToast(`${user.username} РґРѕР±Р°РІР»РµРЅ РІ РєРѕРјР°РЅРґСѓ`);
+    showToast(`${user.username} добавлен в команду`);
     renderRosterList();
     populateRosterUserSelect();
   };
 
   window.removePlayerFromRoster = async function(playerNick) {
-    if (!confirm(`РЈРґР°Р»РёС‚СЊ ${playerNick} РёР· РєРѕРјР°РЅРґС‹?`)) return;
+    if (!confirm(`Удалить ${playerNick} из команды?`)) return;
     
     const players = DB.get('pl_players');
     const player = players.find(p => (p.nick || '').toLowerCase() === (playerNick || '').toLowerCase() && p.team === currentRosterTeamName);
     
     if (player) {
-      // РћС‡РёС‰Р°РµРј РєРѕРјР°РЅРґСѓ Сѓ РёРіСЂРѕРєР° С‡РµСЂРµР· DB.update
+      // Очищаем команду у игрока через DB.update
       await DB.update('pl_players', player.id, { team: '' });
       
-      // РЎРёРЅС…СЂРѕРЅРёР·РёСЂСѓРµРј pl_users вЂ” РёС‰РµРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РїРѕ РЅРёРєСѓ
+      // Синхронизируем pl_users — ищем пользователя по нику
       const users = DB.get('pl_users');
       const user = users.find(u => (u.username || '').toLowerCase() === (playerNick || '').toLowerCase());
       if (user) {
         await DB.update('pl_users', user.id, { team: '', teamId: null });
       }
       
-      showToast(`${playerNick} СѓРґР°Р»С‘РЅ РёР· РєРѕРјР°РЅРґС‹`);
+      showToast(`${playerNick} удалён из команды`);
       renderRosterList();
       populateRosterUserSelect();
     }
   };
 
-  // в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ----------------------------------
   // VETO
-  // в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ----------------------------------
 
-  // РљР°СЂС‚С‹ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
+  // Карты по умолчанию
   const VETO_DEFAULT_MAPS = [
     { name: 'Dust2',    status: 'available' },
     { name: 'Mirage',   status: 'available' },
@@ -1480,7 +1480,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return [];
   }
 
-  // РќР°С…РѕРґРёРј РєР°РїРёС‚Р°РЅРѕРІ РєРѕРјР°РЅРґ
+  // Находим капитанов команд
   function findCaptain(teamName) {
     const users = DB.get('pl_users');
     const teams = DB.get('pl_teams');
@@ -1489,21 +1489,21 @@ document.addEventListener('DOMContentLoaded', () => {
       const u = users.find(u => u.id === team.ownerId);
       if (u) return u.id;
     }
-    // fallback: РёС‰РµРј IGL СЃ СЌС‚РѕР№ РєРѕРјР°РЅРґРѕР№
+    // fallback: ищем IGL с этой командой
     const igl = users.find(u => u.role === 'igl' && u.team === teamName);
     return igl ? igl.id : null;
   }
 
-  // Р—Р°РїРѕР»РЅСЏРµРј СЃРїРёСЃРѕРє РјР°С‚С‡РµР№
+  // Заполняем список матчей
   function populateVetoMatchSelect() {
     const sel = document.getElementById('vetoMatchSelect');
     if (!sel) return;
     const matches = DB.get('pl_matches');
-    sel.innerHTML = '<option value="">вЂ” Р’С‹Р±РµСЂРёС‚Рµ РјР°С‚С‡ вЂ”</option>';
+    sel.innerHTML = '<option value="">— Выберите матч —</option>';
     matches.forEach(m => {
       const opt = document.createElement('option');
       opt.value = m.id;
-      opt.textContent = `${m.team1} vs ${m.team2} вЂ” ${m.tournament || '?'}`;
+      opt.textContent = `${m.team1} vs ${m.team2} — ${m.tournament || '?'}`;
       sel.appendChild(opt);
     });
   }
@@ -1513,13 +1513,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!tbody) return;
     const vetos = DB.get('pl_vetos');
     if (!vetos.length) {
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text-dim);padding:30px">Р’РµС‚Рѕ РµС‰С‘ РЅРµ СЃРѕР·РґР°РЅРѕ</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text-dim);padding:30px">Вето ещё не создано</td></tr>`;
       return;
     }
-    const statusLabels = { waiting: 'РћР¶РёРґР°РЅРёРµ', active: 'РРґС‘С‚ РІРµС‚Рѕ', done: 'Р—Р°РІРµСЂС€РµРЅРѕ' };
+    const statusLabels = { waiting: 'Ожидание', active: 'Идёт вето', done: 'Завершено' };
     const statusColors = { waiting: 'var(--warning)', active: 'var(--accent)', done: 'var(--success)' };
     tbody.innerHTML = vetos.slice().reverse().map(v => {
-      const d = v.createdAt ? new Date(v.createdAt).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'вЂ”';
+      const d = v.createdAt ? new Date(v.createdAt).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '—';
       return `
         <tr>
           <td><strong>${v.team1}</strong> vs <strong>${v.team2}</strong></td>
@@ -1528,8 +1528,8 @@ document.addEventListener('DOMContentLoaded', () => {
           <td style="font-size:0.82rem;color:var(--text-muted)">${d}</td>
           <td>
             <div class="action-btns">
-              <button class="btn btn-sm btn-outline" onclick="openVeto('${v.id}')" title="РћС‚РєСЂС‹С‚СЊ СЃС‚СЂР°РЅРёС†Сѓ РІРµС‚Рѕ"><i class="fas fa-external-link-alt"></i></button>
-              <button class="btn btn-sm btn-outline" onclick="copyVetoLink('${v.id}')" title="РЎРєРѕРїРёСЂРѕРІР°С‚СЊ СЃСЃС‹Р»РєСѓ"><i class="fas fa-link"></i></button>
+              <button class="btn btn-sm btn-outline" onclick="openVeto('${v.id}')" title="Открыть страницу вето"><i class="fas fa-external-link-alt"></i></button>
+              <button class="btn btn-sm btn-outline" onclick="copyVetoLink('${v.id}')" title="Скопировать ссылку"><i class="fas fa-link"></i></button>
               <button class="btn btn-sm btn-danger" onclick="deleteVeto('${v.id}')"><i class="fas fa-trash"></i></button>
             </div>
           </td>
@@ -1548,10 +1548,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const matchId = parseInt(document.getElementById('vetoMatchSelect').value);
     const format  = document.getElementById('vetoFormat').value;
 
-    if (!matchId) { showToast('Р’С‹Р±РµСЂРёС‚Рµ РјР°С‚С‡', 'error'); return; }
+    if (!matchId) { showToast('Выберите матч', 'error'); return; }
 
     const match = DB.get('pl_matches').find(m => m.id === matchId);
-    if (!match) { showToast('РњР°С‚С‡ РЅРµ РЅР°Р№РґРµРЅ', 'error'); return; }
+    if (!match) { showToast('Матч не найден', 'error'); return; }
 
     const team1CaptainId = findCaptain(match.team1);
     const team2CaptainId = findCaptain(match.team2);
@@ -1567,7 +1567,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const createdAt = new Date().toISOString();
 
     try {
-      // РЎРѕС…СЂР°РЅСЏРµРј С‡РµСЂРµР· MongoDB API
+      // Сохраняем через MongoDB API
       const veto = {
         matchId:        matchId,
         team1:          match.team1,
@@ -1591,14 +1591,14 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       const saved = await DB.insert('pl_vetos', veto);
-      console.log(`[DB] вњ… Р’РµС‚Рѕ СЃРѕР·РґР°РЅРѕ РІ MongoDB, ID: ${saved.id}`);
+      console.log(`[DB] ? Вето создано в MongoDB, ID: ${saved.id}`);
 
       toggleForm('vetoForm', false);
       renderVetoTable();
-      showToast(`Р’РµС‚Рѕ СЃРѕР·РґР°РЅРѕ! РџРµСЂРІС‹Рј Р±Р°РЅРёС‚: ${firstTeamName}`);
+      showToast(`Вето создано! Первым банит: ${firstTeamName}`);
     } catch(e) {
-      console.error('[DB] вќЊ РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ РІРµС‚Рѕ:', e.message);
-      showToast('РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ РІРµС‚Рѕ', 'error');
+      console.error('[DB] ? Ошибка создания вето:', e.message);
+      showToast('Ошибка создания вето', 'error');
     }
   });
 
@@ -1609,20 +1609,20 @@ document.addEventListener('DOMContentLoaded', () => {
   window.copyVetoLink = function(id) {
     const url = `${window.location.origin}${window.location.pathname.replace('admin.html', '')}veto.html?id=${id}`;
     navigator.clipboard.writeText(url).then(() => {
-      showToast('РЎСЃС‹Р»РєР° СЃРєРѕРїРёСЂРѕРІР°РЅР°');
+      showToast('Ссылка скопирована');
     }).catch(() => {
-      showToast('РќРµ СѓРґР°Р»РѕСЃСЊ СЃРєРѕРїРёСЂРѕРІР°С‚СЊ', 'error');
+      showToast('Не удалось скопировать', 'error');
     });
   };
 
   window.deleteVeto = async function(id) {
-    if (!confirm('РЈРґР°Р»РёС‚СЊ РІРµС‚Рѕ?')) return;
+    if (!confirm('Удалить вето?')) return;
 
-    // РЈРґР°Р»СЏРµРј С‡РµСЂРµР· MongoDB API (localStorage + СЃРµСЂРІРµСЂ)
+    // Удаляем через MongoDB API (localStorage + сервер)
     await DB.remove('pl_vetos', id);
     renderVetoTable();
-    showToast('Р’РµС‚Рѕ СѓРґР°Р»РµРЅРѕ', 'error');
-    console.log(`[DB] рџ—‘пёЏ Р’РµС‚Рѕ ${id} СѓРґР°Р»РµРЅРѕ РёР· MongoDB`);
+    showToast('Вето удалено', 'error');
+    console.log(`[DB] ??? Вето ${id} удалено из MongoDB`);
   };
 
   renderVetoTable();

@@ -1,9 +1,9 @@
-п»ї// в”Ђв”Ђ Home Page в”Ђв”Ђ
+// -- Home Page --
 document.addEventListener('DOMContentLoaded', () => {
 
   let initialized = false;
 
-  // Р—Р°РїСѓСЃРєР°РµРј init С‚РѕР»СЊРєРѕ РїРѕСЃР»Рµ РїРѕР»СѓС‡РµРЅРёСЏ СЃРІРµР¶РёС… РґР°РЅРЅС‹С… РёР· Supabase
+  // Запускаем init только после получения свежих данных из Supabase
   window.addEventListener('db-updated', () => {
     if (!initialized) {
       init();
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const players = DB.get('pl_players');
     const news    = DB.get('pl_news');
 
-    // Hero counters вЂ” РёСЃРїРѕР»СЊР·СѓРµРј players РґР»СЏ РµРґРёРЅРѕРѕР±СЂР°Р·РёСЏ СЃ РіР»Р°РІРЅРѕР№ Рё Р°РґРјРёРЅРєРѕР№
+    // Hero counters — используем players для единообразия с главной и админкой
     animateCounter('heroTeams',   teams.length);
     animateCounter('heroPlayers', players.length);
     animateCounter('heroNews',    news.length);
@@ -71,14 +71,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // News preview (top 3)
     renderHomeNews(news.slice(0, 3));
 
-    // Р­РєСЃРїРѕСЂС‚РёСЂСѓРµРј С„СѓРЅРєС†РёСЋ РїРµСЂРµСЂРµРЅРґРµСЂР° РґР»СЏ db-updated
+    // Экспортируем функцию перерендера для db-updated
     window._renderHomeAll = function() {
       renderHomeTeams(currentTier);
       renderHomePlayers();
       renderHomeNews(DB.get('pl_news').slice(0, 3));
     };
 
-    // "РџРѕРєР°Р·Р°С‚СЊ РІСЃРµС…" button click
+    // "Показать всех" button click
     document.addEventListener('click', e => {
       if (e.target && e.target.id === 'showAllPlayersBtn') {
         showAllPlayers = true;
@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // в”Ђв”Ђ render functions в”Ђв”Ђ
+    // -- render functions --
     function renderHomeTeams(tier) {
       const grid = document.getElementById('homeTeamsGrid');
       if (!grid) return;
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (tier !== 'all') list = list.filter(t => String(t.tier) === String(tier));
       if (!list.length) {
         grid.className = 'teams-grid';
-        grid.innerHTML = `<div class="empty-state"><i class="fas fa-shield-halved"></i><p>РљРѕРјР°РЅРґС‹ РЅРµ РЅР°Р№РґРµРЅС‹</p></div>`;
+        grid.innerHTML = `<div class="empty-state"><i class="fas fa-shield-halved"></i><p>Команды не найдены</p></div>`;
         return;
       }
       const items = list.slice(0, 10);
@@ -103,9 +103,9 @@ document.addEventListener('DOMContentLoaded', () => {
         grid.innerHTML = `
           <div class="list-header">
             <span class="lh-num">#</span>
-            <span class="lh-name">РљРѕРјР°РЅРґР°</span>
-            <span class="lh-tier">РўРёСЂ</span>
-            <span class="lh-rating">Р РµР№С‚РёРЅРі</span>
+            <span class="lh-name">Команда</span>
+            <span class="lh-tier">Тир</span>
+            <span class="lh-rating">Рейтинг</span>
           </div>
           ${items.map((t, i) => teamListRow(t, i + 1)).join('')}`;
       } else {
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const allPlayers = DB.get('pl_players');
       if (!allPlayers.length) {
         grid.className = 'players-grid';
-        grid.innerHTML = `<div class="empty-state"><i class="fas fa-users"></i><p>РРіСЂРѕРєРё РЅРµ РґРѕР±Р°РІР»РµРЅС‹</p></div>`;
+        grid.innerHTML = `<div class="empty-state"><i class="fas fa-users"></i><p>Игроки не добавлены</p></div>`;
         return;
       }
       const playersList = showAllPlayers ? allPlayers : allPlayers.slice(0, 10);
@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const showAllBtn = hasMore
         ? `<div style="text-align:center;margin-top:24px;">
              <button id="showAllPlayersBtn" class="btn btn-outline">
-               <i class="fas fa-users"></i> РџРѕРєР°Р·Р°С‚СЊ РІСЃРµС… РёРіСЂРѕРєРѕРІ (${allPlayers.length})
+               <i class="fas fa-users"></i> Показать всех игроков (${allPlayers.length})
              </button>
            </div>`
         : '';
@@ -138,9 +138,9 @@ document.addEventListener('DOMContentLoaded', () => {
         grid.innerHTML = `
           <div class="list-header players-header">
             <span class="lh-num">#</span>
-            <span class="lh-name">РРіСЂРѕРє</span>
-            <span class="lh-tier">Р РѕР»СЊ</span>
-            <span class="lh-country">РљРѕРјР°РЅРґР°</span>
+            <span class="lh-name">Игрок</span>
+            <span class="lh-tier">Роль</span>
+            <span class="lh-country">Команда</span>
             <span class="lh-rating">K/D</span>
             <span class="lh-extra">HS%</span>
           </div>
@@ -154,9 +154,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (hasMore) grid.insertAdjacentHTML('afterend', showAllBtn);
     }
 
-  } // РєРѕРЅРµС† init()
+  } // конец init()
 
-}); // РєРѕРЅРµС† DOMContentLoaded
+}); // конец DOMContentLoaded
 
 
 function animateCounter(id, target) {
@@ -175,7 +175,7 @@ function renderHomeNews(newsList) {
   const grid = document.getElementById('homeNewsGrid');
   if (!grid) return;
   if (!newsList.length) {
-    grid.innerHTML = `<div class="empty-state"><i class="fas fa-newspaper"></i><p>РќРѕРІРѕСЃС‚РµР№ РїРѕРєР° РЅРµС‚</p></div>`;
+    grid.innerHTML = `<div class="empty-state"><i class="fas fa-newspaper"></i><p>Новостей пока нет</p></div>`;
     return;
   }
   grid.innerHTML = newsList.map(newsCard).join('');
@@ -195,7 +195,7 @@ function teamCard(t) {
       </div>
       <div class="team-meta">
         <span class="tier-badge tier-${t.tier}">T${t.tier}</span>
-        <span class="team-rating">Р РµР№С‚РёРЅРі: <span>${t.rating || 0}</span></span>
+        <span class="team-rating">Рейтинг: <span>${t.rating || 0}</span></span>
       </div>
       ${t.description ? `<div class="team-desc">${t.description}</div>` : ''}
     </div>`;
@@ -219,10 +219,10 @@ function playerCard(p) {
     ? `<img src="${p.photo}" alt="${p.nick}" />`
     : `<i class="fas fa-user"></i>`;
   const stars = renderStars(p.rating || 0);
-  const kd   = p.stats && p.stats.kd   ? p.stats.kd          : 'вЂ”';
-  const hs   = p.stats && p.stats.hs   ? p.stats.hs + '%'     : 'вЂ”';
-  const wins = p.stats && p.stats.wins ? p.stats.wins         : 'вЂ”';
-  const adr  = p.stats && p.stats.adr  ? p.stats.adr          : 'вЂ”';
+  const kd   = p.stats && p.stats.kd   ? p.stats.kd          : '—';
+  const hs   = p.stats && p.stats.hs   ? p.stats.hs + '%'     : '—';
+  const wins = p.stats && p.stats.wins ? p.stats.wins         : '—';
+  const adr  = p.stats && p.stats.adr  ? p.stats.adr          : '—';
   return `
     <div class="player-card">
       <div class="player-card-img">
@@ -237,7 +237,7 @@ function playerCard(p) {
         <div class="player-stats">
           <div class="player-stat-item"><span class="player-stat-val">${kd}</span><span class="player-stat-lbl">K/D</span></div>
           <div class="player-stat-item"><span class="player-stat-val">${hs}</span><span class="player-stat-lbl">HS%</span></div>
-          <div class="player-stat-item"><span class="player-stat-val">${wins}</span><span class="player-stat-lbl">РџРѕР±РµРґ</span></div>
+          <div class="player-stat-item"><span class="player-stat-val">${wins}</span><span class="player-stat-lbl">Побед</span></div>
           <div class="player-stat-item"><span class="player-stat-val">${adr}</span><span class="player-stat-lbl">ADR</span></div>
         </div>
       </div>
@@ -248,21 +248,21 @@ function playerListRow(p, num) {
   const photo = p.photo
     ? `<img src="${p.photo}" alt="${p.nick}" class="list-logo" />`
     : `<span class="list-logo-placeholder">${p.nick.substring(0,2).toUpperCase()}</span>`;
-  const kd = p.stats && p.stats.kd ? p.stats.kd        : 'вЂ”';
-  const hs = p.stats && p.stats.hs ? p.stats.hs + '%'  : 'вЂ”';
+  const kd = p.stats && p.stats.kd ? p.stats.kd        : '—';
+  const hs = p.stats && p.stats.hs ? p.stats.hs + '%'  : '—';
   return `
     <div class="list-row players-row">
       <span class="lh-num lr-num">${num}</span>
       <span class="lh-name lr-name">${photo} <strong>${p.nick}</strong>${p.name ? `<small class="lr-real">${p.name}</small>` : ''}</span>
-      <span class="lh-tier lr-muted">${p.role || 'вЂ”'}</span>
-      <span class="lh-country lr-muted">${p.team || 'вЂ”'}</span>
+      <span class="lh-tier lr-muted">${p.role || '—'}</span>
+      <span class="lh-country lr-muted">${p.team || '—'}</span>
       <span class="lh-rating lr-accent">${kd}</span>
       <span class="lh-extra lr-muted">${hs}</span>
     </div>`;
 }
 
 function newsCard(n) {
-  const catLabels = { general: 'РћР±С‰РµРµ', tournament: 'РўСѓСЂРЅРёСЂС‹', teams: 'РљРѕРјР°РЅРґС‹', players: 'РРіСЂРѕРєРё' };
+  const catLabels = { general: 'Общее', tournament: 'Турниры', teams: 'Команды', players: 'Игроки' };
   const img = n.image
     ? `<img src="${n.image}" alt="${n.title}" />`
     : `<i class="fas fa-newspaper news-no-img"></i>`;
@@ -280,24 +280,24 @@ function newsCard(n) {
         <div class="news-title">${n.title}</div>
         <div class="news-excerpt">${n.excerpt || ''}</div>
         <span class="news-read-more" onclick="event.stopPropagation(); openNewsModal('${safeId}')">
-          Р§РёС‚Р°С‚СЊ РґР°Р»РµРµ <i class="fas fa-arrow-right"></i>
+          Читать далее <i class="fas fa-arrow-right"></i>
         </span>
       </div>
     </div>`;
 }
 
-// РћС‚РєСЂС‹С‚РёРµ РјРѕРґР°Р»СЊРЅРѕРіРѕ РѕРєРЅР° СЃ РЅРѕРІРѕСЃС‚СЊСЋ
+// Открытие модального окна с новостью
 function openNewsModal(id) {
   const newsList = DB.get('pl_news');
-  // РС‰РµРј РїРѕ СЃС‚СЂРѕРєРѕРІРѕРјСѓ СЃСЂР°РІРЅРµРЅРёСЋ вЂ” MongoDB id СЌС‚Рѕ СЃС‚СЂРѕРєРё
+  // Ищем по строковому сравнению — MongoDB id это строки
   const n = newsList.find(x => String(x.id) === String(id));
   if (!n) return;
   
-  const catLabels = { general: 'РћР±С‰РµРµ', tournament: 'РўСѓСЂРЅРёСЂС‹', teams: 'РљРѕРјР°РЅРґС‹', players: 'РРіСЂРѕРєРё' };
+  const catLabels = { general: 'Общее', tournament: 'Турниры', teams: 'Команды', players: 'Игроки' };
   const d = new Date(n.createdAt || n.date);
   const dateStr = isNaN(d) ? '' : d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
   
-  // РЎРѕР·РґР°С‘Рј РјРѕРґР°Р»РєСѓ РµСЃР»Рё РµС‘ РЅРµС‚
+  // Создаём модалку если её нет
   let modal = document.getElementById('homeNewsModal');
   if (!modal) {
     modal = document.createElement('div');
@@ -324,7 +324,7 @@ function openNewsModal(id) {
     <div style="padding:20px 22px 24px">
       <h2 style="font-size:1.25rem;font-weight:800;line-height:1.35;margin-bottom:10px;color:var(--text)">${n.title}</h2>
       ${dateStr ? `<div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px"><i class="fas fa-calendar-alt" style="color:var(--text-dim)"></i>${dateStr}</div>` : ''}
-      <div style="font-size:0.9rem;line-height:1.75;color:var(--text-muted);white-space:pre-wrap;word-break:break-word">${n.content || n.excerpt || 'РўРµРєСЃС‚ РЅРѕРІРѕСЃС‚Рё РЅРµ СѓРєР°Р·Р°РЅ'}</div>
+      <div style="font-size:0.9rem;line-height:1.75;color:var(--text-muted);white-space:pre-wrap;word-break:break-word">${n.content || n.excerpt || 'Текст новости не указан'}</div>
     </div>`;
   modal.classList.add('active');
 }

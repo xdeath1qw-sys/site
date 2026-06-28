@@ -1,14 +1,14 @@
-п»ї<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Р’РµС‚Рѕ РєР°СЂС‚ вЂ” EFL League</title>
+  <title>Вето карт — EFL League</title>
   <link rel="icon" type="image/svg+xml" href="efl-logo.svg" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
-    /* -- РћСЃРЅРѕРІРЅРѕР№ Р»РµР№Р°СѓС‚ РІРµС‚Рѕ -- */
+    /* -- Основной лейаут вето -- */
     .veto-page { padding: 80px 12px 40px; min-height: 100vh; background: var(--bg); }
 
     .veto-loading, .veto-not-found {
@@ -18,7 +18,7 @@
     }
     .veto-not-found i { font-size: 3rem; color: var(--danger); }
 
-    /* РЁР°РїРєР° */
+    /* Шапка */
     .veto-header { margin-bottom: 16px; }
     .veto-header-inner {
       display: flex; align-items: center; justify-content: center;
@@ -40,7 +40,7 @@
     .veto-tournament { font-size: 0.82rem; color: var(--text-muted); }
     .veto-copy-btn { font-size: 0.82rem; padding: 6px 14px; }
 
-    /* РћР¶РёРґР°РЅРёРµ */
+    /* Ожидание */
     .veto-waiting {
       display: flex; flex-direction: column; align-items: center;
       justify-content: center; gap: 12px; padding: 60px 20px;
@@ -49,7 +49,7 @@
     .veto-waiting i { font-size: 2.5rem; color: var(--warning); }
     .veto-waiting h3 { color: var(--text); margin: 0; }
 
-    /* -- РўСЂС‘С…РєРѕР»РѕРЅРѕС‡РЅС‹Р№ Р»РµР№Р°СѓС‚ -- */
+    /* -- Трёхколоночный лейаут -- */
     .veto-layout {
       display: grid;
       grid-template-columns: 200px 1fr 200px;
@@ -59,7 +59,7 @@
       align-items: start;
     }
 
-    /* РљРѕР»РѕРЅРєР° РёРіСЂРѕРєРѕРІ */
+    /* Колонка игроков */
     .veto-players-col {
       display: flex; flex-direction: column; gap: 6px;
     }
@@ -97,10 +97,10 @@
     }
     .veto-players-col.right .veto-player-nick { text-align: right; }
 
-    /* Р¦РµРЅС‚СЂР°Р»СЊРЅР°СЏ РєРѕР»РѕРЅРєР° */
+    /* Центральная колонка */
     .veto-center-col { display: flex; flex-direction: column; gap: 12px; }
 
-    /* РРЅРґРёРєР°С‚РѕСЂ С…РѕРґР° */
+    /* Индикатор хода */
     .veto-turn-indicator {
       display: flex; align-items: center; justify-content: center;
       gap: 12px; padding: 10px 16px;
@@ -115,7 +115,7 @@
     .vti-opponent-turn { color: var(--text-muted); }
     .vti-done       { color: var(--success) !important; }
 
-    /* РўР°Р№РјРµСЂ */
+    /* Таймер */
     .veto-timer-wrap {
       display: flex; align-items: center; justify-content: center;
       position: relative; width: 36px; height: 36px; flex-shrink: 0;
@@ -129,7 +129,7 @@
       from { transform: scale(1); } to { transform: scale(1.2); }
     }
 
-    /* РЎРµС‚РєР° РєР°СЂС‚ */
+    /* Сетка карт */
     .veto-maps-row {
       display: flex; flex-direction: column; gap: 4px;
     }
@@ -155,20 +155,20 @@
       transform: translateX(3px);
     }
 
-    /* Р—Р°Р±Р°РЅРµРЅР° вЂ” СЃРµСЂР°СЏ */
+    /* Забанена — серая */
     .veto-map-card.banned {
       opacity: 0.4;
       filter: grayscale(1) brightness(0.6);
       pointer-events: none;
     }
 
-    /* Р—Р°РїРёРєР°РЅР° вЂ” Р·РµР»С‘РЅР°СЏ РѕР±РІРѕРґРєР° */
+    /* Запикана — зелёная обводка */
     .veto-map-card.picked {
       border-color: rgba(34,197,94,0.4);
       background: rgba(34,197,94,0.05);
     }
 
-    /* РџСЂРµРІСЊСЋ РєР°СЂС‚С‹ */
+    /* Превью карты */
     .vmc-thumb {
       width: 88px;
       height: 56px;
@@ -177,7 +177,7 @@
       background-position: center;
     }
 
-    /* РќР°Р·РІР°РЅРёРµ РєР°СЂС‚С‹ */
+    /* Название карты */
     .vmc-name {
       font-size: 0.95rem;
       font-weight: 600;
@@ -187,7 +187,7 @@
       letter-spacing: 0.3px;
     }
 
-    /* РЎС‚Р°С‚СѓСЃ СЃРїСЂР°РІР° */
+    /* Статус справа */
     .vmc-status {
       font-size: 0.7rem;
       font-weight: 800;
@@ -215,7 +215,7 @@
       opacity: 0.7;
     }
 
-    /* РљР°СЂС‚РѕС‡РєР° СЂРµР·СѓР»СЊС‚Р°С‚Р° */
+    /* Карточка результата */
     .veto-result {
       background: var(--card); border: 1px solid var(--border);
       border-radius: 12px; padding: 16px 20px;
@@ -237,7 +237,7 @@
     .vrr-decider { background: rgba(245,158,11,0.15); color: #f59e0b; }
     .vrr-by { font-size: 0.78rem; color: var(--text-muted); }
 
-    /* РђРґР°РїС‚РёРІ */
+    /* Адаптив */
     @media (max-width: 860px) {
       .veto-layout { grid-template-columns: 1fr; }
       .veto-players-col { display: none; }
@@ -249,24 +249,24 @@
     <div class="nav-container">
       <a href="index.html" class="nav-logo"><img class="logo-img" src="efl-logo.svg" alt="EFL"> EFL League</a>
       <ul class="nav-links" id="navLinks">
-        <li><a href="index.html"><i class="fas fa-home"></i> Р“Р»Р°РІРЅР°СЏ</a></li>
-        <li><a href="teams.html"><i class="fas fa-shield-halved"></i> РљРѕРјР°РЅРґС‹</a></li>
-        <li><a href="players.html"><i class="fas fa-users"></i> РРіСЂРѕРєРё</a></li>
-        <li><a href="news.html"><i class="fas fa-newspaper"></i> РќРѕРІРѕСЃС‚Рё</a></li>
-        <li><a href="tournaments.html"><i class="fas fa-trophy"></i> РўСѓСЂРЅРёСЂС‹</a></li>
-        <li><a href="rules.html"><i class="fas fa-gavel"></i> РџСЂР°РІРёР»Р°</a></li>
+        <li><a href="index.html"><i class="fas fa-home"></i> Главная</a></li>
+        <li><a href="teams.html"><i class="fas fa-shield-halved"></i> Команды</a></li>
+        <li><a href="players.html"><i class="fas fa-users"></i> Игроки</a></li>
+        <li><a href="news.html"><i class="fas fa-newspaper"></i> Новости</a></li>
+        <li><a href="tournaments.html"><i class="fas fa-trophy"></i> Турниры</a></li>
+        <li><a href="rules.html"><i class="fas fa-gavel"></i> Правила</a></li>
       </ul>
       <div class="nav-actions">
         <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon" id="themeIcon"></i></button>
         <div id="authButtons">
-          <a href="login.html" class="btn btn-outline">Р’РѕР№С‚Рё</a>
-          <a href="register.html" class="btn btn-primary">Р РµРіРёСЃС‚СЂР°С†РёСЏ</a>
+          <a href="login.html" class="btn btn-outline">Войти</a>
+          <a href="register.html" class="btn btn-primary">Регистрация</a>
         </div>
         <div id="userMenu" style="display:none" class="user-menu">
           <div class="user-avatar" id="userAvatarNav"><i class="fas fa-user"></i></div>
           <div class="user-dropdown" id="userDropdown">
-            <a href="profile.html"><i class="fas fa-id-card"></i> РџСЂРѕС„РёР»СЊ</a>
-            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Р’С‹Р№С‚Рё</a>
+            <a href="profile.html"><i class="fas fa-id-card"></i> Профиль</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
           </div>
         </div>
         <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
@@ -278,70 +278,70 @@
 
     <div class="veto-loading" id="vetoLoading">
       <i class="fas fa-spinner fa-spin" style="font-size:2rem;color:var(--primary)"></i>
-      <span>Р—Р°РіСЂСѓР·РєР° РІРµС‚Рѕ...</span>
+      <span>Загрузка вето...</span>
     </div>
 
     <div class="veto-not-found" id="vetoNotFound" style="display:none">
       <i class="fas fa-ban"></i>
-      <h2>Р’РµС‚Рѕ РЅРµ РЅР°Р№РґРµРЅРѕ</h2>
-      <p>РџСЂРѕРІРµСЂСЊС‚Рµ СЃСЃС‹Р»РєСѓ РёР»Рё РѕР±СЂР°С‚РёС‚РµСЃСЊ Рє Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂСѓ.</p>
-      <a href="index.html" class="btn btn-primary"><i class="fas fa-home"></i> РќР° РіР»Р°РІРЅСѓСЋ</a>
+      <h2>Вето не найдено</h2>
+      <p>Проверьте ссылку или обратитесь к администратору.</p>
+      <a href="index.html" class="btn btn-primary"><i class="fas fa-home"></i> На главную</a>
     </div>
 
     <div id="vetoContent" style="display:none">
 
-      <!-- РЁР°РїРєР° -->
+      <!-- Шапка -->
       <div class="veto-header">
         <div class="veto-header-inner">
           <div class="veto-match-title">
-            <span class="veto-team-name" id="vhTeam1">вЂ”</span>
+            <span class="veto-team-name" id="vhTeam1">—</span>
             <span class="veto-vs">VS</span>
-            <span class="veto-team-name" id="vhTeam2">вЂ”</span>
+            <span class="veto-team-name" id="vhTeam2">—</span>
           </div>
           <span class="veto-format-badge" id="vhFormat">BO1</span>
-          <span class="veto-status-badge" id="vhStatus">РћР¶РёРґР°РЅРёРµ</span>
+          <span class="veto-status-badge" id="vhStatus">Ожидание</span>
           <span class="veto-tournament" id="vhTournament"></span>
           <div id="adminStartWrap" style="display:none">
             <button class="btn btn-primary" id="startVetoBtn" style="font-size:0.85rem;padding:7px 16px">
-              <i class="fas fa-play"></i> РќР°С‡Р°С‚СЊ РІРµС‚Рѕ
+              <i class="fas fa-play"></i> Начать вето
             </button>
           </div>
           <button class="btn btn-outline veto-copy-btn" id="copyVetoLink">
-            <i class="fas fa-link"></i> РЎРєРѕРїРёСЂРѕРІР°С‚СЊ СЃСЃС‹Р»РєСѓ
+            <i class="fas fa-link"></i> Скопировать ссылку
           </button>
         </div>
       </div>
 
-      <!-- РћР¶РёРґР°РЅРёРµ -->
+      <!-- Ожидание -->
       <div class="veto-waiting" id="vetoWaiting" style="display:none">
         <i class="fas fa-clock"></i>
-        <h3>РћР¶РёРґР°РµРј РЅР°С‡Р°Р»Р° РІРµС‚Рѕ</h3>
-        <p>РђРґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ СЃРєРѕСЂРѕ Р·Р°РїСѓСЃС‚РёС‚ РІРµС‚Рѕ. РќРµ Р·Р°РєСЂС‹РІР°Р№С‚Рµ СЃС‚СЂР°РЅРёС†Сѓ.</p>
+        <h3>Ожидаем начала вето</h3>
+        <p>Администратор скоро запустит вето. Не закрывайте страницу.</p>
         <div id="adminStartWrapWaiting" style="display:none;margin-top:16px">
           <button class="btn btn-primary" id="startVetoBtnWaiting">
-            <i class="fas fa-play"></i> РќР°С‡Р°С‚СЊ РІРµС‚Рѕ
+            <i class="fas fa-play"></i> Начать вето
           </button>
         </div>
       </div>
 
-      <!-- РђРєС‚РёРІРЅРѕРµ РІРµС‚Рѕ вЂ” С‚СЂРё РєРѕР»РѕРЅРєРё -->
+      <!-- Активное вето — три колонки -->
       <div class="veto-layout" id="vetoMain" style="display:none">
 
-        <!-- Р›РµРІР°СЏ РєРѕР»РѕРЅРєР°: РєРѕРјР°РЅРґР° 1 -->
+        <!-- Левая колонка: команда 1 -->
         <div class="veto-players-col left" id="playersCol1">
-          <div class="veto-players-col-title">РљРѕРјР°РЅРґР°</div>
-          <div class="veto-players-col-teamname" id="playersTeam1Name">вЂ”</div>
+          <div class="veto-players-col-title">Команда</div>
+          <div class="veto-players-col-teamname" id="playersTeam1Name">—</div>
           <div id="playersList1"></div>
         </div>
 
-        <!-- Р¦РµРЅС‚СЂ: РёРЅРґРёРєР°С‚РѕСЂ + РєР°СЂС‚С‹ + СЂРµР·СѓР»СЊС‚Р°С‚ -->
+        <!-- Центр: индикатор + карты + результат -->
         <div class="veto-center-col">
 
-          <!-- РРЅРґРёРєР°С‚РѕСЂ С…РѕРґР° + С‚Р°Р№РјРµСЂ -->
+          <!-- Индикатор хода + таймер -->
           <div class="veto-turn-indicator" id="vetoTurnIndicator">
             <div class="vti-inner" id="vtiInner">
               <i class="fas fa-crosshairs"></i>
-              <span id="vtiText">РћР¶РёРґР°РЅРёРµ...</span>
+              <span id="vtiText">Ожидание...</span>
             </div>
             <div class="veto-timer-wrap" id="vetoTimerWrap" style="display:none">
               <svg class="veto-timer-svg" viewBox="0 0 24 24">
@@ -354,21 +354,21 @@
             </div>
           </div>
 
-          <!-- РЎРїРёСЃРѕРє РєР°СЂС‚ -->
+          <!-- Список карт -->
           <div class="veto-maps-row" id="vetoMapsGrid"></div>
 
-          <!-- Р РµР·СѓР»СЊС‚Р°С‚ -->
+          <!-- Результат -->
           <div class="veto-result" id="vetoResult" style="display:none">
-            <div class="veto-result-title"><i class="fas fa-map-marked-alt"></i> РљР°СЂС‚С‹ РјР°С‚С‡Р°</div>
+            <div class="veto-result-title"><i class="fas fa-map-marked-alt"></i> Карты матча</div>
             <div id="vetoResultMaps"></div>
           </div>
 
         </div>
 
-        <!-- РџСЂР°РІР°СЏ РєРѕР»РѕРЅРєР°: РєРѕРјР°РЅРґР° 2 -->
+        <!-- Правая колонка: команда 2 -->
         <div class="veto-players-col right" id="playersCol2">
-          <div class="veto-players-col-title">РљРѕРјР°РЅРґР°</div>
-          <div class="veto-players-col-teamname" id="playersTeam2Name">вЂ”</div>
+          <div class="veto-players-col-title">Команда</div>
+          <div class="veto-players-col-teamname" id="playersTeam2Name">—</div>
           <div id="playersList2"></div>
         </div>
 
@@ -376,7 +376,7 @@
     </div>
   </div>
 
-  <!-- СЃРєСЂС‹С‚С‹Р№ СЌР»РµРјРµРЅС‚ РґР»СЏ Р»РѕРіР° (РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ veto.js) -->
+  <!-- скрытый элемент для лога (используется в veto.js) -->
   <div id="vetoLogList" style="display:none"></div>
 
   <script src="js/storage.js?v=6"></script>
@@ -386,7 +386,7 @@
   <script src="js/veto.js"></script>
 
   <script>
-    // Р РµРЅРґРµСЂ РёРіСЂРѕРєРѕРІ РїРѕ РєРѕР»РѕРЅРєР°Рј (РІС‹Р·С‹РІР°РµС‚СЃСЏ РёР· veto.js С‡РµСЂРµР· window.renderVetoPlayers)
+    // Рендер игроков по колонкам (вызывается из veto.js через window.renderVetoPlayers)
     window.renderVetoPlayers = function(team1, team2) {
       renderCol(team1, 'playersTeam1Name', 'playersList1', false);
       renderCol(team2, 'playersTeam2Name', 'playersList2', true);
@@ -398,7 +398,7 @@
       const players = DB.get('pl_players').filter(p => p.team === teamName);
       const listEl = document.getElementById(listId);
       if (!players.length) {
-        listEl.innerHTML = '<div style="font-size:0.78rem;color:var(--text-muted);text-align:center;padding:6px">вЂ”</div>';
+        listEl.innerHTML = '<div style="font-size:0.78rem;color:var(--text-muted);text-align:center;padding:6px">—</div>';
         return;
       }
       listEl.innerHTML = players.map(p => {

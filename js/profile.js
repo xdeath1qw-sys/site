@@ -1,10 +1,10 @@
-п»ї// в”Ђв”Ђ Profile Page в”Ђв”Ђ
+// -- Profile Page --
 document.addEventListener('DOMContentLoaded', () => {
   whenDbReady(() => {
   const params     = new URLSearchParams(window.location.search);
-  const viewUser   = params.get('user'); // РЅРёРє РёРіСЂРѕРєР° РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°
+  const viewUser   = params.get('user'); // ник игрока для просмотра
 
-  // Р•СЃР»Рё РѕС‚РєСЂС‹РІР°РµРј С‡СѓР¶РѕР№ РїСЂРѕС„РёР»СЊ
+  // Если открываем чужой профиль
   if (viewUser) {
     const layout = document.getElementById('profileLayout');
     if (!layout) return;
@@ -12,12 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const players = DB.get('pl_players');
     const allUsers = DB.get('pl_users');
 
-    // РС‰РµРј РёРіСЂРѕРєР° РїРѕ РЅРёРєСѓ
+    // Ищем игрока по нику
     const linkedPlayer = players.find(p =>
       (p.nick || '').toLowerCase() === viewUser.toLowerCase()
     );
 
-    // РС‰РµРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РїРѕ РЅРёРєСѓ
+    // Ищем пользователя по нику
     const targetUser = allUsers.find(u =>
       u.username.toLowerCase() === viewUser.toLowerCase()
     );
@@ -26,13 +26,13 @@ document.addEventListener('DOMContentLoaded', () => {
       layout.innerHTML = `
         <div class="empty-state" style="grid-column:1/-1">
           <i class="fas fa-user-slash"></i>
-          <p>РРіСЂРѕРє В«${viewUser}В» РЅРµ РЅР°Р№РґРµРЅ</p>
-          <a href="teams.html" class="btn btn-outline btn-sm" style="margin-top:14px">в†ђ РќР°Р·Р°Рґ</a>
+          <p>Игрок «${viewUser}» не найден</p>
+          <a href="teams.html" class="btn btn-outline btn-sm" style="margin-top:14px">< Назад</a>
         </div>`;
       return;
     }
 
-    // РЎРѕР·РґР°С‘Рј РѕР±СЉРµРєС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РґР»СЏ СЂРµРЅРґРµСЂР° (С‚РѕР»СЊРєРѕ РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°)
+    // Создаём объект пользователя для рендера (только для просмотра)
     const fakeUser = targetUser
       ? (({ password: _, ...safe }) => safe)(targetUser)
       : { id: null, username: viewUser, email: '', role: 'user', avatar: linkedPlayer?.photo || '' };
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // РЎРІРѕР№ РїСЂРѕС„РёР»СЊ
+  // Свой профиль
   const user = Auth.current();
   const layout = document.getElementById('profileLayout');
   if (!layout) return;
@@ -50,8 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
     layout.innerHTML = `
       <div class="empty-state" style="grid-column:1/-1">
         <i class="fas fa-lock"></i>
-        <p>Р’С‹ РЅРµ РІРѕС€Р»Рё РІ Р°РєРєР°СѓРЅС‚</p>
-        <a href="login.html" class="btn btn-primary" style="margin-top:16px">Р’РѕР№С‚Рё</a>
+        <p>Вы не вошли в аккаунт</p>
+        <a href="login.html" class="btn btn-primary" style="margin-top:16px">Войти</a>
       </div>`;
     return;
   }
@@ -66,8 +66,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   renderProfile(user, linkedPlayer, layout, false);
-  }); // РєРѕРЅРµС† whenDbReady
-}); // РєРѕРЅРµС† DOMContentLoaded
+  }); // конец whenDbReady
+}); // конец DOMContentLoaded
 
 function renderProfile(user, player, layout, readOnly) {
   layout.className = 'player-profile-layout';
@@ -88,33 +88,33 @@ function renderProfile(user, player, layout, readOnly) {
 
   // Info table rows
   const infoRows = [
-    { label: 'РљРѕРјР°РЅРґР°',  val: player?.team    || 'вЂ”' },
-    { label: 'Р РѕР»СЊ',     val: player?.role    || 'вЂ”' },
-    { label: 'РњР°С‚С‡РµР№',   val: s.matches || 'вЂ”' },
-    { label: 'РџРѕР±РµРґ',    val: s.wins    || 'вЂ”' },
-    { label: 'Winrate',  val: s.matches && s.wins ? Math.round(s.wins/s.matches*100)+'%' : 'вЂ”' },
+    { label: 'Команда',  val: player?.team    || '—' },
+    { label: 'Роль',     val: player?.role    || '—' },
+    { label: 'Матчей',   val: s.matches || '—' },
+    { label: 'Побед',    val: s.wins    || '—' },
+    { label: 'Winrate',  val: s.matches && s.wins ? Math.round(s.wins/s.matches*100)+'%' : '—' },
   ].map(r => `
     <div class="pp-info-row">
       <span class="pp-info-label">${r.label}</span>
       <span class="pp-info-val">${r.val}</span>
     </div>`).join('');
 
-  // Skill bars removed вЂ” show only key stats
+  // Skill bars removed — show only key stats
   const statItems = [
-    { label: 'K/D Ratio', val: kd ? kd.toFixed(2) : 'вЂ”' },
-    { label: 'Headshot %', val: hs ? hs + '%' : 'вЂ”' },
-    { label: 'ADR', val: adr || 'вЂ”' },
-    { label: 'РџРѕР±РµРґ', val: s.wins || 'вЂ”' },
-    { label: 'РњР°С‚С‡РµР№', val: s.matches || 'вЂ”' },
-    { label: 'Winrate', val: winrate ? winrate + '%' : 'вЂ”' },
+    { label: 'K/D Ratio', val: kd ? kd.toFixed(2) : '—' },
+    { label: 'Headshot %', val: hs ? hs + '%' : '—' },
+    { label: 'ADR', val: adr || '—' },
+    { label: 'Побед', val: s.wins || '—' },
+    { label: 'Матчей', val: s.matches || '—' },
+    { label: 'Winrate', val: winrate ? winrate + '%' : '—' },
   ].map(item => `
     <div class="pp-stat-line">
       <span>${item.label}</span>
       <span class="pp-stat-accent">${item.val}</span>
     </div>`).join('');
 
-  // Matches вЂ” РѕР±С‹С‡РЅС‹Рµ РјР°С‚С‡Рё + Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹Рµ С‚СѓСЂРЅРёСЂС‹
-  // teamName Р±РµСЂС‘Рј РёР· player.team РР›Р РёР· РєРѕРјР°РЅРґС‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РїРѕ teamId
+  // Matches — обычные матчи + зарегистрированные турниры
+  // teamName берём из player.team ИЛИ из команды пользователя по teamId
   let teamName = player?.team || '';
   if (!teamName && user.teamId) {
     const allTeamsForMatch = DB.get('pl_teams');
@@ -128,7 +128,7 @@ function renderProfile(user, player, layout, readOnly) {
         .slice(0, 8)
     : [];
 
-  // РўСѓСЂРЅРёСЂС‹ РіРґРµ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅР° РєРѕРјР°РЅРґР° РёРіСЂРѕРєР°
+  // Турниры где зарегистрирована команда игрока
   const tournamentEntries = [];
   if (teamName) {
     const allTournaments = (() => {
@@ -141,7 +141,7 @@ function renderProfile(user, player, layout, readOnly) {
     const regs = (() => { try { return JSON.parse(localStorage.getItem('pl_tourn_regs')) || {}; } catch(_) { return {}; } })();
     allTournaments.forEach(t => {
       if (t.status === 'finished') return;
-      // РС‰РµРј РїРѕ РІСЃРµРј РІРѕР·РјРѕР¶РЅС‹Рј РєР»СЋС‡Р°Рј id
+      // Ищем по всем возможным ключам id
       const regList = regs[t.id] || regs[String(t.id)] || regs[Number(t.id)] || [];
       const isRegistered = regList.some(r =>
         r.teamName === teamName ||
@@ -160,14 +160,14 @@ function renderProfile(user, player, layout, readOnly) {
     });
   }
 
-  // РћР±СЉРµРґРёРЅСЏРµРј: СЃРЅР°С‡Р°Р»Р° С‚СѓСЂРЅРёСЂС‹, РїРѕС‚РѕРј РјР°С‚С‡Рё
+  // Объединяем: сначала турниры, потом матчи
   const matchRows = (() => {
     const rows = [];
 
     tournamentEntries.forEach(t => {
       const statusLabel = t.status === 'ongoing'
-        ? `<span class="pp-tourn-status ongoing"><i class="fas fa-bolt"></i> РРґС‘С‚ СЃРµР№С‡Р°СЃ</span>`
-        : `<span class="pp-tourn-status upcoming"><i class="fas fa-clock"></i> РЎРєРѕСЂРѕ</span>`;
+        ? `<span class="pp-tourn-status ongoing"><i class="fas fa-bolt"></i> Идёт сейчас</span>`
+        : `<span class="pp-tourn-status upcoming"><i class="fas fa-clock"></i> Скоро</span>`;
       const dateStr = t.dateStart
         ? new Date(t.dateStart).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
         : '';
@@ -201,7 +201,7 @@ function renderProfile(user, player, layout, readOnly) {
       else if (myScore < oppScore) rc = 'match-loss';
 
       const scoreStr = m.status === 'upcoming'
-        ? `<span class="match-score upcoming">СЃРєРѕСЂРѕ</span>`
+        ? `<span class="match-score upcoming">скоро</span>`
         : `<span class="match-score ${myScore > oppScore ? 'win' : myScore < oppScore ? 'loss' : 'draw'}">${myScore} : ${oppScore}</span>`;
 
       const ind = m.status === 'upcoming' ? 'ind-upcoming' : myScore > oppScore ? 'ind-win' : myScore < oppScore ? 'ind-loss' : 'ind-draw';
@@ -214,7 +214,7 @@ function renderProfile(user, player, layout, readOnly) {
           </div>
           <div class="pp-match-right">
             ${scoreStr}
-            ${m.url ? `<a href="${m.url}" target="_blank" class="pp-match-link" title="РЎРјРѕС‚СЂРµС‚СЊ РЅР° xplay"><i class="fas fa-external-link-alt"></i></a>` : ''}
+            ${m.url ? `<a href="${m.url}" target="_blank" class="pp-match-link" title="Смотреть на xplay"><i class="fas fa-external-link-alt"></i></a>` : ''}
             <div class="pp-match-indicator ${ind}"></div>
           </div>
         </div>`);
@@ -222,17 +222,17 @@ function renderProfile(user, player, layout, readOnly) {
 
     return rows.length
       ? rows.join('')
-      : `<div class="pp-no-matches">РњР°С‚С‡РµР№ РїРѕРєР° РЅРµС‚</div>`;
+      : `<div class="pp-no-matches">Матчей пока нет</div>`;
   })();
 
   // Player select options for link
   const allPlayers = DB.get('pl_players');
   const playerOptions = allPlayers.map(p =>
-    `<option value="${p.id}" ${player && player.id === p.id ? 'selected' : ''}>${p.nick}${p.team ? ' вЂ” ' + p.team : ''}</option>`
+    `<option value="${p.id}" ${player && player.id === p.id ? 'selected' : ''}>${p.nick}${p.team ? ' — ' + p.team : ''}</option>`
   ).join('');
 
   layout.innerHTML = `
-    <!-- в•ђв•ђв•ђ TOP HERO CARD в•ђв•ђв•ђ -->
+    <!-- === TOP HERO CARD === -->
     <div class="pp-hero">
       <div class="pp-hero-left">
         ${photoHTML}
@@ -247,54 +247,54 @@ function renderProfile(user, player, layout, readOnly) {
         </div>
       </div>
       <div class="pp-hero-right">
-        <div class="pp-role-badge role-${user.role}">${user.role === 'admin' ? 'вљЎ РђРґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ' : user.role === 'igl' ? 'рџ‘‘ РљР°РїРёС‚Р°РЅ (IGL)' : 'рџ‘¤ РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ'}</div>
+        <div class="pp-role-badge role-${user.role}">${user.role === 'admin' ? '? Администратор' : user.role === 'igl' ? '?? Капитан (IGL)' : '?? Пользователь'}</div>
         <div class="pp-social-links">
           ${user.faceitUrl ? `<a href="${user.faceitUrl}" target="_blank" rel="noopener" class="pp-social-btn pp-faceit-btn"><svg class="pp-faceit-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.189 2L4 9.196l2.513 2.513 5.163-5.163 2.497 2.497-2.677 2.675 2.497 2.498 2.677-2.677 2.496 2.496-5.145 5.145L16.535 22 22 16.534 11.189 2z" fill="#fff"/></svg> Faceit</a>` : ''}
           ${user.steamUrl  ? `<a href="${user.steamUrl}"  target="_blank" rel="noopener" class="pp-social-btn pp-steam-btn"><i class="fab fa-steam"></i> Steam</a>` : ''}
         </div>
-        ${user.role === 'admin' ? `<a href="admin.html" class="btn btn-primary btn-sm" style="margin-top:12px"><i class="fas fa-cog"></i> РџР°РЅРµР»СЊ СѓРїСЂР°РІР»РµРЅРёСЏ</a>` : ''}
+        ${user.role === 'admin' ? `<a href="admin.html" class="btn btn-primary btn-sm" style="margin-top:12px"><i class="fas fa-cog"></i> Панель управления</a>` : ''}
       </div>
     </div>
 
-    <!-- в•ђв•ђв•ђ AWARDS в•ђв•ђв•ђ -->
+    <!-- === AWARDS === -->
     ${buildAwardsStrip(player?.nick || user.username, 'player')}
 
-    <!-- в•ђв•ђв•ђ TABS в•ђв•ђв•ђ -->
+    <!-- === TABS === -->
     <div class="pp-tabs">
-      <button class="pp-tab active" data-tab="info"><i class="fas fa-chart-bar"></i> РЎС‚Р°С‚РёСЃС‚РёРєР°</button>
-      ${!readOnly && user.role === 'igl' ? `<button class="pp-tab" data-tab="team"><i class="fas fa-shield-halved"></i> РљРѕРјР°РЅРґР°</button>` : ''}
-      ${!readOnly ? `<button class="pp-tab" data-tab="edit"><i class="fas fa-edit"></i> Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ</button>` : ''}
+      <button class="pp-tab active" data-tab="info"><i class="fas fa-chart-bar"></i> Статистика</button>
+      ${!readOnly && user.role === 'igl' ? `<button class="pp-tab" data-tab="team"><i class="fas fa-shield-halved"></i> Команда</button>` : ''}
+      ${!readOnly ? `<button class="pp-tab" data-tab="edit"><i class="fas fa-edit"></i> Редактировать</button>` : ''}
     </div>
 
-    <!-- в•ђв•ђв•ђ TAB: INFO в•ђв•ђв•ђ -->
+    <!-- === TAB: INFO === -->
     <div class="pp-tab-content" id="tab-info">
       <div class="pp-two-col">
 
         <div class="pp-stats-block">
           <div class="pp-stats-title">
-            РЎС‚Р°С‚РёСЃС‚РёРєР°
-            <span class="pp-stats-sub">${s.matches ? `${s.matches} РєР°СЂС‚` : 'РЅРµС‚ РґР°РЅРЅС‹С…'}</span>
+            Статистика
+            <span class="pp-stats-sub">${s.matches ? `${s.matches} карт` : 'нет данных'}</span>
           </div>
           <div class="pp-stat-line">
             <span>K/D/A</span>
-            <span class="pp-stat-accent">${kd ? kd.toFixed(2) : 'вЂ”'} / ${hs ? hs : 'вЂ”'} / ${adr ? adr : 'вЂ”'}</span>
+            <span class="pp-stat-accent">${kd ? kd.toFixed(2) : '—'} / ${hs ? hs : '—'} / ${adr ? adr : '—'}</span>
           </div>
           <div class="pp-stat-line">
             <span>Headshot %</span>
-            <span class="pp-stat-accent">${hs ? hs + '%' : 'вЂ”'}</span>
+            <span class="pp-stat-accent">${hs ? hs + '%' : '—'}</span>
           </div>
           <div class="pp-stat-line">
             <span>ADR</span>
-            <span class="pp-stat-accent">${adr || 'вЂ”'}</span>
+            <span class="pp-stat-accent">${adr || '—'}</span>
           </div>
           <div class="pp-stat-line">
             <span>Winrate</span>
-            <span class="pp-stat-accent">${winrate ? winrate + '%' : 'вЂ”'}</span>
+            <span class="pp-stat-accent">${winrate ? winrate + '%' : '—'}</span>
           </div>
         </div>
 
         <div class="pp-matches-block">
-          <div class="pp-matches-title">РџСЂРµРґСЃС‚РѕСЏС‰РёРµ Рё РїРѕСЃР»РµРґРЅРёРµ РјР°С‚С‡Рё</div>
+          <div class="pp-matches-title">Предстоящие и последние матчи</div>
           ${matchRows}
         </div>
 
@@ -303,19 +303,19 @@ function renderProfile(user, player, layout, readOnly) {
 
     
 
-    <!-- в•ђв•ђв•ђ TAB: TEAM (IGL only) в•ђв•ђв•ђ -->
+    <!-- === TAB: TEAM (IGL only) === -->
     ${!readOnly && user.role === 'igl' ? `
     <div class="pp-tab-content" id="tab-team" style="display:none">
       <div class="igl-team-panel" id="iglTeamPanel"></div>
     </div>` : ''}
 
-    <!-- в•ђв•ђв•ђ TAB: EDIT в•ђв•ђв•ђ -->
+    <!-- === TAB: EDIT === -->
     ${!readOnly ? `
     <div class="pp-tab-content" id="tab-edit" style="display:none">      <div class="profile-details" style="width:100%">
-        <h3><i class="fas fa-user"></i> Р”Р°РЅРЅС‹Рµ Р°РєРєР°СѓРЅС‚Р°</h3>
+        <h3><i class="fas fa-user"></i> Данные аккаунта</h3>
         <div id="profileAlert" class="alert" style="display:none"></div>
         <div class="form-group">
-          <label><i class="fas fa-user"></i> РќРёРєРЅРµР№Рј</label>
+          <label><i class="fas fa-user"></i> Никнейм</label>
           <input type="text" id="pUsername" value="${user.username}" />
         </div>
         <div class="form-group">
@@ -325,33 +325,33 @@ function renderProfile(user, player, layout, readOnly) {
         <div class="form-group">
           <label>
             <svg class="pp-faceit-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:16px;height:16px;vertical-align:middle;margin-right:6px"><path d="M11.189 2L4 9.196l2.513 2.513 5.163-5.163 2.497 2.497-2.677 2.675 2.497 2.498 2.677-2.677 2.496 2.496-5.145 5.145L16.535 22 22 16.534 11.189 2z" fill="#FF5500"/></svg>
-            РЎСЃС‹Р»РєР° РЅР° Faceit РїСЂРѕС„РёР»СЊ
+            Ссылка на Faceit профиль
           </label>
-          <input type="url" id="pFaceit" placeholder="https://www.faceit.com/ru/players/Р’Р°С€РќРёРє" value="${user.faceitUrl || ''}" />
+          <input type="url" id="pFaceit" placeholder="https://www.faceit.com/ru/players/ВашНик" value="${user.faceitUrl || ''}" />
         </div>
         <div class="form-group">
           <label>
             <i class="fab fa-steam" style="color:#c6d4df;font-size:16px;vertical-align:middle;margin-right:6px"></i>
-            РЎСЃС‹Р»РєР° РЅР° Steam РїСЂРѕС„РёР»СЊ
+            Ссылка на Steam профиль
           </label>
-          <input type="url" id="pSteam" placeholder="https://steamcommunity.com/id/Р’Р°С€РќРёРє" value="${user.steamUrl || ''}" />
+          <input type="url" id="pSteam" placeholder="https://steamcommunity.com/id/ВашНик" value="${user.steamUrl || ''}" />
         </div>
         <div class="form-group">
-          <label><i class="fas fa-image"></i> РђРІР°С‚Р°СЂ</label>
+          <label><i class="fas fa-image"></i> Аватар</label>
           <div class="file-upload-area" id="avatarUploadArea">
             <i class="fas fa-cloud-upload-alt"></i>
-            <p>РќР°Р¶РјРёС‚Рµ РґР»СЏ РІС‹Р±РѕСЂР° С„РѕС‚Рѕ</p>
+            <p>Нажмите для выбора фото</p>
             <input type="file" id="avatarFile" accept="image/*" style="display:none" />
           </div>
           <div class="logo-preview" id="avatarPreview" style="${user.avatar ? 'display:flex' : 'display:none'}">
             <img id="avatarPreviewImg" src="${user.avatar || ''}" alt="avatar" style="border-radius:50%" />
           </div>
         </div>
-        <button class="btn btn-primary" id="saveProfileBtn"><i class="fas fa-save"></i> РЎРѕС…СЂР°РЅРёС‚СЊ</button>
+        <button class="btn btn-primary" id="saveProfileBtn"><i class="fas fa-save"></i> Сохранить</button>
       </div>
     </div>` : ''}`;
 
-  // в”Ђв”Ђ Tabs в”Ђв”Ђ
+  // -- Tabs --
   document.querySelectorAll('.pp-tab').forEach(tab => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('.pp-tab').forEach(t => t.classList.remove('active'));
@@ -361,7 +361,7 @@ function renderProfile(user, player, layout, readOnly) {
     });
   });
 
-  // в”Ђв”Ђ РђРІС‚РѕРѕР±РЅРѕРІР»РµРЅРёРµ РјР°С‚С‡РµР№ РєР°Р¶РґС‹Рµ 15 СЃРµРє в”Ђв”Ђ
+  // -- Автообновление матчей каждые 15 сек --
   function refreshMatches() {
     const block = document.querySelector('.pp-matches-block');
     if (!block) return;
@@ -379,7 +379,7 @@ function renderProfile(user, player, layout, readOnly) {
       .sort((a, b) => new Date(b.date) - new Date(a.date))
       .slice(0, 8);
 
-    // РўСѓСЂРЅРёСЂС‹
+    // Турниры
     const allTournaments = (() => {
       try {
         const raw = localStorage.getItem('pl_tournaments');
@@ -399,8 +399,8 @@ function renderProfile(user, player, layout, readOnly) {
       })
       .map(t => {
         const sl = t.status === 'ongoing'
-          ? `<span class="pp-tourn-status ongoing"><i class="fas fa-bolt"></i> РРґС‘С‚ СЃРµР№С‡Р°СЃ</span>`
-          : `<span class="pp-tourn-status upcoming"><i class="fas fa-clock"></i> РЎРєРѕСЂРѕ</span>`;
+          ? `<span class="pp-tourn-status ongoing"><i class="fas fa-bolt"></i> Идёт сейчас</span>`
+          : `<span class="pp-tourn-status upcoming"><i class="fas fa-clock"></i> Скоро</span>`;
         const dateStr = t.dateStart
           ? new Date(t.dateStart).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
           : '';
@@ -428,7 +428,7 @@ function renderProfile(user, player, layout, readOnly) {
       else if (myScore > oppScore) rc = 'match-win';
       else if (myScore < oppScore) rc = 'match-loss';
       const scoreStr = m.status === 'upcoming'
-        ? `<span class="match-score upcoming">СЃРєРѕСЂРѕ</span>`
+        ? `<span class="match-score upcoming">скоро</span>`
         : `<span class="match-score ${myScore > oppScore ? 'win' : myScore < oppScore ? 'loss' : 'draw'}">${myScore} : ${oppScore}</span>`;
       const ind = m.status === 'upcoming' ? 'ind-upcoming' : myScore > oppScore ? 'ind-win' : myScore < oppScore ? 'ind-loss' : 'ind-draw';
       return `
@@ -446,17 +446,17 @@ function renderProfile(user, player, layout, readOnly) {
     });
 
     const allRows = [...tournRows, ...matchRows2];
-    block.innerHTML = `<div class="pp-matches-title">РџСЂРµРґСЃС‚РѕСЏС‰РёРµ Рё РїРѕСЃР»РµРґРЅРёРµ РјР°С‚С‡Рё</div>${allRows.length ? allRows.join('') : '<div class="pp-no-matches">РњР°С‚С‡РµР№ РїРѕРєР° РЅРµС‚</div>'}`;
+    block.innerHTML = `<div class="pp-matches-title">Предстоящие и последние матчи</div>${allRows.length ? allRows.join('') : '<div class="pp-no-matches">Матчей пока нет</div>'}`;
   }
 
   setInterval(refreshMatches, 15000);
 
-  // в”Ђв”Ђ IGL Team Panel в”Ђв”Ђ
+  // -- IGL Team Panel --
   if (!readOnly && user.role === 'igl') {
     renderIglTeamPanel(user);
   }
 
-  // в”Ђв”Ђ Avatar upload в”Ђв”Ђ
+  // -- Avatar upload --
   if (!readOnly) {
     let newAvatar = user.avatar || '';
     const area      = document.getElementById('avatarUploadArea');
@@ -468,7 +468,7 @@ function renderProfile(user, player, layout, readOnly) {
       const file = fileInput.files[0];
       if (!file) return;
 
-      // РџРѕРєР°Р·С‹РІР°РµРј РїСЂРµРІСЊСЋ СЃСЂР°Р·Сѓ (Р»РѕРєР°Р»СЊРЅРѕ)
+      // Показываем превью сразу (локально)
       const reader = new FileReader();
       reader.onload = e => {
         previewImg.src = e.target.result;
@@ -476,18 +476,18 @@ function renderProfile(user, player, layout, readOnly) {
       };
       reader.readAsDataURL(file);
 
-      // Р—Р°РіСЂСѓР¶Р°РµРј РЅР° ImgBB
+      // Загружаем на ImgBB
       const uploadBtn = document.getElementById('saveProfileBtn');
-      if (uploadBtn) { uploadBtn.disabled = true; uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Р—Р°РіСЂСѓР·РєР° С„РѕС‚Рѕ...'; }
+      if (uploadBtn) { uploadBtn.disabled = true; uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Загрузка фото...'; }
       try {
         newAvatar = await uploadFileToImgBB(file);
         previewImg.src = newAvatar;
-        console.log('[IMGBB] вњ… РђРІР°С‚Р°СЂ Р·Р°РіСЂСѓР¶РµРЅ:', newAvatar);
+        console.log('[IMGBB] ? Аватар загружен:', newAvatar);
       } catch(e) {
-        console.error('[IMGBB] вќЊ', e.message);
-        if (typeof showToast === 'function') showToast('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё С„РѕС‚Рѕ', 'error');
+        console.error('[IMGBB] ?', e.message);
+        if (typeof showToast === 'function') showToast('Ошибка загрузки фото', 'error');
       } finally {
-        if (uploadBtn) { uploadBtn.disabled = false; uploadBtn.innerHTML = '<i class="fas fa-save"></i> РЎРѕС…СЂР°РЅРёС‚СЊ'; }
+        if (uploadBtn) { uploadBtn.disabled = false; uploadBtn.innerHTML = '<i class="fas fa-save"></i> Сохранить'; }
       }
     });
 
@@ -496,32 +496,32 @@ function renderProfile(user, player, layout, readOnly) {
   }
 }
 
-// в”Ђв”Ђ Save profile data в”Ђв”Ђ
+// -- Save profile data --
 function saveProfile(user, newAvatar) {
   const newUsername = document.getElementById('pUsername').value.trim();
   const newEmail    = document.getElementById('pEmail').value.trim().toLowerCase();
   const alertEl     = document.getElementById('profileAlert');
 
   if (!newUsername || !newEmail) {
-    showProfileAlert('Р—Р°РїРѕР»РЅРёС‚Рµ РІСЃРµ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїРѕР»СЏ', 'error', alertEl); return;
+    showProfileAlert('Заполните все обязательные поля', 'error', alertEl); return;
   }
 
-  // Р–РґС‘Рј Р·Р°РіСЂСѓР·РєРё Р‘Р” РµСЃР»Рё РѕРЅР° РµС‰С‘ РЅРµ РіРѕС‚РѕРІР°
+  // Ждём загрузки БД если она ещё не готова
   if (!window._dbReady) {
-    showProfileAlert('Р—Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С…... РїРѕРїСЂРѕР±СѓР№С‚Рµ С‡РµСЂРµР· СЃРµРєСѓРЅРґСѓ', 'error', alertEl);
+    showProfileAlert('Загрузка данных... попробуйте через секунду', 'error', alertEl);
     window.whenDbReady(() => saveProfile(user, newAvatar));
     return;
   }
 
   let users = DB.get('pl_users');
 
-  // РС‰РµРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РїРѕ id, username РёР»Рё email РґР»СЏ Р±РѕР»СЊС€РµР№ РЅР°РґС‘Р¶РЅРѕСЃС‚Рё
+  // Ищем пользователя по id, username или email для большей надёжности
   let idx = users.findIndex(u => u.id === user.id);
   if (idx === -1) idx = users.findIndex(u => (u.username || '').toLowerCase() === (user.username || '').toLowerCase());
   if (idx === -1) idx = users.findIndex(u => u.email === user.email);
 
-  // Р•СЃР»Рё РЅРµ РЅР°С€Р»Рё РІ localStorage вЂ” РґР°РЅРЅС‹Рµ РµС‰С‘ РЅРµ СЃРёРЅС…СЂРѕРЅРёР·РёСЂРѕРІР°Р»РёСЃСЊ СЃ Supabase,
-  // РІРѕСЃСЃС‚Р°РЅР°РІР»РёРІР°РµРј РёР· С‚РµРєСѓС‰РµР№ СЃРµСЃСЃРёРё Рё РїСЂРѕРґРѕР»Р¶Р°РµРј СЃРѕС…СЂР°РЅРµРЅРёРµ
+  // Если не нашли в localStorage — данные ещё не синхронизировались с Supabase,
+  // восстанавливаем из текущей сессии и продолжаем сохранение
   if (idx === -1) {
     console.warn('[PROFILE] User not in localStorage, restoring from session and saving...');
     users.push({ ...user });
@@ -529,17 +529,17 @@ function saveProfile(user, newAvatar) {
   }
 
   if (users.find((u, i) => i !== idx && u.username.toLowerCase() === newUsername.toLowerCase())) {
-    showProfileAlert('РўР°РєРѕР№ РЅРёРєРЅРµР№Рј СѓР¶Рµ Р·Р°РЅСЏС‚', 'error', alertEl); return;
+    showProfileAlert('Такой никнейм уже занят', 'error', alertEl); return;
   }
   if (users.find((u, i) => i !== idx && u.email === newEmail)) {
-    showProfileAlert('Р­С‚РѕС‚ email СѓР¶Рµ Р·Р°РЅСЏС‚', 'error', alertEl); return;
+    showProfileAlert('Этот email уже занят', 'error', alertEl); return;
   }
 
   users[idx].username = newUsername;
   users[idx].email    = newEmail;
   if (newAvatar) users[idx].avatar = newAvatar;
 
-  // Faceit СЃСЃС‹Р»РєР°
+  // Faceit ссылка
   const faceitInput = document.getElementById('pFaceit');
   if (faceitInput) {
     const faceitVal = faceitInput.value.trim();
@@ -548,7 +548,7 @@ function saveProfile(user, newAvatar) {
     }
   }
 
-  // Steam СЃСЃС‹Р»РєР°
+  // Steam ссылка
   const steamInput = document.getElementById('pSteam');
   if (steamInput) {
     const steamVal = steamInput.value.trim();
@@ -559,13 +559,13 @@ function saveProfile(user, newAvatar) {
 
   lsSet('pl_users', users);
 
-  // РЎРѕС…СЂР°РЅСЏРµРј РёР·РјРµРЅРµРЅРёСЏ РІ MongoDB С‡РµСЂРµР· update
+  // Сохраняем изменения в MongoDB через update
   const updatedUser = users[idx];
   if (updatedUser.id) {
-    DB.update('pl_users', updatedUser.id, updatedUser).catch(e => console.warn('[PROFILE] вљ пёЏ update user:', e.message));
+    DB.update('pl_users', updatedUser.id, updatedUser).catch(e => console.warn('[PROFILE] ?? update user:', e.message));
   }
 
-  // РЎРёРЅС…СЂРѕРЅРёР·РёСЂСѓРµРј РёР·РјРµРЅРµРЅРёСЏ СЃ Р·Р°РїРёСЃСЊСЋ РёРіСЂРѕРєР°
+  // Синхронизируем изменения с записью игрока
   const players = DB.get('pl_players');
   const pi = players.findIndex(p => p.userId === user.id || p.nick.toLowerCase() === user.username.toLowerCase());
   if (pi !== -1) {
@@ -573,15 +573,15 @@ function saveProfile(user, newAvatar) {
     if (newAvatar) players[pi].photo = newAvatar;
     lsSet('pl_players', players);
     if (players[pi].id) {
-      DB.update('pl_players', players[pi].id, players[pi]).catch(e => console.warn('[PROFILE] вљ пёЏ update player:', e.message));
+      DB.update('pl_players', players[pi].id, players[pi]).catch(e => console.warn('[PROFILE] ?? update player:', e.message));
     }
   }
 
   const { password: _, ...safeUser } = users[idx];
   Auth.login(safeUser);
 
-  showProfileAlert('РџСЂРѕС„РёР»СЊ СѓСЃРїРµС€РЅРѕ РѕР±РЅРѕРІР»С‘РЅ', 'success', alertEl);
-  if (typeof showToast === 'function') showToast('РџСЂРѕС„РёР»СЊ РѕР±РЅРѕРІР»С‘РЅ');
+  showProfileAlert('Профиль успешно обновлён', 'success', alertEl);
+  if (typeof showToast === 'function') showToast('Профиль обновлён');
 }
 
 function showProfileAlert(msg, type, el) {
@@ -590,7 +590,7 @@ function showProfileAlert(msg, type, el) {
   el.style.display = 'flex';
 }
 
-// в”Ђв”Ђ IGL Team Panel в”Ђв”Ђ
+// -- IGL Team Panel --
 function renderIglTeamPanel(user) {
   const panel = document.getElementById('iglTeamPanel');
   if (!panel) return;
@@ -602,13 +602,13 @@ function renderIglTeamPanel(user) {
     panel.innerHTML = `
       <div class="empty-state">
         <i class="fas fa-shield-halved"></i>
-        <p>РЈ РІР°СЃ РЅРµС‚ РєРѕРјР°РЅРґС‹</p>
-        <a href="teams.html" class="btn btn-primary btn-sm" style="margin-top:14px">РЎРѕР·РґР°С‚СЊ РєРѕРјР°РЅРґСѓ</a>
+        <p>У вас нет команды</p>
+        <a href="teams.html" class="btn btn-primary btn-sm" style="margin-top:14px">Создать команду</a>
       </div>`;
     return;
   }
 
-  const ROLES = ['IGL', 'AWPer', 'Rifler', 'Entry Fragger', 'Lurker', 'Support', 'Р—Р°РјРµРЅР°'];
+  const ROLES = ['IGL', 'AWPer', 'Rifler', 'Entry Fragger', 'Lurker', 'Support', 'Замена'];
 
   const allPlayers = DB.get('pl_players');
   const teamPlayers = allPlayers.filter(p => p.team === myTeam.name);
@@ -617,8 +617,8 @@ function renderIglTeamPanel(user) {
     ? `<img src="${myTeam.logo}" class="igl-header-logo">`
     : `<div class="igl-header-logo igl-logo-placeholder">${myTeam.name.substring(0,2).toUpperCase()}</div>`;
 
-  // в”Ђв”Ђ РљР°СЂС‚РѕС‡РєРё РёРіСЂРѕРєРѕРІ (HLTV СЃС‚РёР»СЊ) в”Ђв”Ђ
-  // РЎРЅР°С‡Р°Р»Р° РєР°РїРёС‚Р°РЅ, РїРѕС‚РѕРј РѕСЃС‚Р°Р»СЊРЅС‹Рµ вЂ” Р±РµР· РґСѓР±Р»РµР№ РєР°РїРёС‚Р°РЅР°
+  // -- Карточки игроков (HLTV стиль) --
+  // Сначала капитан, потом остальные — без дублей капитана
   const allMembers = [
     { id: 'captain', nick: user.username, photo: user.avatar || '', role: 'IGL', isCaptain: true },
     ...teamPlayers
@@ -636,20 +636,20 @@ function renderIglTeamPanel(user) {
         ${p.isCaptain ? `<div class="igl-hltv-captain-crown"><i class="fas fa-crown"></i></div>` : ''}
       </div>
       <div class="igl-hltv-nick">${p.nick}</div>
-      ${p.role ? `<div class="igl-hltv-role">${p.role}</div>` : '<div class="igl-hltv-role" style="opacity:0">вЂ”</div>'}
+      ${p.role ? `<div class="igl-hltv-role">${p.role}</div>` : '<div class="igl-hltv-role" style="opacity:0">—</div>'}
     </div>`).join('');
 
-  // в”Ђв”Ђ РЎРїРёСЃРѕРє СЃ РІС‹Р±РѕСЂРѕРј СЂРѕР»РµР№ в”Ђв”Ђ
+  // -- Список с выбором ролей --
   const captainRow = `
     <div class="igl-player-row igl-captain-row">
       <div class="igl-player-left">
         ${user.avatar ? `<img src="${user.avatar}" class="igl-player-avatar">` : `<div class="igl-player-avatar igl-avatar-placeholder">${user.username.charAt(0).toUpperCase()}</div>`}
         <div>
-          <div class="igl-player-nick">${user.username} <span class="igl-you-badge">Р’С‹</span></div>
+          <div class="igl-player-nick">${user.username} <span class="igl-you-badge">Вы</span></div>
         </div>
       </div>
       <div class="igl-player-right">
-        <span class="roster-role" style="font-size:0.82rem"><i class="fas fa-crown" style="color:#f59e0b;margin-right:4px"></i> IGL / РљР°РїРёС‚Р°РЅ</span>
+        <span class="roster-role" style="font-size:0.82rem"><i class="fas fa-crown" style="color:#f59e0b;margin-right:4px"></i> IGL / Капитан</span>
       </div>
     </div>`;
 
@@ -672,60 +672,60 @@ function renderIglTeamPanel(user) {
         </div>
         <div class="igl-player-right">
           <select class="igl-role-select" data-pid="${p.id}" onchange="iglSetRole(this)">
-            <option value="">вЂ” Р РѕР»СЊ вЂ”</option>
+            <option value="">— Роль —</option>
             ${roleOpts}
           </select>
-          <span class="igl-save-hint" id="hint-${p.id}" style="display:none;color:var(--success);font-size:0.78rem"><i class="fas fa-check"></i> РЎРѕС…СЂР°РЅРµРЅРѕ</span>
+          <span class="igl-save-hint" id="hint-${p.id}" style="display:none;color:var(--success);font-size:0.78rem"><i class="fas fa-check"></i> Сохранено</span>
         </div>
       </div>`;
   }).join('');
 
   panel.innerHTML = `
-    <!-- РЁР°РїРєР° РєРѕРјР°РЅРґС‹ -->
+    <!-- Шапка команды -->
     <div class="igl-team-header">
       ${logoHTML}
       <div>
         <div class="igl-team-name">${myTeam.name}</div>
         <div class="igl-team-meta">
-          <span><i class="fas fa-users"></i> ${allMembers.length} РёРіСЂРѕРєРѕРІ</span>
+          <span><i class="fas fa-users"></i> ${allMembers.length} игроков</span>
         </div>
       </div>
     </div>
 
-    <!-- HLTV-СЃС‚РёР»СЊ С„РѕС‚Рѕ РёРіСЂРѕРєРѕРІ -->
+    <!-- HLTV-стиль фото игроков -->
     <div class="igl-hltv-roster">
       ${playerCards}
     </div>
 
-    <!-- РЎРїРёСЃРѕРє СЃ РЅР°Р·РЅР°С‡РµРЅРёРµРј СЂРѕР»РµР№ -->
+    <!-- Список с назначением ролей -->
     <div class="igl-players-list" style="margin-top:24px">
-      <div class="igl-list-title"><i class="fas fa-users"></i> РЎРѕСЃС‚Р°РІ вЂ” РЅР°Р·РЅР°С‡СЊС‚Рµ СЂРѕР»Рё</div>
+      <div class="igl-list-title"><i class="fas fa-users"></i> Состав — назначьте роли</div>
       ${captainRow}
       ${teamPlayersNoCaptain.length
         ? playerRows
-        : `<div style="color:var(--text-muted);font-size:0.82rem;padding:16px 0">Р’ РєРѕРјР°РЅРґРµ РїРѕРєР° РЅРµС‚ РґСЂСѓРіРёС… РёРіСЂРѕРєРѕРІ</div>`
+        : `<div style="color:var(--text-muted);font-size:0.82rem;padding:16px 0">В команде пока нет других игроков</div>`
       }
     </div>
 
-    <!-- РћРїР°СЃРЅР°СЏ Р·РѕРЅР° -->
+    <!-- Опасная зона -->
     <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end">
       <button class="btn btn-danger btn-sm" id="iglDeleteTeamBtn">
-        <i class="fas fa-trash"></i> РЈРґР°Р»РёС‚СЊ РєРѕРјР°РЅРґСѓ
+        <i class="fas fa-trash"></i> Удалить команду
       </button>
     </div>`;
 
-  // РћР±СЂР°Р±РѕС‚С‡РёРє СѓРґР°Р»РµРЅРёСЏ РєРѕРјР°РЅРґС‹
+  // Обработчик удаления команды
   document.getElementById('iglDeleteTeamBtn').addEventListener('click', async () => {
-    if (!confirm(`РЈРґР°Р»РёС‚СЊ РєРѕРјР°РЅРґСѓ В«${myTeam.name}В»? Р­С‚Рѕ РґРµР№СЃС‚РІРёРµ РЅРµР»СЊР·СЏ РѕС‚РјРµРЅРёС‚СЊ. РљР” РЅР° СЃРѕР·РґР°РЅРёРµ РЅРѕРІРѕР№ вЂ” 7 РґРЅРµР№.`)) return;
+    if (!confirm(`Удалить команду «${myTeam.name}»? Это действие нельзя отменить. КД на создание новой — 7 дней.`)) return;
 
-    // РЈР±РёСЂР°РµРј РєРѕРјР°РЅРґСѓ Сѓ РІСЃРµС… РёРіСЂРѕРєРѕРІ
+    // Убираем команду у всех игроков
     const players = DB.get('pl_players').map(p => p.team === myTeam.name ? { ...p, team: '' } : p);
     DB.set('pl_players', players);
 
-    // РЈРґР°Р»СЏРµРј РєРѕРјР°РЅРґСѓ
+    // Удаляем команду
     await DB.remove('pl_teams', myTeam.id);
 
-    // РЎС‚Р°РІРёРј РљР” РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ
+    // Ставим КД пользователю
     const users = DB.get('pl_users');
     const idx = users.findIndex(u => String(u.id) === String(user.id));
     if (idx !== -1) {
@@ -738,13 +738,13 @@ function renderIglTeamPanel(user) {
       Auth.login(safe);
     }
 
-    if (typeof showToast === 'function') showToast('РљРѕРјР°РЅРґР° СѓРґР°Р»РµРЅР°. РљР” 7 РґРЅРµР№.', 'error');
+    if (typeof showToast === 'function') showToast('Команда удалена. КД 7 дней.', 'error');
     setTimeout(() => location.reload(), 1000);
   });
 }
 
 window.iglSetRole = function(select) {
-  const pid = select.dataset.pid; // СЃС‚СЂРѕРєР°, РЅРµ parseInt вЂ” СЃРѕРІРјРµСЃС‚РёРјРѕ СЃ MongoDB
+  const pid = select.dataset.pid; // строка, не parseInt — совместимо с MongoDB
   const role = select.value;
   if (!pid) return;
 
@@ -755,22 +755,22 @@ window.iglSetRole = function(select) {
   players[idx].role = role;
   DB.set('pl_players', players);
 
-  // РЎРёРЅС…СЂРѕРЅРёР·РёСЂСѓРµРј СЃ СЃРµСЂРІРµСЂРѕРј
+  // Синхронизируем с сервером
   DB.update('pl_players', String(pid), { role }).catch(e =>
     console.warn('[IGL] role update failed:', e.message)
   );
 
-  // РџРѕРєР°Р·С‹РІР°РµРј РїРѕРґСЃРєР°Р·РєСѓ "РЎРѕС…СЂР°РЅРµРЅРѕ"
+  // Показываем подсказку "Сохранено"
   const hint = document.getElementById(`hint-${pid}`);
   if (hint) {
     hint.style.display = 'inline-flex';
     setTimeout(() => { hint.style.display = 'none'; }, 2000);
   }
 
-  if (typeof showToast === 'function') showToast(`Р РѕР»СЊ В«${role}В» РЅР°Р·РЅР°С‡РµРЅР°`, 'success');
+  if (typeof showToast === 'function') showToast(`Роль «${role}» назначена`, 'success');
 };
 
-// в”Ђв”Ђ Awards helper в”Ђв”Ђ
+// -- Awards helper --
 function getAwards() {
   try { return JSON.parse(localStorage.getItem('pl_awards')) || []; } catch(_) { return []; }
 }
@@ -790,7 +790,7 @@ function buildAwardsStrip(recipientName, type) {
     accent:  '#00D4FF'
   };
 
-  // Р“СЂСѓРїРїРёСЂСѓРµРј РѕРґРёРЅР°РєРѕРІС‹Рµ РЅР°РіСЂР°РґС‹ РїРѕ РёРјРµРЅРё+С†РІРµС‚Сѓ
+  // Группируем одинаковые награды по имени+цвету
   const grouped = {};
   awards.forEach(a => {
     const key = `${a.name}__${a.color}`;
@@ -811,7 +811,7 @@ function buildAwardsStrip(recipientName, type) {
       ? `<div class="award-count-badge">x${a.count}</div>`
       : '';
     return `
-      <div class="award-item" title="${a.name}${a.desc ? ' вЂ” ' + a.desc : ''}${d ? ' (' + d + ')' : ''}${a.count > 1 ? ' Г—' + a.count : ''}">
+      <div class="award-item" title="${a.name}${a.desc ? ' — ' + a.desc : ''}${d ? ' (' + d + ')' : ''}${a.count > 1 ? ' ?' + a.count : ''}">
         <div class="award-icon" style="border-color:${color};box-shadow:0 0 8px ${color}33;position:relative">
           ${iconHTML}
           ${countBadge}
@@ -823,7 +823,7 @@ function buildAwardsStrip(recipientName, type) {
 
   return `
     <div class="awards-strip">
-      <div class="awards-strip-title"><i class="fas fa-medal"></i> РќР°РіСЂР°РґС‹</div>
+      <div class="awards-strip-title"><i class="fas fa-medal"></i> Награды</div>
       <div class="awards-list">${items}</div>
     </div>`;
 }

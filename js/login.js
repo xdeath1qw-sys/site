@@ -1,11 +1,11 @@
-ï»¿// â”€â”€ Login â”€â”€
+// -- Login --
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('loginForm');
   const alert = document.getElementById('loginAlert');
   const togglePass = document.getElementById('togglePass');
   const passInput = document.getElementById('loginPassword');
 
-  // If already logged in â€” redirect
+  // If already logged in — redirect
   if (Auth && Auth.current()) {
     window.location.href = 'index.html';
     return;
@@ -28,19 +28,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const user = users.find(u => (u.username === username || u.email === username) && u.password === password);
 
     if (!user) {
-      showAlert('ÐÐµÐ²ÐµÑ€Ð½Ñ‹Ð¹ Ð»Ð¾Ð³Ð¸Ð½ Ð¸Ð»Ð¸ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ', 'error');
+      showAlert('Íåâåðíûé ëîãèí èëè ïàðîëü', 'error');
       return;
     }
 
-    // ÐŸÑ€Ð¾Ð²ÐµÑ€ÐºÐ° ÑÐ¾Ð³Ð»Ð°ÑÐ¸Ñ Ñ Ð»Ð¸Ñ†ÐµÐ½Ð·Ð¸ÐµÐ¹
+    // Ïðîâåðêà ñîãëàñèÿ ñ ëèöåíçèåé
     const licenseCheck = document.getElementById('licenseCheck');
     if (!licenseCheck || !licenseCheck.checked) {
-      showAlert('ÐÐµÐ¾Ð±Ñ…Ð¾Ð´Ð¸Ð¼Ð¾ Ð¿Ñ€Ð¸Ð½ÑÑ‚ÑŒ Ð›Ð¸Ñ†ÐµÐ½Ð·Ð¸Ð¾Ð½Ð½Ð¾Ðµ ÑÐ¾Ð³Ð»Ð°ÑˆÐµÐ½Ð¸Ðµ', 'error');
+      showAlert('Íåîáõîäèìî ïðèíÿòü Ëèöåíçèîííîå ñîãëàøåíèå', 'error');
       return;
     }
     const termsCheck = document.getElementById('termsCheck');
     if (!termsCheck || !termsCheck.checked) {
-      showAlert('ÐÐµÐ¾Ð±Ñ…Ð¾Ð´Ð¸Ð¼Ð¾ Ð¿Ñ€Ð¸Ð½ÑÑ‚ÑŒ ÐŸÐ¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŒÑÐºÐ¾Ðµ ÑÐ¾Ð³Ð»Ð°ÑˆÐµÐ½Ð¸Ðµ', 'error');
+      showAlert('Íåîáõîäèìî ïðèíÿòü Ïîëüçîâàòåëüñêîå ñîãëàøåíèå', 'error');
       return;
     }
 
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const { password: _, ...safeUser } = user;
     Auth.login(safeUser);
 
-    showAlert('Ð’Ñ…Ð¾Ð´ Ð²Ñ‹Ð¿Ð¾Ð»Ð½ÐµÐ½! ÐŸÐµÑ€ÐµÐ°Ð´Ñ€ÐµÑÐ°Ñ†Ð¸Ñ...', 'success');
+    showAlert('Âõîä âûïîëíåí! Ïåðåàäðåñàöèÿ...', 'success');
     setTimeout(() => window.location.href = 'index.html', 1000);
   });
 

@@ -73,6 +73,19 @@ const Auth = {
       } else {
         userAvatarNav.innerHTML = `<span style="font-size:0.85rem;font-weight:700;color:#fff">${user.username.charAt(0).toUpperCase()}</span>`;
       }
+
+      // Click to toggle dropdown
+      const dropdown = document.getElementById('userDropdown');
+      userAvatarNav.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (dropdown) dropdown.classList.toggle('open');
+      });
+      document.addEventListener('click', () => {
+        if (dropdown) dropdown.classList.remove('open');
+      });
+      if (dropdown) {
+        dropdown.addEventListener('click', (e) => e.stopPropagation());
+      }
     }
   } else {
     if (authBtns) authBtns.style.display = 'flex';

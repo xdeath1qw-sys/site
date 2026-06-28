@@ -1217,3 +1217,11 @@ textarea { resize: vertical; min-height: 90px; }
 .user-dropdown a:hover {
   background: rgba(255,255,255,0.06) !important;
 }
+
+/* ── User dropdown — click only, not hover ── */
+.user-menu:hover .user-dropdown {
+  display: none !important;
+}
+.user-dropdown.open {
+  display: flex !important;
+}

@@ -1,9 +1,9 @@
-// -- Register --
+п»ї// в”Ђв”Ђ Register в”Ђв”Ђ
 document.addEventListener('DOMContentLoaded', () => {
   const form    = document.getElementById('registerForm');
   const alertEl = document.getElementById('regAlert');
 
-  // -- Глазики показать/скрыть пароль --
+  // в”Ђв”Ђ Р“Р»Р°Р·РёРєРё РїРѕРєР°Р·Р°С‚СЊ/СЃРєСЂС‹С‚СЊ РїР°СЂРѕР»СЊ в”Ђв”Ђ
   function setupToggle(btnId, inputId) {
     const btn = document.getElementById(btnId);
     const inp = document.getElementById(inputId);
@@ -33,28 +33,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const password2= document.getElementById('regPassword2').value;
 
     if (!username || username.length < 2) {
-      showAlert('Введите никнейм (минимум 2 символа)', 'error'); isRegistering = false; return;
+      showAlert('Р’РІРµРґРёС‚Рµ РЅРёРєРЅРµР№Рј (РјРёРЅРёРјСѓРј 2 СЃРёРјРІРѕР»Р°)', 'error'); isRegistering = false; return;
     }
     if (password !== password2) {
-      showAlert('Пароли не совпадают', 'error'); isRegistering = false; return;
+      showAlert('РџР°СЂРѕР»Рё РЅРµ СЃРѕРІРїР°РґР°СЋС‚', 'error'); isRegistering = false; return;
     }
     if (password.length < 6) {
-      showAlert('Пароль должен содержать минимум 6 символов', 'error'); isRegistering = false; return;
+      showAlert('РџР°СЂРѕР»СЊ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РјРёРЅРёРјСѓРј 6 СЃРёРјРІРѕР»РѕРІ', 'error'); isRegistering = false; return;
     }
 
-    // Проверка согласия с лицензией
+    // РџСЂРѕРІРµСЂРєР° СЃРѕРіР»Р°СЃРёСЏ СЃ Р»РёС†РµРЅР·РёРµР№
     const licenseCheck = document.getElementById('licenseCheck');
     if (!licenseCheck || !licenseCheck.checked) {
-      showAlert('Необходимо принять Лицензионное соглашение', 'error'); isRegistering = false; return;
+      showAlert('РќРµРѕР±С…РѕРґРёРјРѕ РїСЂРёРЅСЏС‚СЊ Р›РёС†РµРЅР·РёРѕРЅРЅРѕРµ СЃРѕРіР»Р°С€РµРЅРёРµ', 'error'); isRegistering = false; return;
     }
     const termsCheck = document.getElementById('termsCheck');
     if (!termsCheck || !termsCheck.checked) {
-      showAlert('Необходимо принять Пользовательское соглашение', 'error'); isRegistering = false; return;
+      showAlert('РќРµРѕР±С…РѕРґРёРјРѕ РїСЂРёРЅСЏС‚СЊ РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРµ СЃРѕРіР»Р°С€РµРЅРёРµ', 'error'); isRegistering = false; return;
     }
 
-    if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Регистрация...'; }
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Р РµРіРёСЃС‚СЂР°С†РёСЏ...'; }
 
-    // Проверяем уникальность — сначала кэш, потом API
+    // РџСЂРѕРІРµСЂСЏРµРј СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚СЊ вЂ” СЃРЅР°С‡Р°Р»Р° РєСЌС€, РїРѕС‚РѕРј API
     let users = DB.get('pl_users');
     if (!users.length) {
       try {
@@ -65,17 +65,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (users.find(u => (u.username || '').toLowerCase() === username.toLowerCase())) {
-      showAlert('Такой никнейм уже занят', 'error');
+      showAlert('РўР°РєРѕР№ РЅРёРєРЅРµР№Рј СѓР¶Рµ Р·Р°РЅСЏС‚', 'error');
       if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origBtnText; }
       isRegistering = false; return;
     }
     if (users.find(u => u.email === email)) {
-      showAlert('Этот email уже зарегистрирован', 'error');
+      showAlert('Р­С‚РѕС‚ email СѓР¶Рµ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅ', 'error');
       if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origBtnText; }
       isRegistering = false; return;
     }
 
-    // Сохраняем пользователя в MongoDB
+    // РЎРѕС…СЂР°РЅСЏРµРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РІ MongoDB
     let newUser = { username, email, password, role: 'user' };
     try {
       const res = await fetch('/api/data?col=users', {
@@ -86,21 +86,21 @@ document.addEventListener('DOMContentLoaded', () => {
       const saved = await res.json();
       if (saved && saved.id) {
         newUser.id = saved.id;
-        console.log('[REG] ? Пользователь создан, id=', newUser.id);
+        console.log('[REG] вњ… РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃРѕР·РґР°РЅ, id=', newUser.id);
       }
     } catch(e) {
-      console.warn('[REG] ?? Ошибка создания пользователя:', e.message);
+      console.warn('[REG] вљ пёЏ РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ:', e.message);
     }
 
-    // Обновляем localStorage
+    // РћР±РЅРѕРІР»СЏРµРј localStorage
     const allUsers = DB.get('pl_users');
     allUsers.push(newUser);
     lsSet('pl_users', allUsers);
 
-    // Уведомление в Discord
+    // РЈРІРµРґРѕРјР»РµРЅРёРµ РІ Discord
     if (window.notifyNewUser) notifyNewUser(newUser);
 
-    // Создаём игрока в MongoDB
+    // РЎРѕР·РґР°С‘Рј РёРіСЂРѕРєР° РІ MongoDB
     try {
       const res = await fetch('/api/data?col=players', {
         method: 'POST',
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       const pSaved = await res.json();
       if (pSaved && pSaved.id) {
-        console.log('[REG] ? Игрок создан, id=', pSaved.id);
+        console.log('[REG] вњ… РРіСЂРѕРє СЃРѕР·РґР°РЅ, id=', pSaved.id);
         const allPlayers = DB.get('pl_players');
         allPlayers.push({
           id: pSaved.id, nick: username, name: '', team: '', role: '',
@@ -123,14 +123,14 @@ document.addEventListener('DOMContentLoaded', () => {
         lsSet('pl_players', allPlayers);
       }
     } catch(e) {
-      console.warn('[REG] ?? Ошибка создания игрока:', e.message);
+      console.warn('[REG] вљ пёЏ РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ РёРіСЂРѕРєР°:', e.message);
     }
 
-    // Авто-логин
+    // РђРІС‚Рѕ-Р»РѕРіРёРЅ
     const { password: _, ...safeUser } = newUser;
     Auth.login(safeUser);
 
-    showAlert('Аккаунт создан! Переадресация...', 'success');
+    showAlert('РђРєРєР°СѓРЅС‚ СЃРѕР·РґР°РЅ! РџРµСЂРµР°РґСЂРµСЃР°С†РёСЏ...', 'success');
     setTimeout(() => window.location.href = 'index.html', 1200);
   });
 

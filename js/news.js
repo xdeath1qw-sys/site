@@ -1,13 +1,13 @@
-// -- News Page --
+п»ї// в”Ђв”Ђ News Page в”Ђв”Ђ
 
-// Глобальная функция открытия новости (доступна сразу)
+// Р“Р»РѕР±Р°Р»СЊРЅР°СЏ С„СѓРЅРєС†РёСЏ РѕС‚РєСЂС‹С‚РёСЏ РЅРѕРІРѕСЃС‚Рё (РґРѕСЃС‚СѓРїРЅР° СЃСЂР°Р·Сѓ)
 window.openNews = function(id) {
   const newsList = DB.get('pl_news');
-  // Строковое сравнение id
+  // РЎС‚СЂРѕРєРѕРІРѕРµ СЃСЂР°РІРЅРµРЅРёРµ id
   const n = newsList.find(x => String(x.id) === String(id));
   if (!n) return;
   
-  const catLabels = { general: 'Общее', tournament: 'Турниры', teams: 'Команды', players: 'Игроки' };
+  const catLabels = { general: 'РћР±С‰РµРµ', tournament: 'РўСѓСЂРЅРёСЂС‹', teams: 'РљРѕРјР°РЅРґС‹', players: 'РРіСЂРѕРєРё' };
   const d = new Date(n.createdAt || n.date);
   const dateStr = isNaN(d) ? '' : d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
   
@@ -25,7 +25,7 @@ window.openNews = function(id) {
     <div style="padding:20px 22px 24px">
       <h2 style="font-size:1.25rem;font-weight:800;line-height:1.35;margin-bottom:10px;color:var(--text)">${n.title}</h2>
       ${dateStr ? `<div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px"><i class="fas fa-calendar-alt" style="color:var(--text-dim)"></i>${dateStr}</div>` : ''}
-      <div style="font-size:0.9rem;line-height:1.75;color:var(--text-muted);white-space:pre-wrap;word-break:break-word">${n.content || n.excerpt || 'Текст новости не указан'}</div>
+      <div style="font-size:0.9rem;line-height:1.75;color:var(--text-muted);white-space:pre-wrap;word-break:break-word">${n.content || n.excerpt || 'РўРµРєСЃС‚ РЅРѕРІРѕСЃС‚Рё РЅРµ СѓРєР°Р·Р°РЅ'}</div>
     </div>`;
   modal.classList.add('active');
 };
@@ -33,7 +33,7 @@ window.openNews = function(id) {
 document.addEventListener('DOMContentLoaded', () => {
   whenDbReady(() => {
   let searchQuery = '';
-  const catLabels = { general: 'Общее', tournament: 'Турниры', teams: 'Команды', players: 'Игроки' };
+  const catLabels = { general: 'РћР±С‰РµРµ', tournament: 'РўСѓСЂРЅРёСЂС‹', teams: 'РљРѕРјР°РЅРґС‹', players: 'РРіСЂРѕРєРё' };
 
   renderNews();
 
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
     );
 
     if (!newsList.length) {
-      grid.innerHTML = `<div class="empty-state"><i class="fas fa-newspaper"></i><p>Новостей пока нет</p></div>`;
+      grid.innerHTML = `<div class="empty-state"><i class="fas fa-newspaper"></i><p>РќРѕРІРѕСЃС‚РµР№ РїРѕРєР° РЅРµС‚</p></div>`;
       return;
     }
     grid.innerHTML = newsList.map(n => {
@@ -87,19 +87,19 @@ document.addEventListener('DOMContentLoaded', () => {
             ${dateStr ? `<div class="news-date"><i class="fas fa-calendar"></i> ${dateStr}</div>` : ''}
             <div class="news-title">${n.title}</div>
             <div class="news-excerpt">${n.excerpt || ''}</div>
-            <span class="news-read-more">Читать далее <i class="fas fa-arrow-right"></i></span>
+            <span class="news-read-more">Р§РёС‚Р°С‚СЊ РґР°Р»РµРµ <i class="fas fa-arrow-right"></i></span>
           </div>
         </div>`;
     }).join('');
   }
 
-  // Экспортируем renderNews для перерендера при обновлении БД
+  // Р­РєСЃРїРѕСЂС‚РёСЂСѓРµРј renderNews РґР»СЏ РїРµСЂРµСЂРµРЅРґРµСЂР° РїСЂРё РѕР±РЅРѕРІР»РµРЅРёРё Р‘Р”
   window._newsPageRender = renderNews;
 
-  }); // конец whenDbReady
+  }); // РєРѕРЅРµС† whenDbReady
 
-  // Перерендериваем когда Supabase вернул свежие данные
+  // РџРµСЂРµСЂРµРЅРґРµСЂРёРІР°РµРј РєРѕРіРґР° Supabase РІРµСЂРЅСѓР» СЃРІРµР¶РёРµ РґР°РЅРЅС‹Рµ
   window.addEventListener('db-updated', () => {
     if (typeof window._newsPageRender === 'function') window._newsPageRender();
   });
-}); // конец DOMContentLoaded
+}); // РєРѕРЅРµС† DOMContentLoaded

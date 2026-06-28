@@ -1,29 +1,29 @@
-// -- Players Page --
+п»ї// в”Ђв”Ђ Players Page в”Ђв”Ђ
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('[PLAYERS] Страница загружена');
+  console.log('[PLAYERS] РЎС‚СЂР°РЅРёС†Р° Р·Р°РіСЂСѓР¶РµРЅР°');
 
-  // Режим: если в URL передан ?all=1 — показываем ВСЕХ игроков (включая без команды)
+  // Р РµР¶РёРј: РµСЃР»Рё РІ URL РїРµСЂРµРґР°РЅ ?all=1 вЂ” РїРѕРєР°Р·С‹РІР°РµРј Р’РЎР•РҐ РёРіСЂРѕРєРѕРІ (РІРєР»СЋС‡Р°СЏ Р±РµР· РєРѕРјР°РЅРґС‹)
   const urlParams = new URLSearchParams(window.location.search);
   const showAllMode = urlParams.get('all') === '1';
 
-  // Обновляем заголовок страницы в зависимости от режима
+  // РћР±РЅРѕРІР»СЏРµРј Р·Р°РіРѕР»РѕРІРѕРє СЃС‚СЂР°РЅРёС†С‹ РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СЂРµР¶РёРјР°
   if (showAllMode) {
     const ph = document.querySelector('.page-header h1');
-    if (ph) ph.innerHTML = '<i class="fas fa-users"></i> Все игроки';
+    if (ph) ph.innerHTML = '<i class="fas fa-users"></i> Р’СЃРµ РёРіСЂРѕРєРё';
     const ps = document.querySelector('.page-header p');
-    if (ps) ps.textContent = 'Полный рейтинг всех игроков по K/D';
+    if (ps) ps.textContent = 'РџРѕР»РЅС‹Р№ СЂРµР№С‚РёРЅРі РІСЃРµС… РёРіСЂРѕРєРѕРІ РїРѕ K/D';
   } else {
     const ph = document.querySelector('.page-header h1');
-    if (ph) ph.innerHTML = '<i class="fas fa-medal"></i> Топ игроков';
+    if (ph) ph.innerHTML = '<i class="fas fa-medal"></i> РўРѕРї РёРіСЂРѕРєРѕРІ';
     const ps = document.querySelector('.page-header p');
-    if (ps) ps.textContent = 'Лучшие игроки с командами — топ-10 по K/D';
+    if (ps) ps.textContent = 'Р›СѓС‡С€РёРµ РёРіСЂРѕРєРё СЃ РєРѕРјР°РЅРґР°РјРё вЂ” С‚РѕРї-10 РїРѕ K/D';
   }
 
   let searchQuery = '';
   let teamFilter = 'all';
   let currentView = 'list';
 
-  // Показываем скелетон на время загрузки
+  // РџРѕРєР°Р·С‹РІР°РµРј СЃРєРµР»РµС‚РѕРЅ РЅР° РІСЂРµРјСЏ Р·Р°РіСЂСѓР·РєРё
   const grid = document.getElementById('playersGrid');
   if (grid) {
     grid.className = 'players-table-wrap';
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </style>`;
   }
 
-  // Ждём свежих данных из Supabase (db-updated), не используем кэш
+  // Р–РґС‘Рј СЃРІРµР¶РёС… РґР°РЅРЅС‹С… РёР· Supabase (db-updated), РЅРµ РёСЃРїРѕР»СЊР·СѓРµРј РєСЌС€
   let playersInited = false;
   window.addEventListener('db-updated', () => {
     if (!playersInited) {
@@ -59,14 +59,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Запасной вариант если db-updated не пришёл за 5 сек
+  // Р—Р°РїР°СЃРЅРѕР№ РІР°СЂРёР°РЅС‚ РµСЃР»Рё db-updated РЅРµ РїСЂРёС€С‘Р» Р·Р° 5 СЃРµРє
   setTimeout(() => {
     if (!playersInited && window._dbReady) { init(); playersInited = true; }
   }, 5000);
 
   function init() {
     const players = DB.get('pl_players');
-    console.log('[PLAYERS] Загружено игроков:', players.length);
+    console.log('[PLAYERS] Р—Р°РіСЂСѓР¶РµРЅРѕ РёРіСЂРѕРєРѕРІ:', players.length);
     
     populateTeamFilter();
     renderPlayers();
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const teams = DB.get('pl_teams');
 
-    // Старый нативный select (на случай если есть)
+    // РЎС‚Р°СЂС‹Р№ РЅР°С‚РёРІРЅС‹Р№ select (РЅР° СЃР»СѓС‡Р°Р№ РµСЃР»Рё РµСЃС‚СЊ)
     if (tf) {
       while (tf.options.length > 1) tf.remove(1);
       teams.forEach(t => {
@@ -135,13 +135,13 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       if (showAllMode) {
         const opt = document.createElement('option');
-        opt.value = '__no_team__'; opt.textContent = 'Без команды'; tf.appendChild(opt);
+        opt.value = '__no_team__'; opt.textContent = 'Р‘РµР· РєРѕРјР°РЅРґС‹'; tf.appendChild(opt);
       }
     }
 
-    // Кастомный дропдаун
+    // РљР°СЃС‚РѕРјРЅС‹Р№ РґСЂРѕРїРґР°СѓРЅ
     if (filterDrop) {
-      // Убираем старые опции кроме "Все команды"
+      // РЈР±РёСЂР°РµРј СЃС‚Р°СЂС‹Рµ РѕРїС†РёРё РєСЂРѕРјРµ "Р’СЃРµ РєРѕРјР°РЅРґС‹"
       filterDrop.querySelectorAll('.custom-select-option:not([data-value="all"])').forEach(o => o.remove());
       teams.forEach(t => {
         const div = document.createElement('div');
@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const div = document.createElement('div');
         div.className = 'custom-select-option';
         div.dataset.value = '__no_team__';
-        div.textContent = 'Без команды';
+        div.textContent = 'Р‘РµР· РєРѕРјР°РЅРґС‹';
         filterDrop.appendChild(div);
       }
     }
@@ -163,30 +163,30 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderPlayers() {
     const grid = document.getElementById('playersGrid');
     if (!grid) {
-      console.error('[PLAYERS] Элемент playersGrid не найден!');
+      console.error('[PLAYERS] Р­Р»РµРјРµРЅС‚ playersGrid РЅРµ РЅР°Р№РґРµРЅ!');
       return;
     }
 
-    // Приглашения только через admin панель — IGL не может приглашать сам
+    // РџСЂРёРіР»Р°С€РµРЅРёСЏ С‚РѕР»СЊРєРѕ С‡РµСЂРµР· admin РїР°РЅРµР»СЊ вЂ” IGL РЅРµ РјРѕР¶РµС‚ РїСЂРёРіР»Р°С€Р°С‚СЊ СЃР°Рј
     const currentUser = Auth.current();
-    const myTeam = null; // всегда null — кнопки приглашения убраны
+    const myTeam = null; // РІСЃРµРіРґР° null вЂ” РєРЅРѕРїРєРё РїСЂРёРіР»Р°С€РµРЅРёСЏ СѓР±СЂР°РЅС‹
 
     let players = DB.get('pl_players');
-    const totalAllPlayers = players.length; // общее кол-во всех игроков до любых фильтров
-    console.log('[PLAYERS] Всего игроков в базе:', players.length);
+    const totalAllPlayers = players.length; // РѕР±С‰РµРµ РєРѕР»-РІРѕ РІСЃРµС… РёРіСЂРѕРєРѕРІ РґРѕ Р»СЋР±С‹С… С„РёР»СЊС‚СЂРѕРІ
+    console.log('[PLAYERS] Р’СЃРµРіРѕ РёРіСЂРѕРєРѕРІ РІ Р±Р°Р·Рµ:', players.length);
 
-    // В обычном режиме (топ) — только игроки С командой, макс 10
+    // Р’ РѕР±С‹С‡РЅРѕРј СЂРµР¶РёРјРµ (С‚РѕРї) вЂ” С‚РѕР»СЊРєРѕ РёРіСЂРѕРєРё РЎ РєРѕРјР°РЅРґРѕР№, РјР°РєСЃ 10
     if (!showAllMode) {
-      players = players.filter(p => p.team && p.team.trim() !== '' && p.team !== '—');
+      players = players.filter(p => p.team && p.team.trim() !== '' && p.team !== 'вЂ”');
     }
     
     if (teamFilter !== 'all') {
       if (teamFilter === '__no_team__') {
-        players = players.filter(p => !p.team || p.team.trim() === '' || p.team === '—');
+        players = players.filter(p => !p.team || p.team.trim() === '' || p.team === 'вЂ”');
       } else {
         players = players.filter(p => p.team === teamFilter);
       }
-      console.log('[PLAYERS] После фильтра по команде:', players.length);
+      console.log('[PLAYERS] РџРѕСЃР»Рµ С„РёР»СЊС‚СЂР° РїРѕ РєРѕРјР°РЅРґРµ:', players.length);
     }
     if (searchQuery) {
       players = players.filter(p =>
@@ -194,36 +194,36 @@ document.addEventListener('DOMContentLoaded', () => {
         (p.name || '').toLowerCase().includes(searchQuery) ||
         (p.team || '').toLowerCase().includes(searchQuery)
       );
-      console.log('[PLAYERS] После поиска:', players.length);
+      console.log('[PLAYERS] РџРѕСЃР»Рµ РїРѕРёСЃРєР°:', players.length);
     }
 
     if (!players.length) {
       grid.className = 'players-grid full-grid';
-      grid.innerHTML = `<div class="empty-state"><i class="fas fa-users"></i><p>Игроки не найдены</p></div>`;
-      console.log('[PLAYERS] Игроки не найдены, показываем empty state');
+      grid.innerHTML = `<div class="empty-state"><i class="fas fa-users"></i><p>РРіСЂРѕРєРё РЅРµ РЅР°Р№РґРµРЅС‹</p></div>`;
+      console.log('[PLAYERS] РРіСЂРѕРєРё РЅРµ РЅР°Р№РґРµРЅС‹, РїРѕРєР°Р·С‹РІР°РµРј empty state');
       return;
     }
 
-    // Сортируем по K/D — чем выше, тем выше в списке
+    // РЎРѕСЂС‚РёСЂСѓРµРј РїРѕ K/D вЂ” С‡РµРј РІС‹С€Рµ, С‚РµРј РІС‹С€Рµ РІ СЃРїРёСЃРєРµ
     players = players.slice().sort((a, b) => {
       const kdA = parseFloat(a.stats?.kd ?? a.kd ?? 0) || 0;
       const kdB = parseFloat(b.stats?.kd ?? b.kd ?? 0) || 0;
       return kdB - kdA;
     });
 
-    // В режиме топа — берём только первые 10
+    // Р’ СЂРµР¶РёРјРµ С‚РѕРїР° вЂ” Р±РµСЂС‘Рј С‚РѕР»СЊРєРѕ РїРµСЂРІС‹Рµ 10
     const topPlayers = !showAllMode ? players.slice(0, 10) : players;
 
-    // Кнопка "Все игроки" — показывается только в режиме топа
+    // РљРЅРѕРїРєР° "Р’СЃРµ РёРіСЂРѕРєРё" вЂ” РїРѕРєР°Р·С‹РІР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ РІ СЂРµР¶РёРјРµ С‚РѕРїР°
     const allPlayersBtn = !showAllMode
       ? `<div style="text-align:center;padding:20px 0 4px">
            <a href="players.html?all=1" class="btn btn-outline">
-             <i class="fas fa-users"></i> Все игроки${totalAllPlayers > 0 ? ` (${totalAllPlayers})` : ''}
+             <i class="fas fa-users"></i> Р’СЃРµ РёРіСЂРѕРєРё${totalAllPlayers > 0 ? ` (${totalAllPlayers})` : ''}
            </a>
          </div>`
       : `<div style="text-align:center;padding:20px 0 4px">
            <a href="players.html" class="btn btn-outline">
-             <i class="fas fa-medal"></i> Топ-10 игроков
+             <i class="fas fa-medal"></i> РўРѕРї-10 РёРіСЂРѕРєРѕРІ
            </a>
          </div>`;
 
@@ -235,9 +235,9 @@ document.addEventListener('DOMContentLoaded', () => {
           <thead>
             <tr>
               <th class="pt-num">#</th>
-              <th class="pt-player">Игрок</th>
+              <th class="pt-player">РРіСЂРѕРє</th>
               <th class="pt-stat">K/D</th>
-              <th class="pt-team">Команда</th>
+              <th class="pt-team">РљРѕРјР°РЅРґР°</th>
             </tr>
           </thead>
           <tbody>
@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const stars = renderStars(p.rating || 0);
         const s = p.stats || {};
         
-        // Проверяем, является ли игрок IGL
+        // РџСЂРѕРІРµСЂСЏРµРј, СЏРІР»СЏРµС‚СЃСЏ Р»Рё РёРіСЂРѕРє IGL
         const playerUserId = findUserIdByNick(p.nick);
         const isPlayerIgl = playerUserId ? (() => {
           const users = DB.get('pl_users');
@@ -277,22 +277,22 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
               <div class="stars">${stars}</div>
               <div class="player-stats-full">
-                <div class="player-stat-item"><span class="player-stat-val">${s.kd || '—'}</span><span class="player-stat-lbl">K/D</span></div>
-                <div class="player-stat-item"><span class="player-stat-val">${s.hs ? s.hs + '%' : '—'}</span><span class="player-stat-lbl">HS%</span></div>
-                <div class="player-stat-item"><span class="player-stat-val">${s.adr || '—'}</span><span class="player-stat-lbl">ADR</span></div>
-                <div class="player-stat-item"><span class="player-stat-val">${s.wins || '—'}</span><span class="player-stat-lbl">Побед</span></div>
-                <div class="player-stat-item"><span class="player-stat-val">${s.matches || '—'}</span><span class="player-stat-lbl">Матчей</span></div>
-                <div class="player-stat-item"><span class="player-stat-val">${s.matches && s.wins ? Math.round(s.wins/s.matches*100) + '%' : '—'}</span><span class="player-stat-lbl">Winrate</span></div>
+                <div class="player-stat-item"><span class="player-stat-val">${s.kd || 'вЂ”'}</span><span class="player-stat-lbl">K/D</span></div>
+                <div class="player-stat-item"><span class="player-stat-val">${s.hs ? s.hs + '%' : 'вЂ”'}</span><span class="player-stat-lbl">HS%</span></div>
+                <div class="player-stat-item"><span class="player-stat-val">${s.adr || 'вЂ”'}</span><span class="player-stat-lbl">ADR</span></div>
+                <div class="player-stat-item"><span class="player-stat-val">${s.wins || 'вЂ”'}</span><span class="player-stat-lbl">РџРѕР±РµРґ</span></div>
+                <div class="player-stat-item"><span class="player-stat-val">${s.matches || 'вЂ”'}</span><span class="player-stat-lbl">РњР°С‚С‡РµР№</span></div>
+                <div class="player-stat-item"><span class="player-stat-val">${s.matches && s.wins ? Math.round(s.wins/s.matches*100) + '%' : 'вЂ”'}</span><span class="player-stat-lbl">Winrate</span></div>
               </div>
-              ${isPlayerIgl ? `<div class="invite-sent-badge" style="margin-top:12px;width:100%;justify-content:center;background:var(--warning-dim);border-color:var(--warning);color:var(--warning)"><i class="fas fa-crown"></i> IGL (только через админ)</div>` : ''}
-              ${canInvite ? `<button class="btn btn-primary invite-btn" data-pid="${p.id}" data-nick="${p.nick}" style="margin-top:12px;width:100%"><i class="fas fa-user-plus"></i> Пригласить в команду</button>` : ''}
-              ${alreadyInvited ? `<div class="invite-sent-badge" style="margin-top:12px;width:100%;justify-content:center"><i class="fas fa-clock"></i> Приглашение отправлено</div>` : ''}
+              ${isPlayerIgl ? `<div class="invite-sent-badge" style="margin-top:12px;width:100%;justify-content:center;background:var(--warning-dim);border-color:var(--warning);color:var(--warning)"><i class="fas fa-crown"></i> IGL (С‚РѕР»СЊРєРѕ С‡РµСЂРµР· Р°РґРјРёРЅ)</div>` : ''}
+              ${canInvite ? `<button class="btn btn-primary invite-btn" data-pid="${p.id}" data-nick="${p.nick}" style="margin-top:12px;width:100%"><i class="fas fa-user-plus"></i> РџСЂРёРіР»Р°СЃРёС‚СЊ РІ РєРѕРјР°РЅРґСѓ</button>` : ''}
+              ${alreadyInvited ? `<div class="invite-sent-badge" style="margin-top:12px;width:100%;justify-content:center"><i class="fas fa-clock"></i> РџСЂРёРіР»Р°С€РµРЅРёРµ РѕС‚РїСЂР°РІР»РµРЅРѕ</div>` : ''}
             </div>
           </div>`;
       }).join('') + allPlayersBtn;
     }
 
-    // Обработчики кнопок приглашения
+    // РћР±СЂР°Р±РѕС‚С‡РёРєРё РєРЅРѕРїРѕРє РїСЂРёРіР»Р°С€РµРЅРёСЏ
     if (myTeam) {
       document.querySelectorAll('.invite-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -304,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function buildPlayerRows(list, offset, myTeam, currentUser) {
-    const medals = ['??', '??', '??'];
+    const medals = ['рџҐ‡', 'рџҐ€', 'рџҐ‰'];
     return list.map((p, i) => {
       const rank = offset + i;
       const photo = p.photo
@@ -313,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const s = p.stats || {};
       const kd = parseFloat(s.kd ?? p.kd ?? 0) || 0;
 
-      // Проверяем, является ли игрок IGL
+      // РџСЂРѕРІРµСЂСЏРµРј, СЏРІР»СЏРµС‚СЃСЏ Р»Рё РёРіСЂРѕРє IGL
       const playerUserId = findUserIdByNick(p.nick);
       const isPlayerIgl = playerUserId ? (() => {
         const users = DB.get('pl_users');
@@ -328,13 +328,13 @@ document.addEventListener('DOMContentLoaded', () => {
       let actionCell = '';
       if (myTeam) {
         if (isPlayerIgl)
-          actionCell = `<span class="pt-sent" title="IGL добавляются через админ панель"><i class="fas fa-crown"></i> IGL</span>`;
+          actionCell = `<span class="pt-sent" title="IGL РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ С‡РµСЂРµР· Р°РґРјРёРЅ РїР°РЅРµР»СЊ"><i class="fas fa-crown"></i> IGL</span>`;
         else if (canInvite)
-          actionCell = `<button class="pt-invite-btn invite-btn" data-pid="${p.id}" data-nick="${p.nick}" title="Пригласить в команду" onclick="event.stopPropagation()"><i class="fas fa-user-plus"></i> Пригласить</button>`;
+          actionCell = `<button class="pt-invite-btn invite-btn" data-pid="${p.id}" data-nick="${p.nick}" title="РџСЂРёРіР»Р°СЃРёС‚СЊ РІ РєРѕРјР°РЅРґСѓ" onclick="event.stopPropagation()"><i class="fas fa-user-plus"></i> РџСЂРёРіР»Р°СЃРёС‚СЊ</button>`;
         else if (alreadySent)
-          actionCell = `<span class="pt-sent"><i class="fas fa-clock"></i> Отправлено</span>`;
+          actionCell = `<span class="pt-sent"><i class="fas fa-clock"></i> РћС‚РїСЂР°РІР»РµРЅРѕ</span>`;
         else if (inMyTeam)
-          actionCell = `<span class="pt-in-team"><i class="fas fa-check"></i> В команде</span>`;
+          actionCell = `<span class="pt-in-team"><i class="fas fa-check"></i> Р’ РєРѕРјР°РЅРґРµ</span>`;
       }
 
       const rankCell = rank < 3
@@ -355,15 +355,15 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
             </div>
           </td>
-          <td class="pt-stat" style="color:${kdColor};font-weight:700">${kd > 0 ? kd.toFixed(2) : '—'}</td>
-          <td class="pt-team-cell">${p.team ? `<span class="pt-team-name"><i class="fas fa-shield-halved"></i> ${p.team}</span>` : '<span class="pt-dash">—</span>'}</td>
+          <td class="pt-stat" style="color:${kdColor};font-weight:700">${kd > 0 ? kd.toFixed(2) : 'вЂ”'}</td>
+          <td class="pt-team-cell">${p.team ? `<span class="pt-team-name"><i class="fas fa-shield-halved"></i> ${p.team}</span>` : '<span class="pt-dash">вЂ”</span>'}</td>
           ${myTeam ? `<td class="pt-action">${actionCell}</td>` : ''}
         </tr>`;
     }).join('');
   }
 
   window.toggleAllPlayers = function(btn, hiddenCount) {
-    // legacy — больше не используется
+    // legacy вЂ” Р±РѕР»СЊС€Рµ РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ
   };
   function hasPendingInvite(playerNick, teamName) {
     return DB.get('pl_invites').some(inv =>
@@ -373,22 +373,22 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   }
 
-  // Найти userId по нику (ищем пользователя с таким username)
+  // РќР°Р№С‚Рё userId РїРѕ РЅРёРєСѓ (РёС‰РµРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ СЃ С‚Р°РєРёРј username)
   function findUserIdByNick(nick) {
     const users = DB.get('pl_users');
     const u = users.find(u => u.username.toLowerCase() === nick.toLowerCase());
     return u ? u.id : null;
   }
 
-  // Отправить приглашение
+  // РћС‚РїСЂР°РІРёС‚СЊ РїСЂРёРіР»Р°С€РµРЅРёРµ
   function sendInvite(playerNick, team, captain) {
-    // Проверяем, не является ли игрок IGL
+    // РџСЂРѕРІРµСЂСЏРµРј, РЅРµ СЏРІР»СЏРµС‚СЃСЏ Р»Рё РёРіСЂРѕРє IGL
     const targetUserId = findUserIdByNick(playerNick);
     if (targetUserId) {
       const users = DB.get('pl_users');
       const targetUser = users.find(u => u.id === targetUserId);
       if (targetUser && targetUser.role === 'igl') {
-        showToast('IGL можно добавлять только через админ панель', 'error');
+        showToast('IGL РјРѕР¶РЅРѕ РґРѕР±Р°РІР»СЏС‚СЊ С‚РѕР»СЊРєРѕ С‡РµСЂРµР· Р°РґРјРёРЅ РїР°РЅРµР»СЊ', 'error');
         return;
       }
     }
@@ -397,7 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
     invites.push({
       id: Date.now(),
       playerNick,
-      targetUserId,   // null если пользователя нет — всё равно сохраняем по нику
+      targetUserId,   // null РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅРµС‚ вЂ” РІСЃС‘ СЂР°РІРЅРѕ СЃРѕС…СЂР°РЅСЏРµРј РїРѕ РЅРёРєСѓ
       teamName: team.name,
       teamId: team.id,
       captainId: captain.id,
@@ -406,7 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
       createdAt: new Date().toISOString()
     });
     DB.set('pl_invites', invites);
-    showToast(`Приглашение отправлено игроку ${playerNick}`);
+    showToast(`РџСЂРёРіР»Р°С€РµРЅРёРµ РѕС‚РїСЂР°РІР»РµРЅРѕ РёРіСЂРѕРєСѓ ${playerNick}`);
   }
 
   function renderStars(rating) {

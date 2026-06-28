@@ -16,13 +16,17 @@ window.openNews = function(id) {
   if (!content || !modal) return;
   
   content.innerHTML = `
-    ${n.image ? `<img src="${n.image}" alt="${n.title}" class="modal-news-img" />` : ''}
-    <div style="display:inline-block;margin-bottom:12px" class="news-cat cat-${n.category}">${catLabels[n.category] || n.category}</div>
-    <h2 class="modal-news-title">${n.title}</h2>
-    <div class="modal-news-meta">
-      ${dateStr ? `<span><i class="fas fa-calendar"></i> ${dateStr}</span>` : ''}
+    <div style="position:relative;overflow:hidden;border-radius:16px 16px 0 0">
+      ${n.image
+        ? `<img src="${n.image}" alt="${n.title}" style="width:100%;height:260px;object-fit:cover;display:block" />`
+        : `<div style="height:160px;background:linear-gradient(135deg,var(--bg-secondary),var(--bg-card));display:flex;align-items:center;justify-content:center"><i class="fas fa-newspaper" style="font-size:3rem;color:var(--text-dim)"></i></div>`}
+      <span class="news-cat cat-${n.category}" style="position:absolute;bottom:14px;left:16px">${catLabels[n.category] || n.category}</span>
     </div>
-    <div class="modal-news-body">${n.content || n.excerpt || 'Текст новости не указан'}</div>`;
+    <div style="padding:20px 22px 24px">
+      <h2 style="font-size:1.25rem;font-weight:800;line-height:1.35;margin-bottom:10px;color:var(--text)">${n.title}</h2>
+      ${dateStr ? `<div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px"><i class="fas fa-calendar-alt" style="color:var(--text-dim)"></i>${dateStr}</div>` : ''}
+      <div style="font-size:0.9rem;line-height:1.75;color:var(--text-muted);white-space:pre-wrap;word-break:break-word">${n.content || n.excerpt || 'Текст новости не указан'}</div>
+    </div>`;
   modal.classList.add('active');
 };
 

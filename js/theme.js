@@ -1,4 +1,4 @@
-﻿// ── Theme Toggle ──
+// ── Theme Toggle ──
 (function () {
   const root = document.documentElement;
   const btn = document.getElementById('themeToggle');

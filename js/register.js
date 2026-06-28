@@ -1,4 +1,4 @@
-﻿// ── Register ──
+// ── Register ──
 document.addEventListener('DOMContentLoaded', () => {
   const form    = document.getElementById('registerForm');
   const alertEl = document.getElementById('regAlert');

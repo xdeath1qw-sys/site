@@ -1,4 +1,4 @@
-﻿// ── Login ──
+// ── Login ──
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('loginForm');
   const alert = document.getElementById('loginAlert');

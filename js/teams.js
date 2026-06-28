@@ -1,4 +1,4 @@
-﻿// ── Teams Page ──
+// ── Teams Page ──
 document.addEventListener('DOMContentLoaded', () => {
   whenDbReady(() => {
   let currentTier = 'all';

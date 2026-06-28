@@ -1,4 +1,4 @@
-﻿// ── HIGHLIGHTS — storage, render, modal player ───────────────────
+// ── HIGHLIGHTS — storage, render, modal player ───────────────────
 
 (function () {
   'use strict';

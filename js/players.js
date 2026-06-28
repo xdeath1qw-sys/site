@@ -1,4 +1,4 @@
-﻿// ── Players Page ──
+// ── Players Page ──
 document.addEventListener('DOMContentLoaded', () => {
   console.log('[PLAYERS] Страница загружена');
 

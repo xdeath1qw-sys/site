@@ -1,4 +1,4 @@
-﻿// ── Auth helpers ──
+// ── Auth helpers ──
 const Auth = {
   current() {
     try {

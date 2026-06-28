@@ -1,4 +1,4 @@
-﻿// ── News Page ──
+// ── News Page ──
 
 // Глобальная функция открытия новости (доступна сразу)
 window.openNews = function(id) {

@@ -1,4 +1,4 @@
-﻿// ── Profile Page ──
+// ── Profile Page ──
 document.addEventListener('DOMContentLoaded', () => {
   whenDbReady(() => {
   const params     = new URLSearchParams(window.location.search);

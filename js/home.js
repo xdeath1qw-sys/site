@@ -1,4 +1,4 @@
-﻿// ── Home Page ──
+// ── Home Page ──
 document.addEventListener('DOMContentLoaded', () => {
 
   let initialized = false;

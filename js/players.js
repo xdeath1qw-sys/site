@@ -98,24 +98,65 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Custom select logic
+  const filterWrap = document.getElementById('teamFilterWrap');
+  const filterBtn  = document.getElementById('teamFilterBtn');
+  const filterDrop = document.getElementById('teamFilterDropdown');
+  if (filterWrap && filterBtn && filterDrop) {
+    filterBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      filterWrap.classList.toggle('open');
+    });
+    document.addEventListener('click', () => filterWrap.classList.remove('open'));
+    filterDrop.addEventListener('click', (e) => {
+      const opt = e.target.closest('.custom-select-option');
+      if (!opt) return;
+      filterDrop.querySelectorAll('.custom-select-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      teamFilter = opt.dataset.value;
+      filterBtn.textContent = opt.textContent;
+      filterWrap.classList.remove('open');
+      renderPlayers();
+    });
+  }
+
   function populateTeamFilter() {
     const tf = document.getElementById('teamFilter');
-    if (!tf) return;
-    // Очищаем кроме первой опции
-    while (tf.options.length > 1) tf.remove(1);
+    const filterDrop = document.getElementById('teamFilterDropdown');
+
     const teams = DB.get('pl_teams');
-    teams.forEach(t => {
-      const opt = document.createElement('option');
-      opt.value = t.name;
-      opt.textContent = t.name;
-      tf.appendChild(opt);
-    });
-    // В режиме all — добавляем опцию "Без команды"
-    if (showAllMode) {
-      const opt = document.createElement('option');
-      opt.value = '__no_team__';
-      opt.textContent = 'Без команды';
-      tf.appendChild(opt);
+
+    // Старый нативный select (на случай если есть)
+    if (tf) {
+      while (tf.options.length > 1) tf.remove(1);
+      teams.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t.name; opt.textContent = t.name; tf.appendChild(opt);
+      });
+      if (showAllMode) {
+        const opt = document.createElement('option');
+        opt.value = '__no_team__'; opt.textContent = 'Без команды'; tf.appendChild(opt);
+      }
+    }
+
+    // Кастомный дропдаун
+    if (filterDrop) {
+      // Убираем старые опции кроме "Все команды"
+      filterDrop.querySelectorAll('.custom-select-option:not([data-value="all"])').forEach(o => o.remove());
+      teams.forEach(t => {
+        const div = document.createElement('div');
+        div.className = 'custom-select-option';
+        div.dataset.value = t.name;
+        div.textContent = t.name;
+        filterDrop.appendChild(div);
+      });
+      if (showAllMode) {
+        const div = document.createElement('div');
+        div.className = 'custom-select-option';
+        div.dataset.value = '__no_team__';
+        div.textContent = 'Без команды';
+        filterDrop.appendChild(div);
+      }
     }
   }
 

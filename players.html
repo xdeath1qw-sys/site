@@ -53,9 +53,12 @@
           <i class="fas fa-search"></i>
           <input type="text" id="playerSearch" placeholder="Поиск игрока или команды..." />
         </div>
-        <select id="teamFilter" class="select-filter">
-          <option value="all">Все команды</option>
-        </select>
+        <div class="custom-select" id="teamFilterWrap">
+          <button class="custom-select-btn" id="teamFilterBtn">Все команды</button>
+          <div class="custom-select-dropdown" id="teamFilterDropdown">
+            <div class="custom-select-option selected" data-value="all">Все команды</div>
+          </div>
+        </div>
         <div class="view-toggle" id="playersViewToggle" style="margin-left:auto;">
           <button class="view-btn" data-view="grid" title="Сетка"><i class="fas fa-th-large"></i></button>
           <button class="view-btn active" data-view="list" title="Список"><i class="fas fa-list"></i></button>

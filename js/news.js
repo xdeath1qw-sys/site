@@ -18,7 +18,7 @@ window.openNews = function(id) {
   content.innerHTML = `
     <div style="position:relative;overflow:hidden;border-radius:16px 16px 0 0">
       ${n.image
-        ? `<img src="${n.image}" alt="${n.title}" style="width:100%;max-height:480px;object-fit:contain;display:block;background:var(--bg-card)" />`
+        ? `<div style="position:relative;overflow:hidden;background:#0d0d0d"><img src="${n.image}" alt="${n.title}" style="width:100%;max-height:480px;object-fit:contain;display:block" /><div style="position:absolute;inset:0;background:linear-gradient(to right,#141414 0%,transparent 15%,transparent 85%,#141414 100%)"></div></div>`
         : `<div style="height:160px;background:linear-gradient(135deg,var(--bg-secondary),var(--bg-card));display:flex;align-items:center;justify-content:center"><i class="fas fa-newspaper" style="font-size:3rem;color:var(--text-dim)"></i></div>`}
       <span class="news-cat cat-${n.category}" style="position:absolute;bottom:14px;left:16px">${catLabels[n.category] || n.category}</span>
     </div>

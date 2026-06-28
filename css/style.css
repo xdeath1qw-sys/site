@@ -1547,3 +1547,29 @@ textarea { resize: vertical; min-height: 90px; }
   padding: 0 !important;
   position: relative !important;
 }
+
+/* ── Team modal full fix ── */
+#teamModal {
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(0,0,0,0.8) !important;
+  backdrop-filter: blur(6px) !important;
+  z-index: 9999 !important;
+  padding: 20px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+#teamModal[style*="flex"] {
+  display: flex !important;
+}
+#teamModal > .modal {
+  position: relative !important;
+  inset: auto !important;
+  max-width: 820px !important;
+  width: 100% !important;
+  max-height: 90vh !important;
+  overflow-y: auto !important;
+  border-radius: 18px !important;
+  margin: auto !important;
+  flex-shrink: 0 !important;
+}

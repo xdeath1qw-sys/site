@@ -317,7 +317,7 @@ function openNewsModal(id) {
   content.innerHTML = `
     <div style="position:relative;overflow:hidden;border-radius:16px 16px 0 0">
       ${n.image
-        ? `<img src="${n.image}" alt="${n.title}" style="width:100%;height:320px;object-fit:contain;display:block;background:#0a0a0a" />`
+        ? `<img src="${n.image}" alt="${n.title}" style="width:100%;height:320px;object-fit:cover;object-position:center top;display:block" />`
         : `<div style="height:180px;background:linear-gradient(135deg,var(--bg-secondary),var(--bg-card));display:flex;align-items:center;justify-content:center"><i class="fas fa-newspaper" style="font-size:3rem;color:var(--text-dim)"></i></div>`}
       <span class="news-cat cat-${n.category}" style="position:absolute;bottom:12px;left:14px;top:auto;height:auto;width:auto;display:inline-flex;align-items:center;padding:4px 12px;border-radius:20px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;white-space:nowrap">${catLabels[n.category] || n.category}</span>
     </div>

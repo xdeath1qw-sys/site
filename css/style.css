@@ -1343,3 +1343,33 @@ textarea { resize: vertical; min-height: 90px; }
   white-space: nowrap !important;
   line-height: 1.4 !important;
 }
+
+/* ── Highlights footer vertical layout ── */
+.hl-footer {
+  padding: 10px 12px 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 6px !important;
+  border-top: 1px solid var(--border) !important;
+  text-align: center !important;
+}
+.hl-avatar {
+  width: 40px !important;
+  height: 40px !important;
+}
+.hl-nick {
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 100% !important;
+}
+.hl-label {
+  font-size: 0.68rem !important;
+  color: var(--text-dim) !important;
+}
+.hl-expand-icon {
+  display: none !important;
+}

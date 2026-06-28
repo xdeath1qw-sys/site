@@ -1373,3 +1373,40 @@ textarea { resize: vertical; min-height: 90px; }
 .hl-expand-icon {
   display: none !important;
 }
+
+/* ── User dropdown final fix ── */
+.user-menu { position: relative !important; }
+.user-menu:hover .user-dropdown { display: none !important; }
+.user-dropdown {
+  display: none !important;
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  right: 0 !important;
+  left: auto !important;
+  min-width: 160px !important;
+  max-width: 200px !important;
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important;
+  padding: 4px !important;
+  z-index: 2000 !important;
+  flex-direction: column !important;
+}
+.user-dropdown.open {
+  display: flex !important;
+}
+.user-dropdown a {
+  padding: 9px 14px !important;
+  font-size: 0.85rem !important;
+  border-radius: 8px !important;
+  color: var(--text) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  white-space: nowrap !important;
+}
+.user-dropdown a:hover {
+  background: rgba(255,255,255,0.06) !important;
+  color: var(--primary) !important;
+}

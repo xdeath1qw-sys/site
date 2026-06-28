@@ -315,13 +315,19 @@ function openNewsModal(id) {
   
   const content = document.getElementById('homeNewsModalContent');
   content.innerHTML = `
-    ${n.image ? `<img src="${n.image}" alt="${n.title}" class="modal-news-img" />` : ''}
-    <div style="display:inline-block;margin-bottom:12px" class="news-cat cat-${n.category}">${catLabels[n.category] || n.category}</div>
-    <h2 class="modal-news-title">${n.title}</h2>
-    <div class="modal-news-meta">
-      ${dateStr ? `<span><i class="fas fa-calendar"></i> ${dateStr}</span>` : ''}
+    <div style="position:relative">
+      ${n.image ? `<img src="${n.image}" alt="${n.title}" class="modal-news-img" />` : `<div style="height:160px;background:var(--bg-secondary);display:flex;align-items:center;justify-content:center"><i class="fas fa-newspaper" style="font-size:3rem;color:var(--text-dim)"></i></div>`}
     </div>
-    <div class="modal-news-body">${n.content || n.excerpt || 'Текст новости не указан'}</div>`;
+    <div style="padding:24px 28px 28px">
+      <div style="margin-bottom:12px">
+        <span class="news-cat cat-${n.category}">${catLabels[n.category] || n.category}</span>
+      </div>
+      <h2 class="modal-news-title">${n.title}</h2>
+      <div class="modal-news-meta">
+        ${dateStr ? `<i class="fas fa-calendar-alt"></i> <span>${dateStr}</span>` : ''}
+      </div>
+      <div class="modal-news-body">${n.content || n.excerpt || 'Текст новости не указан'}</div>
+    </div>`;
   modal.classList.add('active');
 }
 
